@@ -1,0 +1,6 @@
+{
+  "name": "Patient DNA",
+  "description": "Unified universal patient identity, electronic health records, AI diagnostics, and emergency medical passport system.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
