@@ -1,32 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
-        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
-  <!-- Homepage / Health DNA Universal Portal -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://ais-pre-k4y2pymjytbwvzcmjjk7cv-304461338506.asia-southeast1.run.app/</loc>
     <lastmod>2026-08-19</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
-  <!-- Emergency Digital Medical Passport -->
   <url>
-    <loc>https://ais-pre-k4y2pymjytbwvzcmjjk7cv-304461338506.asia-southeast1.run.app/#emergency</loc>
+    <loc>https://ais-pre-k4y2pymjytbwvzcmjjk7cv-304461338506.asia-southeast1.run.app/emergency</loc>
     <lastmod>2026-08-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
-  <!-- Patient Records & Universal Identity -->
   <url>
-    <loc>https://ais-pre-k4y2pymjytbwvzcmjjk7cv-304461338506.asia-southeast1.run.app/#records</loc>
+    <loc>https://ais-pre-k4y2pymjytbwvzcmjjk7cv-304461338506.asia-southeast1.run.app/records</loc>
     <lastmod>2026-08-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
-  <!-- Clinical AI Diagnostics & Drug Interaction Analysis -->
   <url>
-    <loc>https://ais-pre-k4y2pymjytbwvzcmjjk7cv-304461338506.asia-southeast1.run.app/#ai-diagnostics</loc>
+    <loc>https://ais-pre-k4y2pymjytbwvzcmjjk7cv-304461338506.asia-southeast1.run.app/diagnostics</loc>
     <lastmod>2026-08-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
