@@ -1,0 +1,6 @@
+# Robots.txt for Patient DNA
+User-agent: *
+Allow: /
+
+# Sitemap location for Google Search Console & Web Crawlers
+Sitemap: https://ais-pre-k4y2pymjytbwvzcmjjk7cv-304461338506.asia-southeast1.run.app/sitemap.xml

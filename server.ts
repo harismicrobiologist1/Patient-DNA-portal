@@ -48,6 +48,36 @@ function getGeminiAI() {
 }
 
 // ----------------------------------------------------
+// Search Engine Optimization & Google Site Verification
+// ----------------------------------------------------
+app.get("/sitemap.xml", (req, res) => {
+  const sitemapPath = path.join(process.cwd(), "public", "sitemap.xml");
+  if (fs.existsSync(sitemapPath)) {
+    res.header("Content-Type", "application/xml");
+    return res.sendFile(sitemapPath);
+  }
+  return res.status(404).send("Sitemap not found");
+});
+
+app.get("/robots.txt", (req, res) => {
+  const robotsPath = path.join(process.cwd(), "public", "robots.txt");
+  if (fs.existsSync(robotsPath)) {
+    res.header("Content-Type", "text/plain");
+    return res.sendFile(robotsPath);
+  }
+  return res.status(404).send("Robots.txt not found");
+});
+
+app.get("/googled7298bdf11e67b56.html", (req, res) => {
+  const verifPath = path.join(process.cwd(), "public", "googled7298bdf11e67b56.html");
+  if (fs.existsSync(verifPath)) {
+    res.header("Content-Type", "text/html");
+    return res.sendFile(verifPath);
+  }
+  return res.status(404).send("google-site-verification: googled7298bdf11e67b56.html");
+});
+
+// ----------------------------------------------------
 // Lifetime Database Persistence Endpoints
 // ----------------------------------------------------
 app.get("/api/database/load", (req, res) => {
