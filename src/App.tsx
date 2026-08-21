@@ -930,9 +930,6 @@ export default function App() {
           </div>
           
           <div className="flex items-center space-x-3">
-            <span className="text-[11px] text-slate-500 hidden md:inline">
-              Author: <strong>Haris Amin</strong> (Pharmacist)
-            </span>
             <button
               onClick={() => setIsCreatorPortfolioModalOpen(true)}
               className="px-3 py-1.5 rounded-xl bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 hover:text-blue-200 border border-blue-500/30 transition-all text-xs font-bold flex items-center space-x-1.5 cursor-pointer shadow-sm"
