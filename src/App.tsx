@@ -43,6 +43,7 @@ import { PatientSecurityAuthModal } from "./components/PatientSecurityAuthModal"
 import { PublicDigitalCardModal } from "./components/PublicDigitalCardModal";
 import { PatientLoginModal } from "./components/PatientLoginModal";
 import { AuthWelcomeScreen } from "./components/AuthWelcomeScreen";
+import { CreatorPortfolioModal } from "./components/CreatorPortfolioModal";
 
 import {
   User,
@@ -161,6 +162,8 @@ export default function App() {
 
   const [isPublicCardModalOpen, setIsPublicCardModalOpen] = useState(false);
   const [publicCardPatient, setPublicCardPatient] = useState<PatientProfile | null>(null);
+
+  const [isCreatorPortfolioModalOpen, setIsCreatorPortfolioModalOpen] = useState(false);
 
   // 1. Initial Load from Backend Persistence
   useEffect(() => {
@@ -925,11 +928,31 @@ export default function App() {
             <span className="font-bold text-white">PATIENT DNA</span>
             <span>• Universal Healthcare Identity System</span>
           </div>
+          
+          <div className="flex items-center space-x-3">
+            <span className="text-[11px] text-slate-500 hidden md:inline">
+              Author: <strong>Haris Amin</strong> (Pharmacist)
+            </span>
+            <button
+              onClick={() => setIsCreatorPortfolioModalOpen(true)}
+              className="px-3 py-1.5 rounded-xl bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 hover:text-blue-200 border border-blue-500/30 transition-all text-xs font-bold flex items-center space-x-1.5 cursor-pointer shadow-sm"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-blue-400" />
+              <span>Creator Portfolio & Ownership</span>
+            </button>
+          </div>
+
           <p className="text-[11px] font-mono text-slate-500">
             Encrypted End-to-End • Persistent Cloud Store • ISO 27001 Certified • HIPAA Compliant
           </p>
         </div>
       </footer>
+
+      {/* Creator & Portfolio Modal */}
+      <CreatorPortfolioModal
+        isOpen={isCreatorPortfolioModalOpen}
+        onClose={() => setIsCreatorPortfolioModalOpen(false)}
+      />
     </div>
   );
 }

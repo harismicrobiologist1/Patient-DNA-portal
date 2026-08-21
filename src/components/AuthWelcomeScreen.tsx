@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { PatientProfile, PatientFullRecord } from "../types";
+import { CreatorPortfolioModal } from "./CreatorPortfolioModal";
 import {
   evaluatePasswordStrength,
   checkAccountLockout,
@@ -69,6 +70,7 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
   const [loginError, setLoginError] = useState<string | null>(null);
   const [isAuthenticating, setIsAuthenticating] = useState(false);
   const [lockoutTimer, setLockoutTimer] = useState<number>(0);
+  const [isPortfolioModalOpen, setIsPortfolioModalOpen] = useState(false);
 
   // Registration states
   const [regForm, setRegForm] = useState({
@@ -1067,7 +1069,36 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
             </div>
           </div>
         )}
+
+        {/* Public Project Ownership & Creator Portfolio Footer */}
+        <div className="bg-slate-900/95 border-t border-slate-800 p-4 sm:p-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-slate-400 text-xs">
+          <div className="flex items-center space-x-2.5">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span>
+              <strong>Patient DNA</strong> • Public Biomedical Portal & Universal Health System
+            </span>
+          </div>
+
+          <div className="flex items-center space-x-3">
+            <span className="hidden md:inline text-slate-500">
+              Designed & Built by <strong>Haris Amin</strong> (Pharmacist)
+            </span>
+            <button
+              onClick={() => setIsPortfolioModalOpen(true)}
+              className="px-3 py-1.5 rounded-xl bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 hover:text-blue-200 border border-blue-500/30 transition-all text-xs font-bold flex items-center space-x-1.5 cursor-pointer shadow-sm"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-blue-400" />
+              <span>Creator Portfolio & Ownership</span>
+            </button>
+          </div>
+        </div>
       </div>
+
+      {/* Creator & Portfolio Modal */}
+      <CreatorPortfolioModal
+        isOpen={isPortfolioModalOpen}
+        onClose={() => setIsPortfolioModalOpen(false)}
+      />
     </div>
   );
 };
