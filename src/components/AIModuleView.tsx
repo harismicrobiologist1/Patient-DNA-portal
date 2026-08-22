@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 import { PatientProfile, MedicalHistory, Prescription, ClinicalRecord, LabReport } from "../types";
 import {
+  requestSymptomAnalysis,
+  requestMedicationAnalysis,
+  requestDiseasePrediction,
+} from "../utils/aiAnalysisService";
+import {
   Sparkles,
   Zap,
   Activity,
@@ -63,21 +68,16 @@ export const AIModuleView: React.FC<AIModuleViewProps> = ({
     setSymptomResult(null);
 
     try {
-      const res = await fetch("/api/ai/symptom-analysis", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          symptoms: symptomInput,
-          age: 38,
-          gender: patient.gender,
-          medicalHistory: (history?.diseases || []).map((d) => d.name),
-          vitals: { bp: "122/78", heartRate: 72 },
-        }),
+      const data = await requestSymptomAnalysis({
+        symptoms: symptomInput,
+        age: 38,
+        gender: patient.gender,
+        medicalHistory: (history?.diseases || []).map((d) => d.name),
+        vitals: { bp: "122/78", heartRate: 72 },
       });
-      const data = await res.json();
       setSymptomResult(data);
     } catch (err) {
-      console.error(err);
+      console.error("Error analyzing symptoms:", err);
     } finally {
       setIsSymptomLoading(false);
     }
@@ -92,24 +92,19 @@ export const AIModuleView: React.FC<AIModuleViewProps> = ({
     setMedResult(null);
 
     try {
-      const res = await fetch("/api/ai/medication-analysis", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          medicineName: queryName,
-          proposedDose,
-          duration: treatmentDuration,
-          patientProfile: { age: 38, gender: patient.gender, bloodGroup: patient.bloodGroup },
-          medicalHistory: history || {},
-          prescriptions: prescriptions || [],
-          clinicalRecords: clinicalRecords || [],
-          labReports: labReports || [],
-        }),
+      const data = await requestMedicationAnalysis({
+        medicineName: queryName,
+        proposedDose,
+        duration: treatmentDuration,
+        patientProfile: { age: 38, gender: patient.gender, bloodGroup: patient.bloodGroup },
+        medicalHistory: history || {},
+        prescriptions: prescriptions || [],
+        clinicalRecords: clinicalRecords || [],
+        labReports: labReports || [],
       });
-      const data = await res.json();
       setMedResult(data);
     } catch (err) {
-      console.error(err);
+      console.error("Error analyzing medication:", err);
     } finally {
       setIsMedLoading(false);
     }
@@ -120,20 +115,15 @@ export const AIModuleView: React.FC<AIModuleViewProps> = ({
     setPredictionResult(null);
 
     try {
-      const res = await fetch("/api/ai/disease-prediction", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          patientProfile: { age: 38, bloodGroup: patient.bloodGroup, gender: patient.gender },
-          medicalHistory: history?.diseases || [],
-          lifestyle: history?.lifestyle || {},
-          familyHistory: history?.familyHistory || [],
-        }),
+      const data = await requestDiseasePrediction({
+        patientProfile: { age: 38, bloodGroup: patient.bloodGroup, gender: patient.gender },
+        medicalHistory: history?.diseases || [],
+        lifestyle: history?.lifestyle || {},
+        familyHistory: history?.familyHistory || [],
       });
-      const data = await res.json();
       setPredictionResult(data);
     } catch (err) {
-      console.error(err);
+      console.error("Error predicting disease:", err);
     } finally {
       setIsPredictLoading(false);
     }
