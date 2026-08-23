@@ -165,6 +165,21 @@ export interface LabReport {
   specimenType?: string;
   numericResults: LabResultItem[];
   imagingPreviewType?: "chest_xray" | "brain_mri" | "cardiac_ecg" | "abdominal_us";
+  // Uploaded Scan Assets & Medical Imaging Details
+  uploadedScanUrl?: string;
+  uploadedScanUrls?: string[]; // Multiple cuts/slices for CT/MRI
+  scanFileName?: string;
+  scanFileType?: string;
+  scanFileSize?: string;
+  bodyPart?: string; // e.g. "Brain / Head", "Thorax / Chest", "Lumbar Spine", "Abdomen & Pelvis", "Knee Joint", "Cervical Spine"
+  viewOrientation?: string; // e.g. "Axial Cut", "Sagittal View", "Coronal Slice", "PA Standing", "AP Supine"
+  sliceThickness?: string; // e.g. "1.5 mm", "3.0 mm", "5.0 mm"
+  contrastUsed?: boolean;
+  contrastAgent?: string; // e.g. "Gadolinium 15ml IV", "Iodinated Non-Ionic 100ml"
+  radiologistName?: string;
+  dicomSeriesUid?: string;
+  fieldStrength?: string; // e.g. "3.0 Tesla", "1.5 Tesla", "128-Slice MDCT"
+  indication?: string;
 }
 
 export interface Prescription {
