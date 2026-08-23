@@ -4,6 +4,7 @@ import fs from "fs";
 import { fileURLToPath } from "url";
 import { createServer as createViteServer } from "vite";
 import { GoogleGenAI } from "@google/genai";
+import { Resend } from "resend";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -15,6 +16,19 @@ const app = express();
 const PORT = 3000;
 
 app.use(express.json({ limit: "25mb" }));
+
+// Lazy init Resend client
+let resendClient: Resend | null = null;
+function getResendClient(): Resend | null {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey || apiKey.trim() === "" || apiKey === "MY_RESEND_API_KEY") {
+    return null;
+  }
+  if (!resendClient) {
+    resendClient = new Resend(apiKey.trim());
+  }
+  return resendClient;
+}
 
 // In-memory / File-backed Database Store
 const DATA_FILE_PATH = path.join(__dirname, "patients_database_store.json");
@@ -195,6 +209,192 @@ app.post("/api/auth/verify-doctor-otp", (req, res) => {
     });
   } catch (err: any) {
     console.error("Error verifying doctor OTP:", err);
+    return res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// ----------------------------------------------------
+// Patient Registration Email OTP Verification Endpoints
+// ----------------------------------------------------
+interface RegOtpEntry {
+  code: string;
+  email: string;
+  fullName: string;
+  expiresAt: number;
+}
+const registrationOtps = new Map<string, RegOtpEntry>();
+
+app.post("/api/auth/send-registration-otp", async (req, res) => {
+  try {
+    const { email, fullName } = req.body;
+
+    if (!email || !email.includes("@")) {
+      return res.status(400).json({ success: false, error: "A valid email address is required." });
+    }
+
+    const cleanEmail = email.trim().toLowerCase();
+    // Generate secure 6-digit numeric OTP code
+    const generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
+    const expiresAt = Date.now() + 10 * 60 * 1000; // 10 minutes
+
+    registrationOtps.set(cleanEmail, {
+      code: generatedOtp,
+      email: cleanEmail,
+      fullName: fullName || "Patient",
+      expiresAt,
+    });
+
+    console.log(`[PATIENT DNA REGISTRATION OTP] Generated code ${generatedOtp} for email: ${cleanEmail}`);
+
+    const parts = cleanEmail.split("@");
+    const namePart = parts[0] || "";
+    const maskedEmail = `${namePart.substring(0, Math.min(2, namePart.length))}***${namePart.length > 2 ? namePart.substring(namePart.length - 1) : ""}@${parts[1]}`;
+
+    let emailDeliveryStatus: "sent" | "simulated" | "failed" = "simulated";
+    let emailDeliveryError: string | null = null;
+
+    const resend = getResendClient();
+    if (resend) {
+      try {
+        const fromEmail = process.env.RESEND_FROM_EMAIL || "Health DNA <onboarding@resend.dev>";
+        const emailResponse = await resend.emails.send({
+          from: fromEmail,
+          to: [cleanEmail],
+          subject: `🔐 ${generatedOtp} is your Health DNA Registration Verification Code`,
+          html: `
+            <!DOCTYPE html>
+            <html>
+            <head>
+              <meta charset="utf-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>Health DNA Email Verification</title>
+            </head>
+            <body style="margin: 0; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f8fafc; color: #1e293b;">
+              <div style="max-width: 560px; margin: 0 auto; background-color: #ffffff; border-radius: 20px; border: 1px solid #e2e8f0; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+                
+                <!-- Brand Header -->
+                <div style="background: linear-gradient(135deg, #4f46e5 0%, #2563eb 50%, #06b6d4 100%); padding: 32px 24px; text-align: center;">
+                  <div style="display: inline-block; background-color: rgba(255, 255, 255, 0.2); backdrop-filter: blur(8px); padding: 6px 16px; border-radius: 9999px; color: #ffffff; font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px;">
+                    Universal Health DNA Vault
+                  </div>
+                  <h1 style="margin: 0; color: #ffffff; font-size: 24px; font-weight: 800; letter-spacing: -0.5px;">
+                    Email Verification Code
+                  </h1>
+                </div>
+
+                <!-- Body Content -->
+                <div style="padding: 32px 28px;">
+                  <p style="font-size: 16px; color: #334155; margin-top: 0; margin-bottom: 12px; font-weight: 600;">
+                    Hello ${fullName ? fullName : "Valued Patient"},
+                  </p>
+                  <p style="font-size: 14px; color: #475569; line-height: 1.6; margin-bottom: 24px;">
+                    Thank you for initiating your registration for a Lifetime Universal Health DNA Vault. Please use the following 6-digit one-time password (OTP) to verify your email address and activate your encrypted medical vault:
+                  </p>
+
+                  <!-- OTP Display Box -->
+                  <div style="text-align: center; margin: 28px 0; background-color: #f1f5f9; border: 2px dashed #6366f1; border-radius: 16px; padding: 24px 16px;">
+                    <div style="font-size: 11px; font-weight: 700; color: #6366f1; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px;">
+                      Your One-Time Passcode (OTP)
+                    </div>
+                    <div style="font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace; font-size: 38px; font-weight: 900; letter-spacing: 10px; color: #312e81; padding-left: 10px;">
+                      ${generatedOtp}
+                    </div>
+                    <div style="font-size: 12px; color: #64748b; margin-top: 10px;">
+                      ⏱ This code is valid for <strong>10 minutes</strong>.
+                    </div>
+                  </div>
+
+                  <!-- Security Information -->
+                  <div style="background-color: #f8fafc; border-left: 4px solid #6366f1; border-radius: 8px; padding: 14px 16px; margin-top: 24px;">
+                    <p style="margin: 0; font-size: 12px; color: #475569; line-height: 1.5;">
+                      <strong>Security Tip:</strong> Never share your verification code or account password with anyone. Our support team will never ask for your OTP.
+                    </p>
+                  </div>
+                </div>
+
+                <!-- Footer -->
+                <div style="background-color: #f8fafc; border-top: 1px solid #e2e8f0; padding: 20px 28px; text-align: center;">
+                  <p style="margin: 0; font-size: 11px; color: #94a3b8; line-height: 1.5;">
+                    If you did not request this registration, you can safely disregard this email.<br />
+                    © 2026 Health DNA Decentralized Medical Passport System.
+                  </p>
+                </div>
+              </div>
+            </body>
+            </html>
+          `,
+        });
+
+        if (emailResponse.error) {
+          console.error("Resend delivery failed:", emailResponse.error);
+          emailDeliveryStatus = "failed";
+          emailDeliveryError = emailResponse.error.message;
+        } else {
+          emailDeliveryStatus = "sent";
+          console.log(`[RESEND SUCCESS] Registration OTP successfully dispatched to ${cleanEmail}. Resend ID: ${emailResponse.data?.id}`);
+        }
+      } catch (sendErr: any) {
+        console.error("Resend API exception:", sendErr);
+        emailDeliveryStatus = "failed";
+        emailDeliveryError = sendErr.message;
+      }
+    } else {
+      console.log("[INFO] RESEND_API_KEY is not configured in environment. Using fallback simulation for preview testing.");
+    }
+
+    return res.json({
+      success: true,
+      message: emailDeliveryStatus === "sent"
+        ? `A 6-digit verification code was delivered to ${cleanEmail}`
+        : `A 6-digit verification code was generated for ${cleanEmail}`,
+      emailDeliveryStatus,
+      emailDeliveryError,
+      resendConfigured: !!resend,
+      // If Resend is active and successfully delivered, do not expose OTP code in response payload.
+      // If Resend is not configured yet, include OTP for sandbox preview testing so user isn't locked out.
+      otpCode: emailDeliveryStatus === "sent" ? undefined : generatedOtp,
+      maskedEmail,
+      expiresAt,
+    });
+  } catch (err: any) {
+    console.error("Error generating registration OTP:", err);
+    return res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.post("/api/auth/verify-registration-otp", (req, res) => {
+  try {
+    const { email, otpCode } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ success: false, error: "Email is required." });
+    }
+
+    const cleanEmail = email.trim().toLowerCase();
+    const entry = registrationOtps.get(cleanEmail);
+
+    if (!entry) {
+      return res.status(400).json({ success: false, error: "No pending OTP request found for this email. Please request a new verification code." });
+    }
+
+    if (Date.now() > entry.expiresAt) {
+      registrationOtps.delete(cleanEmail);
+      return res.status(400).json({ success: false, error: "OTP expired. Please request a new verification code." });
+    }
+
+    if (entry.code !== String(otpCode).trim()) {
+      return res.status(400).json({ success: false, error: "Incorrect 6-digit OTP code entered. Please check your email or simulated code." });
+    }
+
+    // Success!
+    registrationOtps.delete(cleanEmail);
+    return res.json({
+      success: true,
+      verified: true,
+      message: "Email identity successfully verified.",
+    });
+  } catch (err: any) {
+    console.error("Error verifying registration OTP:", err);
     return res.status(500).json({ success: false, error: err.message });
   }
 });
