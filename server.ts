@@ -92,16 +92,54 @@ app.get("/googled7298bdf11e67b56.html", (req, res) => {
 });
 
 // ----------------------------------------------------
-// Lifetime Database Persistence Endpoints
+// Lifetime Database Persistence & Multi-Patient Endpoints
 // ----------------------------------------------------
-app.get("/api/database/load", (req, res) => {
+function readDatabaseFromDisk(): { database: Record<string, any>; auditLogs: any[] } {
   try {
     if (fs.existsSync(DATA_FILE_PATH)) {
       const dataStr = fs.readFileSync(DATA_FILE_PATH, "utf-8");
       const parsed = JSON.parse(dataStr);
-      return res.json({ success: true, database: parsed.database, auditLogs: parsed.auditLogs || [] });
+      const db = parsed.patientsDatabase || parsed.database || {};
+      const logs = parsed.auditLogs || [];
+      return { database: db, auditLogs: logs };
     }
-    return res.json({ success: true, database: null, auditLogs: null });
+  } catch (e) {
+    console.error("Error reading database from disk:", e);
+  }
+  return { database: {}, auditLogs: [] };
+}
+
+function writeDatabaseToDisk(db: Record<string, any>, logs: any[] = []) {
+  try {
+    fs.writeFileSync(
+      DATA_FILE_PATH,
+      JSON.stringify(
+        {
+          database: db,
+          patientsDatabase: db,
+          auditLogs: logs,
+          updatedAt: new Date().toISOString(),
+        },
+        null,
+        2
+      ),
+      "utf-8"
+    );
+  } catch (e) {
+    console.error("Error writing database to disk:", e);
+  }
+}
+
+app.get("/api/database/load", (req, res) => {
+  try {
+    const { database, auditLogs } = readDatabaseFromDisk();
+    const hasData = database && Object.keys(database).length > 0;
+    return res.json({
+      success: true,
+      database: hasData ? database : null,
+      patientsDatabase: hasData ? database : null,
+      auditLogs,
+    });
   } catch (err: any) {
     console.error("Error reading database store:", err);
     return res.status(500).json({ success: false, error: err.message });
@@ -110,18 +148,94 @@ app.get("/api/database/load", (req, res) => {
 
 app.post("/api/database/save", (req, res) => {
   try {
-    const { database, auditLogs } = req.body;
-    if (!database) {
-      return res.status(400).json({ success: false, error: "Database payload missing" });
+    const incomingDb = req.body.patientsDatabase || req.body.database;
+    const incomingLogs = req.body.auditLogs || [];
+    if (!incomingDb || typeof incomingDb !== "object") {
+      return res.status(400).json({ success: false, error: "Database payload missing or invalid" });
     }
-    fs.writeFileSync(
-      DATA_FILE_PATH,
-      JSON.stringify({ database, auditLogs, updatedAt: new Date().toISOString() }, null, 2),
-      "utf-8"
-    );
-    return res.json({ success: true, message: "Database permanently saved to lifetime disk storage" });
+
+    // Merge with any existing database to ensure no patient accounts are lost
+    const { database: currentDb, auditLogs: currentLogs } = readDatabaseFromDisk();
+    const mergedDb = { ...currentDb, ...incomingDb };
+    const mergedLogs = [...(incomingLogs.length > 0 ? incomingLogs : currentLogs)];
+
+    writeDatabaseToDisk(mergedDb, mergedLogs);
+    console.log(`[PATIENTS DATABASE STORE] Saved ${Object.keys(mergedDb).length} patients to disk.`);
+
+    return res.json({
+      success: true,
+      database: mergedDb,
+      patientsDatabase: mergedDb,
+      count: Object.keys(mergedDb).length,
+      message: "Database permanently saved to lifetime disk storage",
+    });
   } catch (err: any) {
     console.error("Error writing database store:", err);
+    return res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// Dedicated Real-time Patient Registration Endpoint
+app.post("/api/patients/register", (req, res) => {
+  try {
+    const { newRecord, patient, record } = req.body;
+    const patientRecord = newRecord || record || (patient ? { patient } : null);
+
+    if (!patientRecord || !patientRecord.patient || !patientRecord.patient.dnaId) {
+      return res.status(400).json({ success: false, error: "Invalid patient registration record: DNA ID missing." });
+    }
+
+    const dnaId = patientRecord.patient.dnaId;
+    const { database: currentDb, auditLogs: currentLogs } = readDatabaseFromDisk();
+
+    const updatedDb = {
+      ...currentDb,
+      [dnaId]: patientRecord,
+    };
+
+    const newAuditLog = {
+      id: `log-${Date.now()}`,
+      timestamp: new Date().toISOString().replace("T", " ").substring(0, 19),
+      actor: "Patient Registration Service",
+      role: "patient",
+      action: "New Patient Registered to Universal Network",
+      details: `Profile ${patientRecord.patient.fullName} (${dnaId}) registered into database.`,
+      ipAddress: req.ip || "127.0.0.1",
+      securityHash: `0x${Math.random().toString(16).substring(2, 10).toUpperCase()}...AES256`,
+    };
+
+    const updatedLogs = [newAuditLog, ...currentLogs];
+    writeDatabaseToDisk(updatedDb, updatedLogs);
+
+    console.log(`[PATIENT REGISTERED TO LIFETIME DIRECTORY] ${patientRecord.patient.fullName} (${dnaId})`);
+
+    return res.json({
+      success: true,
+      dnaId,
+      patient: patientRecord.patient,
+      patientsDatabase: updatedDb,
+      count: Object.keys(updatedDb).length,
+      message: `Patient ${patientRecord.patient.fullName} (${dnaId}) successfully added to patient directory.`,
+    });
+  } catch (err: any) {
+    console.error("Error in /api/patients/register:", err);
+    return res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// List all registered patients for directory & lookups
+app.get("/api/patients/all", (req, res) => {
+  try {
+    const { database } = readDatabaseFromDisk();
+    const patients = Object.values(database).map((r: any) => r.patient).filter(Boolean);
+    return res.json({
+      success: true,
+      count: patients.length,
+      patients,
+      patientsDatabase: database,
+    });
+  } catch (err: any) {
+    console.error("Error fetching all patients:", err);
     return res.status(500).json({ success: false, error: err.message });
   }
 });

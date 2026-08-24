@@ -165,25 +165,66 @@ export default function App() {
 
   const [isCreatorPortfolioModalOpen, setIsCreatorPortfolioModalOpen] = useState(false);
 
-  // 1. Initial Load from Backend Persistence
-  useEffect(() => {
-    const loadDatabaseFromServer = async () => {
-      try {
-        const res = await fetch("/api/database/load");
-        const data = await res.json();
-        if (data.success && data.patientsDatabase && Object.keys(data.patientsDatabase).length > 0) {
-          setPatientsDatabase(data.patientsDatabase);
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(data.patientsDatabase));
-        }
-      } catch (err) {
-        console.warn("Failed to fetch database from backend store:", err);
-      } finally {
-        setIsDbLoaded(true);
-      }
-    };
+  // 1. Initial Load & Real-time Live Sync from Backend Persistence
+  const syncDatabaseFromServer = useCallback(async (isInitial = false) => {
+    try {
+      const res = await fetch("/api/database/load");
+      if (!res.ok) return;
+      const data = await res.json();
+      const serverDb = data.patientsDatabase || data.database;
 
-    loadDatabaseFromServer();
+      if (data.success && serverDb && typeof serverDb === "object" && Object.keys(serverDb).length > 0) {
+        setPatientsDatabase((prev) => {
+          // Check if server has new patients or changes
+          const prevKeys = Object.keys(prev);
+          const serverKeys = Object.keys(serverDb);
+          const hasNew = serverKeys.some((k) => !prev[k]);
+          const hasUpdates = serverKeys.length !== prevKeys.length;
+
+          if (!hasNew && !hasUpdates && !isInitial) {
+            return prev;
+          }
+
+          const merged = { ...prev, ...serverDb };
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
+          return merged;
+        });
+      } else if (isInitial) {
+        // If server had no file yet, push our initial seed database to the server store
+        setPatientsDatabase((current) => {
+          fetch("/api/database/save", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ database: current, patientsDatabase: current }),
+          }).catch(() => {});
+          return current;
+        });
+      }
+    } catch (err) {
+      console.warn("Live database sync notice:", err);
+    } finally {
+      if (isInitial) setIsDbLoaded(true);
+    }
   }, []);
+
+  useEffect(() => {
+    // Initial fetch
+    syncDatabaseFromServer(true);
+
+    // Periodic live background poll so registrations on other devices/tabs appear immediately
+    const pollInterval = setInterval(() => {
+      syncDatabaseFromServer(false);
+    }, 3500);
+
+    // Also sync whenever the browser tab gains focus
+    const onFocus = () => syncDatabaseFromServer(false);
+    window.addEventListener("focus", onFocus);
+
+    return () => {
+      clearInterval(pollInterval);
+      window.removeEventListener("focus", onFocus);
+    };
+  }, [syncDatabaseFromServer]);
 
   // 2. Persistent Save on Database Mutation
   const persistDatabase = useCallback(async (updatedDb: Record<string, PatientFullRecord>) => {
@@ -196,7 +237,7 @@ export default function App() {
       await fetch("/api/database/save", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ patientsDatabase: updatedDb }),
+        body: JSON.stringify({ database: updatedDb, patientsDatabase: updatedDb }),
       });
       setSaveStatus("synced");
     } catch (err) {
@@ -364,13 +405,28 @@ export default function App() {
     }));
   };
 
-  const handleRegisterPatient = (newRecord: PatientFullRecord) => {
+  const handleRegisterPatient = async (newRecord: PatientFullRecord) => {
     const newDnaId = newRecord.patient.dnaId;
+    
+    // Instant local state update
     updatePatientsDatabaseState((prev) => ({
       ...prev,
       [newDnaId]: newRecord,
     }));
     handleLoginSuccess(newDnaId);
+
+    // Broadcast to server registration endpoint for real-time network persistence
+    try {
+      await fetch("/api/patients/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ newRecord }),
+      });
+      // Force instant sync
+      syncDatabaseFromServer(false);
+    } catch (e) {
+      console.warn("Server registration push note:", e);
+    }
 
     // Audit log
     const newLog: AuditLog = {
@@ -797,12 +853,13 @@ export default function App() {
         {activeTab === "doctor-dash" && (
           <DoctorDashboardView
             patient={patient || allPatientsList[0]}
-            history={history || patientsDatabase[allPatientsList[0].dnaId]?.history || INITIAL_MEDICAL_HISTORY}
+            history={history || patientsDatabase[allPatientsList[0]?.dnaId]?.history || INITIAL_MEDICAL_HISTORY}
             onAddClinicalRecord={handleAddClinicalRecord}
             onAddPrescription={handleAddPrescription}
             allPatients={allPatientsList}
             onSelectPatient={handleSelectPatientRequest}
             onOpenAddPatient={() => setIsAddPatientModalOpen(true)}
+            onRefresh={() => syncDatabaseFromServer(false)}
           />
         )}
 
@@ -813,6 +870,7 @@ export default function App() {
             allPatients={allPatientsList}
             onSelectPatient={handleSelectPatientRequest}
             onOpenAddPatient={() => setIsAddPatientModalOpen(true)}
+            onRefresh={() => syncDatabaseFromServer(false)}
           />
         )}
       </main>
@@ -851,6 +909,7 @@ export default function App() {
         onSelectPatient={handleSelectPatientRequest}
         onOpenAddPatient={() => setIsAddPatientModalOpen(true)}
         onViewPublicCard={handleOpenPublicCard}
+        onRefresh={() => syncDatabaseFromServer(false)}
         onRequestUnlockPatient={(target) => {
           setPatientAuthTarget(target);
           setIsPatientAuthModalOpen(true);

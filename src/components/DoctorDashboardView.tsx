@@ -11,6 +11,8 @@ import {
   CheckCircle2,
   Calendar,
   Zap,
+  RefreshCw,
+  Database,
 } from "lucide-react";
 
 interface DoctorDashboardViewProps {
@@ -21,6 +23,7 @@ interface DoctorDashboardViewProps {
   allPatients?: PatientProfile[];
   onSelectPatient?: (dnaId: string) => void;
   onOpenAddPatient?: () => void;
+  onRefresh?: () => void;
 }
 
 export const DoctorDashboardView: React.FC<DoctorDashboardViewProps> = ({
@@ -31,9 +34,19 @@ export const DoctorDashboardView: React.FC<DoctorDashboardViewProps> = ({
   allPatients = [],
   onSelectPatient,
   onOpenAddPatient,
+  onRefresh,
 }) => {
   const [searchDnaId, setSearchDnaId] = useState("");
   const [activeTab, setActiveTab] = useState<"examine" | "prescription" | "ai-support">("examine");
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const handleRefresh = async () => {
+    if (onRefresh) {
+      setIsRefreshing(true);
+      await onRefresh();
+      setTimeout(() => setIsRefreshing(false), 500);
+    }
+  };
 
   // New Clinical Note Form
   const [chiefComplaint, setChiefComplaint] = useState("");
@@ -244,11 +257,24 @@ export const DoctorDashboardView: React.FC<DoctorDashboardViewProps> = ({
               </select>
             )}
 
+            {onRefresh && (
+              <button
+                type="button"
+                onClick={handleRefresh}
+                disabled={isRefreshing}
+                className="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-slate-700 transition-all text-xs font-bold flex items-center space-x-1 cursor-pointer"
+                title="Sync patients from live cloud registry"
+              >
+                <RefreshCw className={`w-4 h-4 ${isRefreshing ? "animate-spin text-cyan-400" : ""}`} />
+                <span className="hidden lg:inline text-[11px]">Sync Live</span>
+              </button>
+            )}
+
             {onOpenAddPatient && (
               <button
                 type="button"
                 onClick={onOpenAddPatient}
-                className="px-3.5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-md flex items-center space-x-1.5"
+                className="px-3.5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-md flex items-center space-x-1.5 cursor-pointer"
               >
                 <Plus className="w-4 h-4" />
                 <span className="hidden sm:inline">Add Patient</span>

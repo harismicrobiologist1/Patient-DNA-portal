@@ -16,6 +16,8 @@ import {
   UserPlus,
   ArrowRight,
   Heart,
+  RefreshCw,
+  Database,
 } from "lucide-react";
 
 interface HospitalDashboardViewProps {
@@ -24,6 +26,7 @@ interface HospitalDashboardViewProps {
   allPatients?: PatientProfile[];
   onSelectPatient?: (dnaId: string) => void;
   onOpenAddPatient?: () => void;
+  onRefresh?: () => void;
 }
 
 export const HospitalDashboardView: React.FC<HospitalDashboardViewProps> = ({
@@ -32,9 +35,19 @@ export const HospitalDashboardView: React.FC<HospitalDashboardViewProps> = ({
   allPatients = [],
   onSelectPatient,
   onOpenAddPatient,
+  onRefresh,
 }) => {
   const [activeTab, setActiveTab] = useState<"overview" | "patients" | "doctors" | "audit">("overview");
   const [patientFilter, setPatientFilter] = useState("");
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const handleRefresh = async () => {
+    if (onRefresh) {
+      setIsRefreshing(true);
+      await onRefresh();
+      setTimeout(() => setIsRefreshing(false), 500);
+    }
+  };
 
   const filteredPatients = allPatients.filter(
     (p) =>
@@ -208,10 +221,22 @@ export const HospitalDashboardView: React.FC<HospitalDashboardViewProps> = ({
                 />
               </div>
 
+              {onRefresh && (
+                <button
+                  onClick={handleRefresh}
+                  disabled={isRefreshing}
+                  className="p-2 rounded-xl bg-purple-50 hover:bg-purple-100 text-purple-700 border border-purple-200 transition-all text-xs font-bold flex items-center space-x-1 cursor-pointer"
+                  title="Sync patient registry from live cloud"
+                >
+                  <RefreshCw className={`w-4 h-4 ${isRefreshing ? "animate-spin text-purple-600" : ""}`} />
+                  <span className="hidden md:inline">Sync Live</span>
+                </button>
+              )}
+
               {onOpenAddPatient && (
                 <button
                   onClick={onOpenAddPatient}
-                  className="px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs flex items-center space-x-1.5 shadow-md whitespace-nowrap"
+                  className="px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs flex items-center space-x-1.5 shadow-md whitespace-nowrap cursor-pointer"
                 >
                   <UserPlus className="w-4 h-4" />
                   <span>+ Register Patient</span>

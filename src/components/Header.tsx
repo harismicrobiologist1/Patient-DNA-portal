@@ -81,6 +81,19 @@ export const Header: React.FC<HeaderProps> = ({
 
           {/* Patient Selection & Quick Actions */}
           <div className="flex items-center space-x-3">
+            {/* Direct Patient Directory Button (Always accessible to search/view all patients) */}
+            <button
+              onClick={onOpenPatientSwitcher}
+              className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-slate-800/80 hover:bg-slate-800 text-slate-200 border border-slate-700/80 hover:border-cyan-500/50 transition-all text-xs font-semibold shadow-sm cursor-pointer group"
+              title="Open Universal Patient Directory"
+            >
+              <Users className="w-3.5 h-3.5 text-cyan-400 group-hover:scale-110 transition-transform" />
+              <span className="hidden md:inline">Patient Directory</span>
+              <span className="px-1.5 py-0.5 rounded-full bg-blue-500/20 text-cyan-300 font-mono text-[10px] font-bold border border-blue-500/30">
+                {patientCount}
+              </span>
+            </button>
+
             {isAuthenticated && patient ? (
               <>
                 {/* Active Patient Switcher Button */}

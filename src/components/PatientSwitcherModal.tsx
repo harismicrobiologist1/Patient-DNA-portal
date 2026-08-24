@@ -16,6 +16,8 @@ import {
   KeyRound,
   ShieldAlert,
   Sparkles,
+  RefreshCw,
+  Database,
 } from "lucide-react";
 
 interface PatientSwitcherModalProps {
@@ -28,6 +30,7 @@ interface PatientSwitcherModalProps {
   onOpenAddPatient: () => void;
   onViewPublicCard?: (patient: PatientProfile) => void;
   onRequestUnlockPatient?: (patient: PatientProfile) => void;
+  onRefresh?: () => void;
 }
 
 export const PatientSwitcherModal: React.FC<PatientSwitcherModalProps> = ({
@@ -40,10 +43,20 @@ export const PatientSwitcherModal: React.FC<PatientSwitcherModalProps> = ({
   onOpenAddPatient,
   onViewPublicCard,
   onRequestUnlockPatient,
+  onRefresh,
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   if (!isOpen) return null;
+
+  const handleRefreshClick = async () => {
+    if (onRefresh) {
+      setIsRefreshing(true);
+      await onRefresh();
+      setTimeout(() => setIsRefreshing(false), 500);
+    }
+  };
 
   const filteredPatients = patients.filter(
     (p) =>
@@ -89,18 +102,30 @@ export const PatientSwitcherModal: React.FC<PatientSwitcherModalProps> = ({
               <div className="flex items-center space-x-2">
                 <h2 className="text-xl font-black tracking-tight">Patient Directory & Switcher</h2>
                 <span className="px-2 py-0.5 rounded-full bg-blue-500/20 text-cyan-300 font-mono text-[10px] font-bold">
-                  {patients.length} REGISTERED FOR LIFE
+                  {patients.length} REGISTERED IN NETWORK
                 </span>
               </div>
               <p className="text-xs text-slate-400">
                 {currentRole === "patient"
-                  ? "Direct switching is protected • Account password required to switch"
-                  : "Select active patient record for clinical consultation"}
+                  ? "Universal Patient Registry • Password required to unlock individual private vaults"
+                  : "Universal Patient Registry • Select record to begin clinical consultation"}
               </p>
             </div>
           </div>
 
           <div className="flex items-center space-x-2">
+            {onRefresh && (
+              <button
+                onClick={handleRefreshClick}
+                disabled={isRefreshing}
+                className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-cyan-300 transition-all cursor-pointer flex items-center space-x-1 text-xs"
+                title="Sync database from live network"
+              >
+                <RefreshCw className={`w-4 h-4 ${isRefreshing ? "animate-spin text-cyan-400" : ""}`} />
+                <span className="hidden sm:inline text-[11px] font-medium">Sync Live</span>
+              </button>
+            )}
+
             <button
               onClick={() => {
                 onClose();
@@ -119,6 +144,17 @@ export const PatientSwitcherModal: React.FC<PatientSwitcherModalProps> = ({
               <X className="w-5 h-5" />
             </button>
           </div>
+        </div>
+
+        {/* Security Policy & Live Status Reminder Banner */}
+        <div className="bg-slate-50 px-6 py-2 border-b border-slate-200 flex items-center justify-between text-[11px] text-slate-600">
+          <span className="flex items-center space-x-1.5">
+            <Database className="w-3.5 h-3.5 text-emerald-600" />
+            <span>All registered accounts automatically saved to persistent database</span>
+          </span>
+          <span className="text-emerald-700 font-semibold bg-emerald-100/60 px-2 py-0.5 rounded-full text-[10px]">
+            Live Real-time Sync Active
+          </span>
         </div>
 
         {/* Security Policy Reminder Banner */}
