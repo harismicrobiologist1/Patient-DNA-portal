@@ -705,29 +705,42 @@ app.post("/api/ai/medication-analysis", async (req, res) => {
   try {
     const ai = getGeminiAI();
 
-    const prompt = `You are an expert Clinical Pharmacologist, Toxicologist, and Antimicrobial Stewardship AI for "Patient DNA".
+    const prompt = `You are a Chief Clinical Pharmacologist, Toxicologist, and Antimicrobial Stewardship AI for "Patient DNA".
 The user has submitted a search query for medication analysis: "${rawMed}" (Proposed Dosage: "${proposedDose || 'Standard'}", Duration: "${duration || 'Standard'}").
 
-CRITICAL STEP 1 - ENTITY VERIFICATION:
-First, rigorously determine if "${rawMed}" is a recognized pharmaceutical drug, generic name, brand name, active pharmaceutical ingredient (API), chemical drug molecule, vaccine, therapeutic biological agent, therapeutic vitamin/electrolyte supplement, botanical medicine extract, or valid drug class/compound/stem.
+CRITICAL MANDATORY STEP 1 - PHARMACEUTICAL ENTITY VERIFICATION & FULL NAME REQUIREMENT:
+Rigourously evaluate whether "${rawMed}" is a recognized COMPLETE FULL pharmaceutical drug generic INN name, FULL brand name, or FULL active chemical molecule.
 
-- IF IT IS NOT A MEDICINE OR DRUG (e.g. everyday words, foods, objects, vehicles, animals, tech gadgets, places, non-medicinal terms like "car", "apple", "shoes", "table", "football", "hello", "laptop", "sky", "dog", "random test", gibberish):
-  You MUST set "isValidMedication": false.
+- IF IT IS AN INCOMPLETE SHORTCUT, ABBREVIATION, OR TRUNCATED FRAGMENT (e.g., "amox", "cipro", "para", "pcm", "met", "atorva", "azithro", "aug", "tyl", "ibup", "doxy", "metro", "vanc", "ceftri", "dexa", "pred", "amlo", "omep", "salbu", "albut", etc.):
+  You MUST set "isValidMedication": false and "isShortcut": true.
+  DO NOT generate pharmacological clearance, resistance, or efficacy scores for incomplete shortcuts.
+  Provide:
+  - "isValidMedication": false
+  - "isShortcut": true
+  - "medicationName": "${rawMed}"
+  - "detectedCategory": "Incomplete Drug Shortcut / Abbreviation"
+  - "nonMedicineReason": "Shortcut or incomplete drug name detected ('${rawMed}'). Clinical pharmacology analysis requires the complete official generic name or full brand name."
+  - "suggestedMedicines": Array of the full complete expanded drug names matching this shortcut (e.g. ["Amoxicillin (Beta-Lactam Antibiotic)", "Amoxicillin / Clavulanic Acid (Augmentin)"]).
+  - "guidanceMessage": "Please select or search the complete full generic or brand name to run the clinical interaction and antimicrobial resistance checks."
+
+- IF IT IS NOT A MEDICINE OR DRUG (e.g. everyday words, common nouns, objects, foods, vehicles, animals, tech gadgets, places, medical symptoms like "fever" or "pain", or arbitrary strings like "car", "apple", "shoes", "table", "chair", "water", "football", "hello", "laptop", "sky", "dog", "random test", "testing", gibberish):
+  You MUST set "isValidMedication": false and "isShortcut": false.
   DO NOT generate fake pharmacological scores, fake bioavailability, fake clearance, or fake antibiotic resistance.
   Provide:
   - "isValidMedication": false
+  - "isShortcut": false
   - "medicationName": "${rawMed}"
-  - "detectedCategory": "Non-Medical Term / Everyday Object" (or appropriate classification)
+  - "detectedCategory": "Non-Medical Term / Everyday Object"
   - "nonMedicineReason": A clear, professional explanation of why "${rawMed}" cannot be clinically analyzed as a drug.
-  - "suggestedMedicines": Array of 4 to 6 real pharmaceutical medications (phonetic matches or common clinical medicines like ["Amoxicillin", "Paracetamol", "Metformin", "Atorvastatin", "Ciprofloxacin", "Augmentin"]).
-  - "guidanceMessage": "Please search for a recognized generic or brand-name drug. If you were searching for symptoms or physical complaints instead, please switch to the Symptom Analysis tab."
+  - "suggestedMedicines": Array of 4 to 6 real pharmaceutical medications (e.g. ["Amoxicillin (Antibiotic)", "Paracetamol (Analgesic)", "Metformin (Antidiabetic)", "Atorvastatin (Statin)", "Ciprofloxacin (Fluoroquinolone)", "Augmentin (Penicillin)"]).
+  - "guidanceMessage": "Please search for a registered full generic or brand-name pharmaceutical drug. If you were searching for symptoms or physical complaints instead, please switch to the Symptom Analysis tab."
 
-- IF IT IS A VALID MEDICINE OR DRUG:
+- IF AND ONLY IF IT IS A VERIFIED COMPLETE FULL MEDICINE OR DRUG:
   You MUST set "isValidMedication": true.
-  Extract:
+  Provide:
   - "isValidMedication": true
   - "medicationName": "${rawMed}"
-  - "genericName": string (Official Generic INN / USAN Name)
+  - "genericName": string (Official Complete Generic INN / USAN Name)
   - "activeIngredient": string (Active chemical or biological agent)
   - "drugClass": string (Pharmacological class, e.g. "Beta-Lactam Penicillin Antibiotic", "HMG-CoA Reductase Inhibitor", "Biguanide Antihyperglycemic")
   - "therapeuticUse": string (Standard clinical indication)
@@ -758,7 +771,7 @@ Analyze against the patient's complete longitudinal record:
 Respond ONLY with valid JSON.`;
 
     const response = await ai.models.generateContent({
-      model: "gemini-3.7-flash",
+      model: "gemini-2.5-flash",
       contents: prompt,
       config: {
         responseMimeType: "application/json",
@@ -785,19 +798,68 @@ Respond ONLY with valid JSON.`;
       "plane", "airplane", "aeroplane", "ship", "boat", "bicycle", "bike", "motorcycle", "train",
       "money", "dollar", "bank", "gold", "silver", "facebook", "google", "youtube", "twitter", "instagram",
       "hello", "hi", "hey", "test", "testing", "asdf", "qwerty", "xyz", "abc", "food", "pizza", "burger",
-      "bread", "rice", "coffee", "tea", "milk", "sugar", "salt", "meat", "chicken", "fish", "egg"
+      "bread", "rice", "coffee", "tea", "milk", "sugar", "salt", "meat", "chicken", "fish", "egg",
+      "fever", "headache", "cough", "pain", "chest pain", "stomach pain", "fatigue", "vomiting",
+      "doctor", "patient", "hospital", "clinic", "dna", "medical", "disease", "health"
     ]);
 
     const isExplicitNonMed = commonNonMedicalWords.has(queryLower);
 
-    // List of recognized pharmaceutical stems / suffixes / keywords
-    const drugStems = [
-      "cillin", "mycin", "micin", "floxacin", "cycline", "statin", "olol", "alol", "pril", "sartan",
-      "dipine", "prazole", "tidine", "zole", "asone", "olone", "onide", "mab", "nib", "parin",
-      "gliptin", "gliflozin", "tide", "xaban", "gatran", "pam", "lam", "triptan", "vir", "caine",
-      "setron", "dronate", "afil", "toin", "stine", "taxel", "azine", "amine", "tine", "line",
-      "done", "cef", "ceph", "sulfa", "cort", "pred", "dexa", "beta", "para", "aceto", "hydro", "gly"
-    ];
+    // Known shortcut dictionary
+    const shortcutMap: Record<string, string[]> = {
+      amox: ["Amoxicillin (Beta-Lactam Antibiotic)", "Amoxicillin / Clavulanic Acid (Augmentin)"],
+      cipro: ["Ciprofloxacin (Fluoroquinolone Antimicrobial)"],
+      pcm: ["Paracetamol (Analgesic & Antipyretic)", "Panadol (Paracetamol)"],
+      para: ["Paracetamol (Analgesic & Antipyretic)", "Panadol (Paracetamol)"],
+      tyl: ["Tylenol (Acetaminophen / Paracetamol)"],
+      met: ["Metformin (Biguanide Antidiabetic)", "Metronidazole (Flagyl)"],
+      atorva: ["Atorvastatin (Lipitor / HMG-CoA Statin)"],
+      azith: ["Azithromycin (Macrolide Antibiotic / Z-Pak)"],
+      azithro: ["Azithromycin (Macrolide Antibiotic / Z-Pak)"],
+      aug: ["Augmentin (Amoxicillin + Clavulanate)"],
+      doxy: ["Doxycycline (Tetracycline Antibiotic)"],
+      metro: ["Metronidazole (Nitroimidazole Antibiotic)"],
+      genta: ["Gentamicin (Aminoglycoside Antibiotic)"],
+      vanc: ["Vancomycin (Glycopeptide Antibiotic)"],
+      vanco: ["Vancomycin (Glycopeptide Antibiotic)"],
+      ceftri: ["Ceftriaxone (3rd Gen Cephalosporin)"],
+      ibup: ["Ibuprofen (NSAID Analgesic / Advil)"],
+      napro: ["Naproxen (NSAID Analgesic / Aleve)"],
+      dexa: ["Dexamethasone (Glucocorticoid Steroid)"],
+      pred: ["Prednisolone (Glucocorticoid Steroid)", "Prednisone"],
+      levo: ["Levofloxacin (Fluoroquinolone)", "Levothyroxine (Synthroid)"],
+      losar: ["Losartan (Angiotensin II Receptor Blocker)"],
+      amlo: ["Amlodipine (Calcium Channel Blocker / Norvasc)"],
+      omep: ["Omeprazole (Proton Pump Inhibitor / Prilosec)"],
+      panto: ["Pantoprazole (Proton Pump Inhibitor / Protonix)"],
+      salbu: ["Salbutamol (Short-Acting Beta-2 Agonist / Ventolin)"],
+      albut: ["Albuterol (Short-Acting Beta-2 Agonist / ProAir)"],
+      mont: ["Montelukast (Leukotriene Antagonist / Singulair)"],
+      cetir: ["Cetirizine (2nd Gen Antihistamine / Zyrtec)"],
+      sertra: ["Sertraline (SSRI Antidepressant / Zoloft)"],
+      gaba: ["Gabapentin (Neurontin)"],
+      prega: ["Pregabalin (Lyrica)"],
+      warf: ["Warfarin (Coumadin / Anticoagulant)"],
+      clopi: ["Clopidogrel (Plavix / Antiplatelet)"],
+      ondans: ["Ondansetron (5-HT3 Antagonist / Zofran)"],
+      furo: ["Furosemide (Loop Diuretic / Lasix)"],
+      glim: ["Glimepiride (Sulfonylurea Antidiabetic / Amaryl)"],
+      sita: ["Sitagliptin (DPP-4 Inhibitor / Januvia)"],
+      empagl: ["Empagliflozin (SGLT2 Inhibitor / Jardiance)"],
+      sema: ["Semaglutide (GLP-1 Agonist / Ozempic)"]
+    };
+
+    if (shortcutMap[queryLower]) {
+      return res.json({
+        isValidMedication: false,
+        isShortcut: true,
+        medicationName: rawMed,
+        detectedCategory: "Incomplete Drug Shortcut / Abbreviation",
+        nonMedicineReason: `Shortcut/abbreviation "${rawMed}" detected. Clinical pharmacology diagnostics require the complete full generic or brand name.`,
+        suggestedMedicines: shortcutMap[queryLower],
+        guidanceMessage: "Please search or click the complete full medication name below to run pharmacology and resistance checks."
+      });
+    }
 
     const specificDrugs = [
       "amoxicillin", "augmentin", "ampicillin", "penicillin", "azithromycin", "clarithromycin",
@@ -816,26 +878,49 @@ Respond ONLY with valid JSON.`;
       "fluoxetine", "prozac", "diazepam", "valium", "alprazolam", "xanax", "clonazepam", "gabapentin",
       "pregabalin", "lyrica", "warfarin", "apixaban", "eliquis", "rivaroxaban", "xarelto", "clopidogrel",
       "plavix", "ondansetron", "zofran", "levothyroxine", "synthroid", "vitamin d", "vitamin c",
-      "folic acid", "iron", "ferrous sulfate", "calcium", "zinc", "potassium"
+      "folic acid", "iron", "ferrous sulfate", "calcium", "zinc", "potassium", "ceftriaxone", "cephalexin",
+      "meropenem", "imipenem", "clindamycin", "rifampin", "nitrofurantoin", "fosfomycin"
     ];
 
-    const hasDrugStem = drugStems.some((stem) => queryLower.includes(stem));
-    const isKnownDrug = specificDrugs.some((drug) => queryLower.includes(drug) || drug.includes(queryLower));
+    const exactKnownDrug = specificDrugs.find((d) => d === queryLower);
+    const isPartialDrug = specificDrugs.find((d) => d.startsWith(queryLower) && queryLower.length >= 3);
 
-    const isMedication = !isExplicitNonMed && (hasDrugStem || isKnownDrug || queryLower.length >= 4 && !queryLower.match(/^[0-9]+$/));
+    if (!exactKnownDrug && isPartialDrug) {
+      return res.json({
+        isValidMedication: false,
+        isShortcut: true,
+        medicationName: rawMed,
+        detectedCategory: "Incomplete Drug Name",
+        nonMedicineReason: `Incomplete drug name "${rawMed}" detected. Please search or select the complete full pharmaceutical name (e.g., "${isPartialDrug.charAt(0).toUpperCase() + isPartialDrug.slice(1)}").`,
+        suggestedMedicines: [isPartialDrug.charAt(0).toUpperCase() + isPartialDrug.slice(1)],
+        guidanceMessage: "Please enter the complete full medication name."
+      });
+    }
+
+    const drugStems = [
+      "cillin", "mycin", "micin", "floxacin", "cycline", "statin", "olol", "alol", "pril", "sartan",
+      "dipine", "prazole", "tidine", "zole", "asone", "olone", "onide", "mab", "nib", "parin",
+      "gliptin", "gliflozin", "tide", "xaban", "gatran", "pam", "lam", "triptan", "vir", "caine",
+      "setron", "dronate", "afil", "toin", "stine", "taxel", "azine", "amine", "done", "penem"
+    ];
+
+    const hasFullDrugStem = drugStems.some((stem) => queryLower.endsWith(stem) && queryLower.length >= stem.length + 3);
+
+    const isMedication = !isExplicitNonMed && (Boolean(exactKnownDrug) || hasFullDrugStem);
 
     if (!isMedication || isExplicitNonMed) {
       return res.json({
         isValidMedication: false,
+        isShortcut: false,
         medicationName: rawMed,
-        detectedCategory: isExplicitNonMed ? "Everyday Non-Medical Entity" : "Unrecognized Term",
-        nonMedicineReason: `"${rawMed}" is not recognized as a pharmaceutical drug, active pharmaceutical ingredient (API), chemical molecule, or therapeutic compound.`,
+        detectedCategory: isExplicitNonMed ? "Everyday Non-Medical Word / Object" : "Unrecognized Term",
+        nonMedicineReason: `"${rawMed}" is not recognized as a registered full pharmaceutical generic or brand medication.`,
         suggestedMedicines: [
-          "Amoxicillin (Antibiotic)",
+          "Amoxicillin (Beta-Lactam Antibiotic)",
           "Paracetamol / Acetaminophen (Analgesic)",
-          "Metformin (Antidiabetic)",
-          "Atorvastatin (Lipid-Lowering)",
-          "Ciprofloxacin (Antimicrobial)",
+          "Metformin (Biguanide Antidiabetic)",
+          "Atorvastatin (HMG-CoA Statin)",
+          "Ciprofloxacin (Fluoroquinolone)",
           "Augmentin (Amoxicillin + Clavulanate)"
         ],
         guidanceMessage: "AI Medication Diagnostics strictly analyzes verified pharmaceuticals for drug-drug interactions, microbial resistance, and clearance. Please search a valid generic or brand medication."
@@ -843,7 +928,7 @@ Respond ONLY with valid JSON.`;
     }
 
     // Valid Medication Clinical Fallback
-    const isAntibiotic = queryLower.includes("cillin") || queryLower.includes("mycin") || queryLower.includes("floxacin") || queryLower.includes("augmentin") || queryLower.includes("cef");
+    const isAntibiotic = queryLower.includes("cillin") || queryLower.includes("mycin") || queryLower.includes("floxacin") || queryLower.includes("augmentin") || queryLower.includes("cef") || queryLower.includes("penem");
     const isCardio = queryLower.includes("statin") || queryLower.includes("lol") || queryLower.includes("pril") || queryLower.includes("sartan") || queryLower.includes("dipine");
     const score = isAntibiotic ? 86 : isCardio ? 92 : 88;
 
