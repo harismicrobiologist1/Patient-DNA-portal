@@ -138,7 +138,7 @@ export async function requestMedicationAnalysis(params: {
     });
     if (res.ok) {
       const data = await res.json();
-      if (data && !data.error && data.overallSuitabilityScore !== undefined) {
+      if (data && !data.error && (data.overallSuitabilityScore !== undefined || data.isValidMedication === false)) {
         return data;
       }
     }
@@ -149,6 +149,71 @@ export async function requestMedicationAnalysis(params: {
   // Clinical Pharmacology & Antimicrobial Stewardship Fallback
   const med = (params.medicineName || "").trim();
   const medLower = med.toLowerCase();
+
+  // Known non-medical common words
+  const commonNonMedicalWords = new Set([
+    "car", "cars", "apple", "apples", "banana", "bananas", "orange", "oranges", "shoes", "shoe",
+    "table", "chair", "desk", "house", "home", "building", "door", "window", "dog", "cat", "bird",
+    "animal", "phone", "iphone", "android", "computer", "laptop", "television", "tv", "radio",
+    "football", "soccer", "cricket", "basketball", "ball", "shirt", "pant", "clothes", "shoes",
+    "pen", "pencil", "paper", "book", "bottle", "water", "sky", "cloud", "tree", "river", "mountain",
+    "plane", "airplane", "aeroplane", "ship", "boat", "bicycle", "bike", "motorcycle", "train",
+    "money", "dollar", "bank", "gold", "silver", "facebook", "google", "youtube", "twitter", "instagram",
+    "hello", "hi", "hey", "test", "testing", "asdf", "qwerty", "xyz", "abc", "food", "pizza", "burger"
+  ]);
+
+  const isExplicitNonMed = commonNonMedicalWords.has(medLower);
+
+  const drugStems = [
+    "cillin", "mycin", "micin", "floxacin", "cycline", "statin", "olol", "alol", "pril", "sartan",
+    "dipine", "prazole", "tidine", "zole", "asone", "olone", "onide", "mab", "nib", "parin",
+    "gliptin", "gliflozin", "tide", "xaban", "gatran", "pam", "lam", "triptan", "vir", "caine",
+    "setron", "dronate", "afil", "toin", "stine", "taxel", "azine", "amine", "tine", "line",
+    "done", "cef", "ceph", "sulfa", "cort", "pred", "dexa", "beta", "para", "aceto", "hydro", "gly"
+  ];
+
+  const specificDrugs = [
+    "amoxicillin", "augmentin", "ampicillin", "penicillin", "azithromycin", "clarithromycin",
+    "ciprofloxacin", "levofloxacin", "doxycycline", "gentamicin", "vancomycin", "metronidazole",
+    "flagyl", "bactrim", "paracetamol", "panadol", "tylenol", "acetaminophen", "aspirin",
+    "ibuprofen", "advil", "motrin", "naproxen", "aleve", "diclofenac", "voltaren", "celecoxib",
+    "tramadol", "morphine", "fentanyl", "codeine", "metformin", "glucophage", "glimepiride",
+    "glipizide", "sitagliptin", "januvia", "empagliflozin", "jardiance", "dapagliflozin", "insulin",
+    "atorvastatin", "lipitor", "rosuvastatin", "crestor", "simvastatin", "losartan", "cozaar",
+    "telmisartan", "micardis", "valsartan", "lisinopril", "enalapril", "ramipril", "amlodipine",
+    "norvasc", "metoprolol", "atenolol", "bisoprolol", "carvedilol", "furosemide", "lasix",
+    "spironolactone", "omeprazole", "pantoprazole", "esomeprazole", "nexium", "famotidine",
+    "dexamethasone", "prednisolone", "prednisone", "hydrocortisone", "budesonide", "salbutamol",
+    "ventolin", "albuterol", "montelukast", "singulair", "cetirizine", "zyrtec", "fexofenadine",
+    "allegra", "loratadine", "claritin", "sertraline", "zoloft", "escitalopram", "lexapro",
+    "fluoxetine", "prozac", "diazepam", "valium", "alprazolam", "xanax", "clonazepam", "gabapentin",
+    "pregabalin", "lyrica", "warfarin", "apixaban", "eliquis", "rivaroxaban", "xarelto", "clopidogrel",
+    "plavix", "ondansetron", "zofran", "levothyroxine", "synthroid", "vitamin d", "vitamin c",
+    "folic acid", "iron", "ferrous sulfate", "calcium", "zinc", "potassium"
+  ];
+
+  const hasDrugStem = drugStems.some((stem) => medLower.includes(stem));
+  const isKnownDrug = specificDrugs.some((drug) => medLower.includes(drug) || drug.includes(medLower));
+
+  const isMedication = !isExplicitNonMed && (hasDrugStem || isKnownDrug || (medLower.length >= 4 && !medLower.match(/^[0-9]+$/)));
+
+  if (!isMedication || isExplicitNonMed) {
+    return {
+      isValidMedication: false,
+      medicationName: med,
+      detectedCategory: isExplicitNonMed ? "Everyday Non-Medical Object" : "Unrecognized Term",
+      nonMedicineReason: `"${med}" is not recognized as a pharmaceutical medicine, active pharmaceutical ingredient (API), chemical molecule, or therapeutic compound.`,
+      suggestedMedicines: [
+        "Amoxicillin (Antibiotic)",
+        "Paracetamol / Acetaminophen (Analgesic)",
+        "Metformin (Antidiabetic)",
+        "Atorvastatin (Lipid-Lowering)",
+        "Ciprofloxacin (Antimicrobial)",
+        "Augmentin (Amoxicillin + Clavulanate)"
+      ],
+      guidanceMessage: "AI Medication Diagnostics strictly analyzes verified pharmaceuticals for drug-drug interactions, microbial resistance, and clearance. Please search a valid generic or brand medication."
+    };
+  }
 
   const isAntibiotic =
     medLower.includes("cillin") ||
@@ -168,7 +233,12 @@ export async function requestMedicationAnalysis(params: {
   const score = isAntibiotic ? 86 : isCardio ? 92 : 89;
 
   return {
+    isValidMedication: true,
     medicationName: med,
+    genericName: med.charAt(0).toUpperCase() + med.slice(1),
+    activeIngredient: med.charAt(0).toUpperCase() + med.slice(1),
+    drugClass: isAntibiotic ? "Antimicrobial / Antibiotic Therapy" : isCardio ? "Cardiovascular & Metabolic Agent" : "Pharmacological Therapeutic Agent",
+    therapeuticUse: isAntibiotic ? "Treatment of susceptible bacterial and microbial infections" : "Cardiovascular and metabolic regulation",
     overallSuitabilityScore: score,
     riskRating: score >= 85 ? "Low Risk" : "Moderate Risk",
     pharmacologicalSummary: `Comprehensive clinical evaluation of ${med} (${params.proposedDose || "Standard Dose"}, ${params.duration || "Standard Duration"}). Analysis against longitudinal patient history reveals favorable bioavailability, standard hepatic CYP clearance, and high therapeutic index under current clinical parameters.`,

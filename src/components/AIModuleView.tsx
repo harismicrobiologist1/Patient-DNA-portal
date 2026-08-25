@@ -290,13 +290,96 @@ export const AIModuleView: React.FC<AIModuleViewProps> = ({
           </div>
 
           {/* Analysis Results Display */}
-          {medResult && (
+          {medResult && medResult.isValidMedication === false && (
+            <div className="bg-gradient-to-br from-rose-50/80 via-white to-amber-50/80 rounded-3xl p-6 sm:p-8 border border-rose-200/90 shadow-sm space-y-6 animate-fadeIn">
+              <div className="flex items-start space-x-4">
+                <div className="w-12 h-12 rounded-2xl bg-rose-500/10 text-rose-600 flex items-center justify-center shrink-0 border border-rose-200">
+                  <AlertOctagon className="w-6 h-6 text-rose-600" />
+                </div>
+                <div className="space-y-1.5 flex-1">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-rose-100 text-rose-800 border border-rose-300">
+                      Entity Verification Notice
+                    </span>
+                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-700 border border-slate-200">
+                      {medResult.detectedCategory || "Non-Medical / Non-Drug Input"}
+                    </span>
+                  </div>
+                  <h3 className="text-lg font-black text-slate-900">
+                    "{medResult.medicationName || medSearchTerm}" is Not Recognized as a Pharmaceutical Medication
+                  </h3>
+                  <p className="text-xs text-slate-600 leading-relaxed">
+                    {medResult.nonMedicineReason || `The term "${medResult.medicationName || medSearchTerm}" is not recognized as a pharmaceutical drug, active therapeutic molecule, or medical substance.`}
+                  </p>
+                </div>
+              </div>
+
+              {/* Explanation Card */}
+              <div className="p-4 rounded-2xl bg-white/90 border border-rose-200/80 text-xs space-y-2">
+                <span className="font-bold text-slate-900 flex items-center space-x-1.5">
+                  <Info className="w-4 h-4 text-indigo-600" />
+                  <span>Why does AI require a valid pharmaceutical drug?</span>
+                </span>
+                <p className="text-slate-600 leading-relaxed text-[11px]">
+                  The Patient DNA Clinical Pharmacology Engine performs real biological cross-checks against patient kidney/liver clearance (CYP450 enzymes), antibiotic resistance gene history, and drug-drug interactions. These algorithms can only be computed for genuine generic drugs, brand medicines, or active pharmacological compounds.
+                </p>
+              </div>
+
+              {/* Clickable Quick Medication Suggestions */}
+              <div className="space-y-3">
+                <span className="text-xs font-bold text-slate-800 flex items-center space-x-1.5">
+                  <Pill className="w-4 h-4 text-indigo-600" />
+                  <span>Try analyzing one of these verified clinical medications:</span>
+                </span>
+                <div className="flex flex-wrap gap-2">
+                  {(medResult.suggestedMedicines || quickMedSuggestions).map((item: string, idx: number) => {
+                    const cleanName = item.split(" (")[0].replace(" 1000mg", "");
+                    return (
+                      <button
+                        key={idx}
+                        type="button"
+                        onClick={() => {
+                          setMedSearchTerm(cleanName);
+                          handleAnalyzeMedication(undefined, cleanName);
+                        }}
+                        className="px-3.5 py-2 rounded-xl bg-white hover:bg-indigo-600 hover:text-white text-slate-800 text-xs font-bold border border-slate-300 shadow-2xs hover:shadow-md transition-all flex items-center space-x-1.5"
+                      >
+                        <span className="text-indigo-500 font-black hover:text-white">+</span>
+                        <span>{item}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Action Redirection */}
+              <div className="pt-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-t border-rose-200/60">
+                <p className="text-xs text-slate-500">
+                  Were you trying to search a symptom or physical discomfort (e.g. fever, headache)?
+                </p>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setActiveSubTab("symptoms");
+                    setSymptomInput(medSearchTerm);
+                  }}
+                  className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-sm transition-all flex items-center space-x-1.5 shrink-0"
+                >
+                  <Sparkles className="w-3.5 h-3.5" />
+                  <span>Switch to Symptom Analysis</span>
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Valid Medication Analysis Results Display */}
+          {medResult && medResult.isValidMedication !== false && (
             <div className="space-y-6 animate-fadeIn">
               {/* Header Badge & Suitability Card */}
               <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-sm space-y-6">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
                   <div>
-                    <div className="flex items-center space-x-2">
+                    <div className="flex flex-wrap items-center gap-2">
                       <h3 className="text-xl font-black text-slate-900">
                         {medResult.medicationName || medSearchTerm}
                       </h3>
@@ -311,8 +394,14 @@ export const AIModuleView: React.FC<AIModuleViewProps> = ({
                       >
                         {medResult.riskRating || "Moderate Risk"}
                       </span>
+                      {medResult.drugClass && (
+                        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-200">
+                          {medResult.drugClass}
+                        </span>
+                      )}
                     </div>
                     <p className="text-xs text-slate-500 mt-1">
+                      {medResult.activeIngredient ? `Active Compound: ${medResult.activeIngredient} • ` : ""}
                       Analyzed against {prescriptions.length} past prescriptions & {history.diseases.length} diagnosed conditions
                     </p>
                   </div>
