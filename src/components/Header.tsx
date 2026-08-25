@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { UserRole, PatientProfile } from "../types";
 import {
   Dna,
@@ -14,6 +14,10 @@ import {
   UserPlus,
   LogOut,
   KeyRound,
+  Clock,
+  ShieldAlert,
+  Sliders,
+  Check,
 } from "lucide-react";
 
 interface HeaderProps {
@@ -27,6 +31,10 @@ interface HeaderProps {
   onOpenAddPatient: () => void;
   onOpenPatientLogin?: () => void;
   onLogout?: () => void;
+  onLockSession?: () => void;
+  sessionRemainingSeconds?: number;
+  timeoutDurationSeconds?: number;
+  onSetTimeoutSeconds?: (seconds: number) => void;
   activeTab: string;
   setActiveTab: (tab: string) => void;
   patientCount?: number;
@@ -43,10 +51,29 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenAddPatient,
   onOpenPatientLogin,
   onLogout,
+  onLockSession,
+  sessionRemainingSeconds = 300,
+  timeoutDurationSeconds = 300,
+  onSetTimeoutSeconds,
   activeTab,
   setActiveTab,
   patientCount = 3,
 }) => {
+  const [isSecurityMenuOpen, setIsSecurityMenuOpen] = useState(false);
+
+  // Format seconds to mm:ss
+  const formatTimeRemaining = (secs: number) => {
+    const m = Math.floor(secs / 60);
+    const s = secs % 60;
+    return `${m}:${s < 10 ? "0" : ""}${s}`;
+  };
+
+  const timeoutOptions = [
+    { label: "2 Min (High Security)", seconds: 120 },
+    { label: "5 Min (HIPAA Standard)", seconds: 300 },
+    { label: "10 Min (Consultation)", seconds: 600 },
+    { label: "15 Min (Hospital Ward)", seconds: 900 },
+  ];
   return (
     <header className="sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md text-white border-b border-slate-800 shadow-xl">
       {/* Top Banner Bar */}
@@ -122,6 +149,96 @@ export const Header: React.FC<HeaderProps> = ({
                   </div>
                   <ChevronDown className="w-4 h-4 text-slate-400 group-hover:text-cyan-300" />
                 </button>
+
+                {/* Session Inactivity & Security Status Dropdown */}
+                <div className="relative">
+                  <button
+                    onClick={() => setIsSecurityMenuOpen(!isSecurityMenuOpen)}
+                    className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-xl border transition-all text-xs font-mono font-bold cursor-pointer ${
+                      sessionRemainingSeconds <= 45
+                        ? "bg-rose-500/20 text-rose-300 border-rose-500/50 animate-pulse"
+                        : "bg-slate-800/90 text-cyan-300 border-slate-700 hover:border-cyan-500/50 hover:bg-slate-800"
+                    }`}
+                    title="HIPAA Inactivity Auto-Lock Timer & Settings"
+                  >
+                    <Clock className="w-3.5 h-3.5 text-cyan-400" />
+                    <span className="hidden sm:inline">Auto-Lock:</span>
+                    <span>{formatTimeRemaining(sessionRemainingSeconds)}</span>
+                    <ChevronDown className="w-3 h-3 text-slate-400" />
+                  </button>
+
+                  {/* Dropdown Menu */}
+                  {isSecurityMenuOpen && (
+                    <div className="absolute right-0 mt-2 w-64 bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl p-3 z-50 text-slate-200 animate-fadeIn">
+                      <div className="flex items-center justify-between pb-2 border-b border-slate-800">
+                        <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center space-x-1">
+                          <ShieldCheck className="w-3.5 h-3.5 text-cyan-400 inline" />
+                          <span>Session Security</span>
+                        </span>
+                        <span className="text-[10px] font-mono text-cyan-300 bg-cyan-950/60 px-1.5 py-0.5 rounded border border-cyan-800">
+                          HIPAA Active
+                        </span>
+                      </div>
+
+                      <div className="py-2.5 space-y-1">
+                        <p className="text-[11px] text-slate-400">
+                          Auto-lock vault on inactivity:
+                        </p>
+                        {timeoutOptions.map((opt) => (
+                          <button
+                            key={opt.seconds}
+                            type="button"
+                            onClick={() => {
+                              if (onSetTimeoutSeconds) onSetTimeoutSeconds(opt.seconds);
+                              setIsSecurityMenuOpen(false);
+                            }}
+                            className={`w-full text-left px-2.5 py-1.5 rounded-lg text-xs flex items-center justify-between transition-colors ${
+                              timeoutDurationSeconds === opt.seconds
+                                ? "bg-blue-600 text-white font-bold"
+                                : "hover:bg-slate-800 text-slate-300"
+                            }`}
+                          >
+                            <span>{opt.label}</span>
+                            {timeoutDurationSeconds === opt.seconds && (
+                              <Check className="w-3.5 h-3.5 text-white" />
+                            )}
+                          </button>
+                        ))}
+                      </div>
+
+                      <div className="pt-2 border-t border-slate-800 space-y-2">
+                        {onLockSession && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setIsSecurityMenuOpen(false);
+                              onLockSession();
+                            }}
+                            className="w-full py-2 px-3 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 text-xs font-bold flex items-center justify-center space-x-1.5 transition-colors cursor-pointer"
+                          >
+                            <Lock className="w-3.5 h-3.5 text-amber-400" />
+                            <span>Lock Vault Now</span>
+                          </button>
+                        )}
+                        <p className="text-[10px] text-slate-500 leading-tight text-center">
+                          Vault automatically locks on fresh app launch or inactivity.
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Direct Instant Lock Button */}
+                {onLockSession && (
+                  <button
+                    onClick={onLockSession}
+                    className="flex items-center space-x-1 px-2.5 py-2 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/40 text-xs font-bold transition-all shadow-sm group cursor-pointer"
+                    title="Lock medical records screen immediately"
+                  >
+                    <Lock className="w-3.5 h-3.5 text-amber-400 group-hover:scale-110 transition-transform" />
+                    <span className="hidden md:inline">Lock</span>
+                  </button>
+                )}
 
                 {/* Digital Card Button */}
                 <button

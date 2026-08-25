@@ -44,6 +44,17 @@ import { PublicDigitalCardModal } from "./components/PublicDigitalCardModal";
 import { PatientLoginModal } from "./components/PatientLoginModal";
 import { AuthWelcomeScreen } from "./components/AuthWelcomeScreen";
 import { CreatorPortfolioModal } from "./components/CreatorPortfolioModal";
+import { SessionInactivityModal } from "./components/SessionInactivityModal";
+import {
+  validateCurrentSession,
+  createActiveSession,
+  touchActiveSession,
+  terminateActiveSession,
+  getStoredInactivityTimeout,
+  setStoredInactivityTimeout,
+  getAndClearExpirationNotice,
+  WARNING_DURATION_SECONDS,
+} from "./utils/sessionSecurity";
 
 import {
   User,
@@ -75,11 +86,26 @@ import {
 } from "lucide-react";
 
 const STORAGE_KEY = "health_dna_patients_database_v2";
-const AUTH_SESSION_KEY = "health_dna_auth_session_v2";
 
 export default function App() {
   const [currentRole, setRole] = useState<UserRole>("patient");
   const [activeTab, setActiveTab] = useState<string>("patient-dash");
+
+  // Inactivity timeout configuration (in seconds, default 300s = 5m)
+  const [inactivityTimeoutSeconds, setInactivityTimeoutSeconds] = useState<number>(() =>
+    getStoredInactivityTimeout()
+  );
+  const [sessionRemainingSeconds, setSessionRemainingSeconds] = useState<number>(() =>
+    getStoredInactivityTimeout()
+  );
+  const [isWarningModalOpen, setIsWarningModalOpen] = useState(false);
+  const [sessionExpiredReason, setSessionExpiredReason] = useState<string | null>(() =>
+    getAndClearExpirationNotice()
+  );
+  const [lastActivePatientId, setLastActivePatientId] = useState<string | null>(null);
+
+  // Ref tracking exact timestamp of user's last interaction
+  const lastActiveTimestampRef = React.useRef<number>(Date.now());
 
   // Multi-Patient Database State with local fallback + server persistent sync
   const [patientsDatabase, setPatientsDatabase] = useState<Record<string, PatientFullRecord>>(() => {
@@ -97,33 +123,18 @@ export default function App() {
     return INITIAL_PATIENTS_DATABASE;
   });
 
-  // Authentication State: Session starts unauthenticated unless valid stored session exists
+  // Authentication State: Validated against session activity
   const [activePatientId, setActivePatientId] = useState<string | null>(() => {
-    try {
-      const session = localStorage.getItem(AUTH_SESSION_KEY);
-      if (session) {
-        const parsed = JSON.parse(session);
-        if (parsed && parsed.dnaId) {
-          return parsed.dnaId;
-        }
-      }
-    } catch (e) {
-      console.warn("Could not read auth session from localStorage:", e);
+    const sessionCheck = validateCurrentSession();
+    if (sessionCheck.isValid && sessionCheck.session) {
+      return sessionCheck.session.dnaId;
     }
     return null;
   });
 
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
-    try {
-      const session = localStorage.getItem(AUTH_SESSION_KEY);
-      if (session) {
-        const parsed = JSON.parse(session);
-        return !!(parsed && parsed.dnaId);
-      }
-    } catch (e) {
-      console.warn("Could not check auth session:", e);
-    }
-    return false;
+    const sessionCheck = validateCurrentSession();
+    return sessionCheck.isValid && !!sessionCheck.session;
   });
 
   const [isDbLoaded, setIsDbLoaded] = useState(false);
@@ -256,6 +267,78 @@ export default function App() {
     });
   };
 
+  // User Activity Listeners to Reset Inactivity Countdown
+  useEffect(() => {
+    if (!isAuthenticated) return;
+
+    const handleUserActivity = () => {
+      const now = Date.now();
+      // Throttle session touching to once every 2 seconds
+      if (now - lastActiveTimestampRef.current > 2000) {
+        lastActiveTimestampRef.current = now;
+        touchActiveSession();
+        if (isWarningModalOpen) {
+          setIsWarningModalOpen(false);
+        }
+      }
+    };
+
+    const events = ["mousemove", "mousedown", "keydown", "touchstart", "scroll", "click"];
+    events.forEach((ev) => window.addEventListener(ev, handleUserActivity, { passive: true }));
+
+    return () => {
+      events.forEach((ev) => window.removeEventListener(ev, handleUserActivity));
+    };
+  }, [isAuthenticated, isWarningModalOpen]);
+
+  // Real-Time 1-Second Inactivity Countdown Interval
+  useEffect(() => {
+    if (!isAuthenticated) return;
+
+    const interval = setInterval(() => {
+      const now = Date.now();
+      const elapsedSecs = Math.floor((now - lastActiveTimestampRef.current) / 1000);
+      const remaining = Math.max(0, inactivityTimeoutSeconds - elapsedSecs);
+      setSessionRemainingSeconds(remaining);
+
+      if (remaining <= WARNING_DURATION_SECONDS && remaining > 0) {
+        setIsWarningModalOpen(true);
+      } else if (remaining <= 0) {
+        // Auto-lock triggered due to inactivity
+        clearInterval(interval);
+        setIsWarningModalOpen(false);
+        const lockedPatientId = activePatientId;
+        setLastActivePatientId(lockedPatientId);
+        terminateActiveSession(
+          "Your session was automatically locked after several minutes of inactivity for HIPAA patient data security. Please sign in again."
+        );
+        setActivePatientId(null);
+        setIsAuthenticated(false);
+        setSessionExpiredReason(
+          "Your session timed out after several minutes of inactivity for HIPAA patient privacy. Please sign in to resume."
+        );
+        setActiveTab("patient-dash");
+
+        // Record Audit Log for Auto-Lock
+        const autoLockAudit: AuditLog = {
+          id: `log-${Date.now()}`,
+          timestamp: new Date().toISOString().replace("T", " ").substring(0, 19),
+          actor: "HIPAA Security Guardian",
+          role: "patient",
+          action: "Session Auto-Locked (Inactivity)",
+          details: `Vault for patient ${lockedPatientId || "Active"} automatically locked after ${Math.round(
+            inactivityTimeoutSeconds / 60
+          )} minutes of inactivity.`,
+          ipAddress: "127.0.0.1 (Local Session Security)",
+          securityHash: `0x${Math.random().toString(16).substring(2, 10).toUpperCase()}...TIMEOUT`,
+        };
+        setAuditLogs((prev) => [autoLockAudit, ...prev]);
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [isAuthenticated, inactivityTimeoutSeconds, activePatientId]);
+
   // Derived Active Record Data - ONLY available if user is authenticated and valid patient is selected
   const currentRecord =
     isAuthenticated && activePatientId && patientsDatabase[activePatientId]
@@ -275,34 +358,97 @@ export default function App() {
   );
 
   // Authentication Login Handler
-  const handleLoginSuccess = (dnaId: string) => {
-    try {
-      localStorage.setItem(
-        AUTH_SESSION_KEY,
-        JSON.stringify({
-          dnaId,
-          loggedInAt: new Date().toISOString(),
-        })
-      );
-    } catch (e) {
-      console.warn("Failed to store auth session:", e);
-    }
+  const handleLoginSuccess = (dnaId: string, remember = true) => {
+    const patientName = patientsDatabase[dnaId]?.patient.fullName;
+    const session = createActiveSession(dnaId, patientName, remember);
+    lastActiveTimestampRef.current = Date.now();
+    setSessionRemainingSeconds(session.timeoutSeconds);
+    setIsWarningModalOpen(false);
+    setSessionExpiredReason(null);
+    setLastActivePatientId(dnaId);
     setActivePatientId(dnaId);
     setIsAuthenticated(true);
     setRole("patient");
     setActiveTab("patient-dash");
+
+    // Add Audit Log
+    const loginAudit: AuditLog = {
+      id: `log-${Date.now()}`,
+      timestamp: new Date().toISOString().replace("T", " ").substring(0, 19),
+      actor: patientName || dnaId,
+      role: "patient",
+      action: "Patient Vault Authenticated",
+      details: `Successful sign-in to Health DNA vault (${dnaId}) with active session protection.`,
+      ipAddress: "127.0.0.1 (Secure Local Session)",
+      securityHash: `0x${Math.random().toString(16).substring(2, 10).toUpperCase()}...AES256`,
+    };
+    setAuditLogs((prev) => [loginAudit, ...prev]);
   };
 
   // Authentication Logout Handler
-  const handleLogout = () => {
-    try {
-      localStorage.removeItem(AUTH_SESSION_KEY);
-    } catch (e) {
-      console.warn("Failed to remove auth session:", e);
-    }
+  const handleLogout = (reason?: string) => {
+    const prevId = activePatientId;
+    if (prevId) setLastActivePatientId(prevId);
+    terminateActiveSession(reason);
     setActivePatientId(null);
     setIsAuthenticated(false);
+    setIsWarningModalOpen(false);
+    if (reason) {
+      setSessionExpiredReason(reason);
+    }
     setActiveTab("patient-dash");
+
+    const logoutAudit: AuditLog = {
+      id: `log-${Date.now()}`,
+      timestamp: new Date().toISOString().replace("T", " ").substring(0, 19),
+      actor: prevId || "Patient",
+      role: "patient",
+      action: "Session Logged Out",
+      details: reason ? `Logout: ${reason}` : "Manual patient vault log out.",
+      ipAddress: "127.0.0.1",
+      securityHash: `0x${Math.random().toString(16).substring(2, 10).toUpperCase()}...LOGOUT`,
+    };
+    setAuditLogs((prev) => [logoutAudit, ...prev]);
+  };
+
+  // Manual Vault Lock (one-click instant security lock)
+  const handleManualLock = () => {
+    const prevId = activePatientId;
+    if (prevId) setLastActivePatientId(prevId);
+    terminateActiveSession("Patient vault manually locked for privacy.");
+    setIsAuthenticated(false);
+    setIsWarningModalOpen(false);
+    setSessionExpiredReason("Patient vault manually locked. Re-authenticate to access medical records.");
+    setActiveTab("patient-dash");
+
+    const lockAudit: AuditLog = {
+      id: `log-${Date.now()}`,
+      timestamp: new Date().toISOString().replace("T", " ").substring(0, 19),
+      actor: prevId || "Patient",
+      role: "patient",
+      action: "Vault Manually Locked",
+      details: `Vault for patient ${prevId} was manually locked to prevent unauthorized viewing.`,
+      ipAddress: "127.0.0.1",
+      securityHash: `0x${Math.random().toString(16).substring(2, 10).toUpperCase()}...LOCK`,
+    };
+    setAuditLogs((prev) => [lockAudit, ...prev]);
+  };
+
+  // Extend Session from Inactivity Warning Modal
+  const handleExtendSession = () => {
+    lastActiveTimestampRef.current = Date.now();
+    setSessionRemainingSeconds(inactivityTimeoutSeconds);
+    touchActiveSession();
+    setIsWarningModalOpen(false);
+  };
+
+  // Inactivity Timeout Configuration Change
+  const handleSetTimeoutSeconds = (secs: number) => {
+    setStoredInactivityTimeout(secs);
+    setInactivityTimeoutSeconds(secs);
+    setSessionRemainingSeconds(secs);
+    lastActiveTimestampRef.current = Date.now();
+    touchActiveSession();
   };
 
   // State Updates per Active Patient (Auto-persisted)
@@ -512,7 +658,11 @@ export default function App() {
         onOpenPatientSwitcher={() => setIsPatientSwitcherModalOpen(true)}
         onOpenAddPatient={() => setIsAddPatientModalOpen(true)}
         onOpenPatientLogin={() => setIsPatientLoginModalOpen(true)}
-        onLogout={handleLogout}
+        onLogout={() => handleLogout("Manual user logout")}
+        onLockSession={handleManualLock}
+        sessionRemainingSeconds={sessionRemainingSeconds}
+        timeoutDurationSeconds={inactivityTimeoutSeconds}
+        onSetTimeoutSeconds={handleSetTimeoutSeconds}
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         patientCount={allPatientsList.length}
@@ -595,6 +745,8 @@ export default function App() {
               if (tab === "hospital-dash") setRole("admin");
               setActiveTab(tab);
             }}
+            sessionExpiredReason={sessionExpiredReason}
+            lastActivePatientId={lastActivePatientId}
           />
         ) : isAuthenticated && patient && history ? (
           <>
@@ -1003,6 +1155,16 @@ export default function App() {
           </p>
         </div>
       </footer>
+
+      {/* HIPAA Session Inactivity Warning Modal */}
+      <SessionInactivityModal
+        isOpen={isWarningModalOpen}
+        secondsRemaining={sessionRemainingSeconds}
+        onExtendSession={handleExtendSession}
+        onLockNow={handleManualLock}
+        patientName={patient?.fullName}
+        totalTimeoutMinutes={Math.round(inactivityTimeoutSeconds / 60)}
+      />
 
       {/* Creator & Portfolio Modal */}
       <CreatorPortfolioModal

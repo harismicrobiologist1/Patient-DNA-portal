@@ -7,6 +7,7 @@ import {
   recordFailedPasswordAttempt,
   resetFailedAttempts,
 } from "../utils/security";
+import { getRememberedPatient } from "../utils/sessionSecurity";
 import {
   Lock,
   ShieldCheck,
@@ -39,6 +40,7 @@ import {
   Copy,
   ChevronLeft,
   Send,
+  Clock,
 } from "lucide-react";
 
 interface AuthWelcomeScreenProps {
@@ -50,6 +52,8 @@ interface AuthWelcomeScreenProps {
   onOpenPublicEmergency?: (patient: PatientProfile) => void;
   onOpenEmergencyTriage?: (patient: PatientProfile) => void;
   onSelectRoleTab: (tab: string) => void;
+  sessionExpiredReason?: string | null;
+  lastActivePatientId?: string | null;
 }
 
 export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
@@ -61,6 +65,8 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
   onOpenPublicEmergency,
   onOpenEmergencyTriage,
   onSelectRoleTab,
+  sessionExpiredReason = null,
+  lastActivePatientId = null,
 }) => {
   const patientList = allPatients && allPatients.length > 0 ? allPatients : (patients || []);
   const handleRegisterCallback = onRegisterPatient || onRegisterNewPatient;
@@ -68,8 +74,13 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
 
   const [activeMode, setActiveMode] = useState<"login" | "register" | "emergency" | "staff">("login");
 
-  // Sign in states
-  const [identifier, setIdentifier] = useState("");
+  // Sign in states - pre-fill identifier if remembered or recently locked
+  const [identifier, setIdentifier] = useState(() => {
+    if (lastActivePatientId) return lastActivePatientId;
+    const remembered = getRememberedPatient();
+    if (remembered && remembered.dnaId) return remembered.dnaId;
+    return "";
+  });
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
@@ -77,6 +88,19 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
   const [isAuthenticating, setIsAuthenticating] = useState(false);
   const [lockoutTimer, setLockoutTimer] = useState<number>(0);
   const [isPortfolioModalOpen, setIsPortfolioModalOpen] = useState(false);
+  const [activeExpiryNotice, setActiveExpiryNotice] = useState<string | null>(sessionExpiredReason);
+
+  useEffect(() => {
+    if (sessionExpiredReason) {
+      setActiveExpiryNotice(sessionExpiredReason);
+    }
+  }, [sessionExpiredReason]);
+
+  useEffect(() => {
+    if (lastActivePatientId && !identifier) {
+      setIdentifier(lastActivePatientId);
+    }
+  }, [lastActivePatientId, identifier]);
 
   // Registration states
   const [regForm, setRegForm] = useState({
@@ -678,6 +702,23 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
                     Enter your unique DNA ID, registered email, or phone number along with your password or 4-digit security PIN.
                   </p>
                 </div>
+
+                {/* Session Inactivity / Lockout Expiration Banner */}
+                {activeExpiryNotice && (
+                  <div className="p-4 rounded-2xl bg-amber-50 border border-amber-300 text-amber-900 text-xs flex items-start space-x-3 shadow-sm animate-fadeIn">
+                    <div className="p-1.5 bg-amber-200/70 text-amber-800 rounded-xl shrink-0 mt-0.5">
+                      <Clock className="w-4 h-4" />
+                    </div>
+                    <div className="space-y-0.5 flex-1">
+                      <p className="font-bold text-amber-950">
+                        Session Protection Notice
+                      </p>
+                      <p className="text-amber-800 leading-relaxed text-[11px]">
+                        {activeExpiryNotice}
+                      </p>
+                    </div>
+                  </div>
+                )}
 
                 <form onSubmit={handleLoginSubmit} className="space-y-4">
                   <div>
