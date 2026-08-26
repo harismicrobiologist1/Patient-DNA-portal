@@ -42,29 +42,13 @@ export const AddPatientModal: React.FC<AddPatientModalProps> = ({
   const [email, setEmail] = useState("");
   const [address, setAddress] = useState("");
   const [nationalId, setNationalId] = useState("");
-  const [registeredHospital, setRegisteredHospital] = useState("Apex National University Medical Center");
   const [organDonorStatus, setOrganDonorStatus] = useState(true);
   const [customAvatarUrl, setCustomAvatarUrl] = useState("");
-
-  // Emergency Contact
-  const [emergencyName, setEmergencyName] = useState("");
-  const [emergencyPhone, setEmergencyPhone] = useState("");
-  const [emergencyRelation, setEmergencyRelation] = useState("Spouse");
-
-  // Insurance Info
-  const [insuranceProvider, setInsuranceProvider] = useState("Aetna Healthcare");
-  const [policyNumber, setPolicyNumber] = useState("");
-
-  // Clinical Defaults
-  const [initialAllergy, setInitialAllergy] = useState("");
-  const [initialChronicCondition, setInitialChronicCondition] = useState("");
-  const [initialMedicine, setInitialMedicine] = useState("");
 
   // Account Security Credentials (for Patient Self-Login)
   const [password, setPassword] = useState("Patient@2026!");
   const [confirmPassword, setConfirmPassword] = useState("Patient@2026!");
   const [showPassword, setShowPassword] = useState(false);
-  const [securityPin, setSecurityPin] = useState("1234");
   const [formError, setFormError] = useState<string | null>(null);
 
   if (!isOpen) return null;
@@ -125,80 +109,28 @@ export const AddPatientModal: React.FC<AddPatientModalProps> = ({
       nationalId: nationalId || `US-NY-${Math.floor(100000 + Math.random() * 900000)}-X`,
       biometricStatus: "Verified",
       organDonorStatus,
-      registeredHospital,
-      securityPin: securityPin.trim() || "1234",
+      registeredHospital: "Apex National University Medical Center",
+      securityPin: "1234",
       password: password.trim(),
+      biometricAuthEnabled: true,
       insurance: {
-        provider: insuranceProvider || "Standard Health Care",
-        policyNumber: policyNumber || `POL-${Math.floor(100000 + Math.random() * 900000)}`,
+        provider: "Universal Standard Health Network",
+        policyNumber: `POL-${Math.floor(100000 + Math.random() * 900000)}`,
         groupNumber: "GRP-0012",
         status: "Active",
         coverageAmount: "$500,000 Standard Coverage",
       },
-      emergencyContacts: [
-        {
-          id: `ec-${Date.now()}`,
-          name: emergencyName || "Emergency Contact",
-          relationship: emergencyRelation || "Relative",
-          phone: emergencyPhone || "+1 (555) 999-0000",
-          isPrimary: true,
-        },
-      ],
+      emergencyContacts: [],
     };
 
     const newHistory: MedicalHistory = {
-      diseases: initialChronicCondition
-        ? [
-            {
-              id: `dis-${Date.now()}`,
-              name: initialChronicCondition,
-              diagnosedDate: new Date().toISOString().split("T")[0],
-              status: "Managed",
-              doctor: "Dr. Marcus Vance",
-              severity: "Moderate",
-            },
-          ]
-        : [],
+      diseases: [],
       surgeries: [],
       vaccinations: [],
-      medicines: initialMedicine
-        ? [
-            {
-              id: `med-${Date.now()}`,
-              name: initialMedicine,
-              dosage: "Standard Dose",
-              frequency: "Daily",
-              startDate: new Date().toISOString().split("T")[0],
-              duration: "Ongoing",
-              prescribedBy: "Dr. Attending Physician",
-              purpose: "Therapy / Maintenance",
-              refillsRemaining: 3,
-            },
-          ]
-        : [],
-      allergies: initialAllergy
-        ? [
-            {
-              id: `alg-${Date.now()}`,
-              allergen: initialAllergy,
-              reaction: "Hypersensitivity / Rash",
-              severity: "Severe",
-              onsetDate: new Date().toISOString().split("T")[0],
-            },
-          ]
-        : [],
+      medicines: [],
+      allergies: [],
       familyHistory: [],
-      chronicIllnesses: initialChronicCondition
-        ? [
-            {
-              id: `chr-${Date.now()}`,
-              condition: initialChronicCondition,
-              diagnosedYear: new Date().getFullYear().toString(),
-              carePlan: "Standard Monitoring",
-              currentControlStatus: "Optimal",
-            },
-          ]
-        : [],
+      chronicIllnesses: [],
       lifestyle: {
         smokingStatus: "Non-smoker",
         alcoholConsumption: "None",
@@ -393,41 +325,6 @@ export const AddPatientModal: React.FC<AddPatientModalProps> = ({
                 />
               </div>
 
-              <div className="sm:col-span-2">
-                <label className="block font-bold text-slate-700 mb-1">Residential Address</label>
-                <input
-                  type="text"
-                  placeholder="Street, City, State, Zip Code"
-                  value={address}
-                  onChange={(e) => setAddress(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Hospital & Emergency Contact */}
-          <div className="space-y-4 pt-2 border-t border-slate-100">
-            <h3 className="text-xs font-black uppercase text-blue-600 tracking-wider flex items-center space-x-2">
-              <Building className="w-4 h-4" />
-              <span>Hospital & Emergency Contact</span>
-            </h3>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-              <div>
-                <label className="block font-bold text-slate-700 mb-1">Primary Network Hospital</label>
-                <select
-                  value={registeredHospital}
-                  onChange={(e) => setRegisteredHospital(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium bg-white"
-                >
-                  <option value="Apex National University Medical Center">Apex National Medical Center</option>
-                  <option value="Saint Jude Memorial Hospital">Saint Jude Memorial Hospital</option>
-                  <option value="City Care Specialty Clinic">City Care Specialty Clinic</option>
-                  <option value="Apex Orthopedic Specialty Center">Apex Orthopedic Center</option>
-                </select>
-              </div>
-
               <div>
                 <label className="block font-bold text-slate-700 mb-1">National ID / Passport No.</label>
                 <input
@@ -439,81 +336,27 @@ export const AddPatientModal: React.FC<AddPatientModalProps> = ({
                 />
               </div>
 
-              <div>
-                <label className="block font-bold text-slate-700 mb-1">Emergency Contact Person</label>
-                <input
-                  type="text"
-                  placeholder="Relative / Guardian Name"
-                  value={emergencyName}
-                  onChange={(e) => setEmergencyName(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium"
-                />
-              </div>
-
-              <div>
-                <label className="block font-bold text-slate-700 mb-1">Emergency Phone</label>
-                <input
-                  type="text"
-                  placeholder="+1 (555) 999-8877"
-                  value={emergencyPhone}
-                  onChange={(e) => setEmergencyPhone(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Initial Medical Profile */}
-          <div className="space-y-4 pt-2 border-t border-slate-100">
-            <h3 className="text-xs font-black uppercase text-blue-600 tracking-wider flex items-center space-x-2">
-              <AlertCircle className="w-4 h-4 text-amber-500" />
-              <span>Initial Allergies & Medical Notes</span>
-            </h3>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-              <div>
-                <label className="block font-bold text-slate-700 mb-1">Primary Drug Allergy (If any)</label>
-                <input
-                  type="text"
-                  placeholder="e.g. Penicillin, Sulfa, Latex"
-                  value={initialAllergy}
-                  onChange={(e) => setInitialAllergy(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium"
-                />
-              </div>
-
-              <div>
-                <label className="block font-bold text-slate-700 mb-1">Pre-existing Condition / Disease</label>
-                <input
-                  type="text"
-                  placeholder="e.g. Hypertension, Type 2 Diabetes, Asthma"
-                  value={initialChronicCondition}
-                  onChange={(e) => setInitialChronicCondition(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium"
-                />
-              </div>
-
               <div className="sm:col-span-2">
-                <label className="block font-bold text-slate-700 mb-1">Current Ongoing Medication (Optional)</label>
+                <label className="block font-bold text-slate-700 mb-1">Residential Address</label>
                 <input
                   type="text"
-                  placeholder="e.g. Metformin 500mg, Lisinopril 10mg, Atorvastatin 20mg"
-                  value={initialMedicine}
-                  onChange={(e) => setInitialMedicine(e.target.value)}
+                  placeholder="Street, City, State, Zip Code"
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
                   className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium"
                 />
               </div>
             </div>
 
-            <div className="flex items-center space-x-2 pt-1">
+            <div className="flex items-center space-x-2 pt-2">
               <input
                 type="checkbox"
                 id="organDonor"
                 checked={organDonorStatus}
                 onChange={(e) => setOrganDonorStatus(e.target.checked)}
-                className="w-4 h-4 rounded text-blue-600 focus:ring-blue-500 border-slate-300"
+                className="w-4 h-4 rounded text-blue-600 focus:ring-blue-500 border-slate-300 cursor-pointer"
               />
-              <label htmlFor="organDonor" className="text-xs font-bold text-slate-700">
+              <label htmlFor="organDonor" className="text-xs font-bold text-slate-700 cursor-pointer">
                 Registered Organ Donor
               </label>
             </div>
@@ -652,30 +495,6 @@ export const AddPatientModal: React.FC<AddPatientModalProps> = ({
                       <span>Passwords match</span>
                     </p>
                   )}
-                </div>
-              </div>
-
-              {/* 4-Digit Quick PIN */}
-              <div className="pt-2 border-t border-amber-200/80">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                  <div>
-                    <label className="block font-bold text-slate-800 text-xs">
-                      4-Digit Quick Security PIN:
-                    </label>
-                    <span className="text-[10px] text-amber-800">
-                      Optional fast numeric passcode for bedside kiosks and mobile triage.
-                    </span>
-                  </div>
-                  <div className="w-32">
-                    <input
-                      type="text"
-                      maxLength={6}
-                      placeholder="1234"
-                      value={securityPin}
-                      onChange={(e) => setSecurityPin(e.target.value)}
-                      className="w-full px-3 py-1.5 rounded-xl border border-amber-300 bg-white font-mono font-bold text-slate-900 text-center focus:ring-2 focus:ring-amber-500 text-xs"
-                    />
-                  </div>
                 </div>
               </div>
             </div>

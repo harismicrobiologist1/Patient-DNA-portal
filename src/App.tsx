@@ -45,6 +45,7 @@ import { PatientLoginModal } from "./components/PatientLoginModal";
 import { AuthWelcomeScreen } from "./components/AuthWelcomeScreen";
 import { CreatorPortfolioModal } from "./components/CreatorPortfolioModal";
 import { SessionInactivityModal } from "./components/SessionInactivityModal";
+import { FhirCryptoVaultModal } from "./components/FhirCryptoVaultModal";
 import {
   validateCurrentSession,
   createActiveSession,
@@ -85,7 +86,7 @@ import {
   LogOut,
 } from "lucide-react";
 
-const STORAGE_KEY = "health_dna_patients_database_v2";
+const STORAGE_KEY = "health_dna_patients_database_v4";
 
 export default function App() {
   const [currentRole, setRole] = useState<UserRole>("patient");
@@ -175,6 +176,7 @@ export default function App() {
   const [publicCardPatient, setPublicCardPatient] = useState<PatientProfile | null>(null);
 
   const [isCreatorPortfolioModalOpen, setIsCreatorPortfolioModalOpen] = useState(false);
+  const [isFhirCryptoModalOpen, setIsFhirCryptoModalOpen] = useState(false);
 
   // 1. Initial Load & Real-time Live Sync from Backend Persistence
   const syncDatabaseFromServer = useCallback(async (isInitial = false) => {
@@ -711,12 +713,24 @@ export default function App() {
               })}
             </div>
 
-            {/* Persistent Database Sync Pill */}
-            <div className="hidden lg:flex items-center space-x-2 pl-4 text-[11px] text-slate-500 font-medium shrink-0">
-              <span className="flex items-center space-x-1 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 font-semibold">
-                <Database className="w-3 h-3 text-emerald-600" />
-                <span>Cloud Database Synced</span>
-              </span>
+            {/* Actions: Zero-Knowledge & FHIR Launcher + Persistent Database Sync Pill */}
+            <div className="flex items-center space-x-2.5 pl-3 shrink-0">
+              <button
+                onClick={() => setIsFhirCryptoModalOpen(true)}
+                className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white text-xs font-bold shadow-md shadow-blue-500/20 cursor-pointer transition-all"
+                title="Open Zero-Knowledge AES-256 Cryptography & HL7 FHIR Interoperability Center"
+              >
+                <ShieldCheck className="w-3.5 h-3.5 text-cyan-200" />
+                <span className="hidden sm:inline">Zero-Knowledge & FHIR Center</span>
+                <span className="sm:hidden">E2EE / FHIR</span>
+              </button>
+
+              <div className="hidden lg:flex items-center space-x-2 text-[11px] text-slate-500 font-medium">
+                <span className="flex items-center space-x-1 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 font-semibold">
+                  <Database className="w-3 h-3 text-emerald-600" />
+                  <span>Cloud DB Synced</span>
+                </span>
+              </div>
             </div>
           </div>
         </div>
@@ -947,6 +961,7 @@ export default function App() {
                 onUpdatePatient={handleUpdatePatient}
                 onOpenDigitalId={() => setIsDigitalIdModalOpen(true)}
                 onLogout={handleLogout}
+                onOpenFhirCryptoVault={() => setIsFhirCryptoModalOpen(true)}
               />
             )}
 
@@ -1164,6 +1179,18 @@ export default function App() {
         onLockNow={handleManualLock}
         patientName={patient?.fullName}
         totalTimeoutMinutes={Math.round(inactivityTimeoutSeconds / 60)}
+      />
+
+      {/* Zero-Knowledge AES-256 Crypto & HL7 FHIR Interoperability Center */}
+      <FhirCryptoVaultModal
+        isOpen={isFhirCryptoModalOpen}
+        onClose={() => setIsFhirCryptoModalOpen(false)}
+        patient={patient || allPatientsList[0] || INITIAL_PATIENT}
+        history={history || undefined}
+        clinicalRecords={clinicalRecords}
+        labReports={labReports}
+        prescriptions={prescriptions}
+        geneticMarkers={geneticMarkers}
       />
 
       {/* Creator & Portfolio Modal */}

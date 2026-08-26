@@ -112,41 +112,14 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
     email: "",
     address: "450 Medical Center Blvd, Suite 300, Boston, MA",
     nationalId: "US-MA-882104-Z",
-    allergies: "Penicillin, Sulfa drugs",
     organDonor: true,
-    emergencyContactName: "Michael Adams",
-    emergencyRelationship: "Spouse",
-    emergencyPhone: "+1 (555) 234-9900",
     password: "",
     confirmPassword: "",
     securityPin: "1234",
   });
   const [regError, setRegError] = useState<string | null>(null);
   const [isRegistering, setIsRegistering] = useState(false);
-
-  // OTP Verification States
-  const [regStep, setRegStep] = useState<"form" | "otp">("form");
-  const [regOtpDigits, setRegOtpDigits] = useState<string[]>(["", "", "", "", "", ""]);
-  const [regSentOtp, setRegSentOtp] = useState<string>("");
-  const [regOtpTimer, setRegOtpTimer] = useState<number>(0);
-  const [isSendingOtp, setIsSendingOtp] = useState(false);
-  const [isVerifyingOtp, setIsVerifyingOtp] = useState(false);
-  const [simulatedOtp, setSimulatedOtp] = useState<string | null>(null);
-  const [emailDeliveryStatus, setEmailDeliveryStatus] = useState<"sent" | "simulated" | "failed">("simulated");
-  const [resendConfigured, setResendConfigured] = useState(false);
-  const [otpVerificationSuccess, setOtpVerificationSuccess] = useState(false);
-  const [regOtpPassword, setRegOtpPassword] = useState("");
-  const [showRegOtpPassword, setShowRegOtpPassword] = useState(false);
-  const [copiedOtp, setCopiedOtp] = useState(false);
-
-  // Countdown timer for registration OTP resend
-  useEffect(() => {
-    if (regOtpTimer <= 0) return;
-    const interval = setInterval(() => {
-      setRegOtpTimer((prev) => Math.max(0, prev - 1));
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [regOtpTimer]);
+  const [registrationSuccess, setRegistrationSuccess] = useState(false);
 
   // Countdown timer for lockout
   useEffect(() => {
@@ -239,8 +212,8 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
     setLoginError(null);
   };
 
-  // Step 1: Validate Form & Send Email OTP
-  const handleInitiateRegistration = async (e: React.FormEvent) => {
+  // Single-Step Direct Patient Registration
+  const handleDirectRegistration = (e: React.FormEvent) => {
     e.preventDefault();
     setRegError(null);
 
@@ -250,11 +223,11 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
     }
     const cleanEmail = regForm.email.trim();
     if (!cleanEmail || !cleanEmail.includes("@") || !cleanEmail.includes(".")) {
-      setRegError("A valid email address is required to receive your registration OTP.");
+      setRegError("Please enter a valid email address.");
       return;
     }
     if (!regForm.password.trim()) {
-      setRegError("Please set a strong account password.");
+      setRegError("Please set an account password.");
       return;
     }
     if (!regPasswordStrength.isValidStrong) {
@@ -267,186 +240,9 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
       setRegError("Passwords do not match. Please verify.");
       return;
     }
-    if (!regForm.securityPin.trim() || regForm.securityPin.length < 4) {
-      setRegError("Please enter a 4-digit bedside PIN.");
-      return;
-    }
 
-    setIsSendingOtp(true);
-
-    try {
-      // Fallback local code
-      const fallbackOtp = Math.floor(100000 + Math.random() * 900000).toString();
-      let activeCode = fallbackOtp;
-      let deliveryStatus: "sent" | "simulated" | "failed" = "simulated";
-      let isResendReady = false;
-
-      try {
-        const res = await fetch("/api/auth/send-registration-otp", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            email: cleanEmail,
-            fullName: regForm.fullName.trim(),
-          }),
-        });
-        if (res.ok) {
-          const data = await res.json();
-          deliveryStatus = data.emailDeliveryStatus || "simulated";
-          isResendReady = !!data.resendConfigured;
-          if (data && data.otpCode) {
-            activeCode = data.otpCode;
-          }
-        }
-      } catch (apiErr) {
-        console.warn("API registration OTP dispatched with local verification engine:", apiErr);
-      }
-
-      setRegSentOtp(activeCode);
-      setEmailDeliveryStatus(deliveryStatus);
-      setResendConfigured(isResendReady);
-      setSimulatedOtp(deliveryStatus === "sent" ? null : activeCode);
-      setRegOtpDigits(["", "", "", "", "", ""]);
-      setRegOtpPassword("");
-      setRegOtpTimer(60);
-      setRegStep("otp");
-      setRegError(null);
-
-      // Auto-focus first input box after step switch
-      setTimeout(() => {
-        const firstInput = document.getElementById("reg-otp-input-0");
-        if (firstInput) firstInput.focus();
-      }, 100);
-    } catch (err: any) {
-      setRegError(err.message || "Failed to send verification code. Please try again.");
-    } finally {
-      setIsSendingOtp(false);
-    }
-  };
-
-  // Resend Registration OTP
-  const handleResendRegistrationOtp = async () => {
-    if (regOtpTimer > 0) return;
-    setIsSendingOtp(true);
-    setRegError(null);
-
-    try {
-      const cleanEmail = regForm.email.trim();
-      const fallbackOtp = Math.floor(100000 + Math.random() * 900000).toString();
-      let activeCode = fallbackOtp;
-      let deliveryStatus: "sent" | "simulated" | "failed" = "simulated";
-      let isResendReady = false;
-
-      try {
-        const res = await fetch("/api/auth/send-registration-otp", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            email: cleanEmail,
-            fullName: regForm.fullName.trim(),
-          }),
-        });
-        if (res.ok) {
-          const data = await res.json();
-          deliveryStatus = data.emailDeliveryStatus || "simulated";
-          isResendReady = !!data.resendConfigured;
-          if (data && data.otpCode) {
-            activeCode = data.otpCode;
-          }
-        }
-      } catch (err) {
-        console.warn("Resend OTP applied fallback:", err);
-      }
-
-      setRegSentOtp(activeCode);
-      setEmailDeliveryStatus(deliveryStatus);
-      setResendConfigured(isResendReady);
-      setSimulatedOtp(deliveryStatus === "sent" ? null : activeCode);
-      setRegOtpTimer(60);
-    } catch (err: any) {
-      setRegError("Could not resend OTP. Please try again.");
-    } finally {
-      setIsSendingOtp(false);
-    }
-  };
-
-  // Handle OTP digit individual inputs
-
-  const handleOtpDigitChange = (index: number, val: string) => {
-    const clean = val.replace(/[^0-9]/g, "");
-    if (!clean) {
-      const updated = [...regOtpDigits];
-      updated[index] = "";
-      setRegOtpDigits(updated);
-      return;
-    }
-
-    if (clean.length > 1) {
-      const digits = clean.slice(0, 6).split("");
-      const updated = [...regOtpDigits];
-      digits.forEach((d, i) => {
-        if (i < 6) updated[i] = d;
-      });
-      setRegOtpDigits(updated);
-      const nextIdx = Math.min(digits.length, 5);
-      const nextElem = document.getElementById(`reg-otp-input-${nextIdx}`);
-      if (nextElem) nextElem.focus();
-      return;
-    }
-
-    const updated = [...regOtpDigits];
-    updated[index] = clean[clean.length - 1];
-    setRegOtpDigits(updated);
-
-    if (index < 5 && clean) {
-      const nextElem = document.getElementById(`reg-otp-input-${index + 1}`);
-      if (nextElem) nextElem.focus();
-    }
-  };
-
-  const handleOtpKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Backspace" && !regOtpDigits[index] && index > 0) {
-      const prevElem = document.getElementById(`reg-otp-input-${index - 1}`);
-      if (prevElem) prevElem.focus();
-    }
-  };
-
-  const handleAutofillSimulatedOtp = () => {
-    if (simulatedOtp && simulatedOtp.length === 6) {
-      setRegOtpDigits(simulatedOtp.split(""));
-      setRegOtpPassword(regForm.password);
-      setRegError(null);
-    }
-  };
-
-  // Step 2: Verify OTP & Confirm Password to Register
-  const handleVerifyOtpAndRegister = (e: React.FormEvent) => {
-    e.preventDefault();
-    setRegError(null);
-
-    const enteredOtp = regOtpDigits.join("").trim();
-    if (enteredOtp.length < 6) {
-      setRegError("Please enter the complete 6-digit OTP code sent to your email.");
-      return;
-    }
-
-    if (enteredOtp !== regSentOtp) {
-      setRegError("Incorrect 6-digit OTP verification code. Please check your email or click autofill.");
-      return;
-    }
-
-    if (!regOtpPassword.trim()) {
-      setRegError("Please enter your account password to confirm your registration.");
-      return;
-    }
-
-    if (regOtpPassword.trim() !== regForm.password.trim()) {
-      setRegError("Entered password does not match the password you set in step 1.");
-      return;
-    }
-
-    setIsVerifyingOtp(true);
-    setOtpVerificationSuccess(true);
+    setIsRegistering(true);
+    setRegistrationSuccess(true);
 
     // Generate unique DNA ID
     const randomPart1 = Math.floor(1000 + Math.random() * 9000);
@@ -470,8 +266,9 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
       biometricStatus: "Verified",
       organDonorStatus: regForm.organDonor,
       registeredHospital: "Apex National Medical Center",
-      securityPin: regForm.securityPin.trim(),
+      securityPin: "1234",
       password: regForm.password.trim(),
+      biometricAuthEnabled: true,
       insurance: {
         provider: "Universal Standard Health Network",
         policyNumber: `POL-${Math.floor(1000000 + Math.random() * 9000000)}`,
@@ -479,15 +276,7 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
         status: "Active",
         coverageAmount: "$500,000 Comprehensive",
       },
-      emergencyContacts: [
-        {
-          id: `ec-${Date.now()}`,
-          name: regForm.emergencyContactName.trim() || "Emergency Contact",
-          relationship: regForm.emergencyRelationship || "Family",
-          phone: regForm.emergencyPhone.trim() || "+1 (555) 911-0000",
-          isPrimary: true,
-        },
-      ],
+      emergencyContacts: [],
     };
 
     const newRecord: PatientFullRecord = {
@@ -497,15 +286,7 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
         surgeries: [],
         vaccinations: [],
         medicines: [],
-        allergies: regForm.allergies
-          ? regForm.allergies.split(",").map((a, idx) => ({
-              id: `all-${idx}`,
-              substance: a.trim(),
-              severity: "Severe" as const,
-              reaction: "Anaphylaxis Alert",
-              firstObserved: "2024-01-10",
-            }))
-          : [],
+        allergies: [],
         familyHistory: [],
         chronicIllnesses: [],
         lifestyle: {
@@ -523,11 +304,11 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
     };
 
     setTimeout(() => {
-      setIsVerifyingOtp(false);
+      setIsRegistering(false);
       if (handleRegisterCallback) {
         handleRegisterCallback(newRecord);
       }
-    }, 700);
+    }, 400);
   };
 
   // Handle Emergency Lookup
@@ -844,10 +625,10 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
                   </div>
                   <div>
                     <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
-                      Demo Accounts & Passwords
+                      Demo Account & Credentials
                     </h3>
                     <p className="text-[11px] text-slate-500">
-                      Click any registered profile to fill credentials:
+                      Click the test profile to autofill credentials:
                     </p>
                   </div>
                 </div>
@@ -896,52 +677,22 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
         {/* Tab 2: Register New Patient with Email OTP Verification */}
         {activeMode === "register" && (
           <div className="p-6 sm:p-10 space-y-6 animate-fadeIn">
-            {/* Header & Step Stepper */}
+            {/* Header */}
             <div className="border-b border-slate-200 pb-5">
-              <div className="flex items-center justify-between flex-wrap gap-2">
-                <div className="flex items-center space-x-2 text-indigo-600 font-bold text-xs uppercase tracking-wider">
-                  <UserPlus className="w-4 h-4" />
-                  <span>Universal Health DNA Passport Registration</span>
-                </div>
-                {/* Stepper Indicator */}
-                <div className="flex items-center space-x-2 text-xs font-bold">
-                  <span
-                    className={`flex items-center space-x-1.5 px-3 py-1 rounded-full transition-all ${
-                      regStep === "form"
-                        ? "bg-indigo-100 text-indigo-800 ring-2 ring-indigo-500/30"
-                        : "bg-emerald-100 text-emerald-800"
-                    }`}
-                  >
-                    {regStep === "otp" ? <Check className="w-3.5 h-3.5" /> : <span>1</span>}
-                    <span>1. Patient Data & Password</span>
-                  </span>
-                  <span className="text-slate-300">→</span>
-                  <span
-                    className={`flex items-center space-x-1.5 px-3 py-1 rounded-full transition-all ${
-                      regStep === "otp"
-                        ? "bg-indigo-600 text-white shadow-md shadow-indigo-500/20 ring-2 ring-indigo-500/30"
-                        : "bg-slate-100 text-slate-400"
-                    }`}
-                  >
-                    <span>2</span>
-                    <span>2. Email OTP Verification</span>
-                  </span>
-                </div>
+              <div className="flex items-center space-x-2 text-indigo-600 font-bold text-xs uppercase tracking-wider">
+                <UserPlus className="w-4 h-4" />
+                <span>Universal Health DNA Passport Registration</span>
               </div>
 
               <h2 className="text-2xl font-black text-slate-900 mt-2">
-                {regStep === "form" ? "Create Your Universal Health DNA Account" : "Verify Email & Confirm Security"}
+                Create Your Universal Health DNA Account
               </h2>
               <p className="text-xs sm:text-sm text-slate-500 mt-1">
-                {regStep === "form"
-                  ? "Enter your demographic & medical details. A 6-digit one-time passcode (OTP) will be sent to your email to verify account ownership."
-                  : `Please enter the 6-digit verification code sent to ${regForm.email} and confirm your password to activate your decentralized vault.`}
+                Enter your demographic and medical details to instantly provision your decentralized health vault and DNA ID.
               </p>
             </div>
 
-            {/* STEP 1: FORM INPUTS */}
-            {regStep === "form" && (
-              <form onSubmit={handleInitiateRegistration} className="space-y-6">
+            <form onSubmit={handleDirectRegistration} className="space-y-6">
                 {/* Personal Details */}
                 <div>
                   <h3 className="text-xs font-bold uppercase text-slate-500 tracking-wider mb-3">
@@ -1027,9 +778,6 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
                     <div className="sm:col-span-2">
                       <label className="block text-xs font-bold text-slate-700 mb-1">
                         Email Address <span className="text-red-500">*</span>
-                        <span className="ml-1 text-[10px] font-normal text-indigo-600 bg-indigo-50 px-1.5 py-0.5 rounded">
-                          OTP will be sent here
-                        </span>
                       </label>
                       <div className="relative">
                         <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
@@ -1072,25 +820,12 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
                   </div>
                 </div>
 
-                {/* Emergency & Security */}
+                {/* Password & Security */}
                 <div>
                   <h3 className="text-xs font-bold uppercase text-slate-500 tracking-wider mb-3">
-                    2. Emergency Details & Strong Password Security
+                    2. Account Password & Vault Security
                   </h3>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div>
-                      <label className="block text-xs font-bold text-slate-700 mb-1">
-                        Emergency Contact Name
-                      </label>
-                      <input
-                        type="text"
-                        placeholder="e.g. John Doe (Spouse)"
-                        value={regForm.emergencyContactName}
-                        onChange={(e) => setRegForm({ ...regForm, emergencyContactName: e.target.value })}
-                        className="w-full px-3.5 py-2 rounded-2xl border border-slate-300 text-xs font-bold text-slate-900 focus:ring-2 focus:ring-indigo-500 outline-none"
-                      />
-                    </div>
-
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-xs font-bold text-slate-700 mb-1">
                         Account Password <span className="text-red-500">*</span>
@@ -1114,21 +849,6 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
                         placeholder="Re-enter password"
                         value={regForm.confirmPassword}
                         onChange={(e) => setRegForm({ ...regForm, confirmPassword: e.target.value })}
-                        className="w-full px-3.5 py-2 rounded-2xl border border-slate-300 text-xs font-mono font-bold text-slate-900 focus:ring-2 focus:ring-indigo-500 outline-none"
-                        required
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-bold text-slate-700 mb-1">
-                        4-Digit Bedside PIN <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        type="password"
-                        maxLength={4}
-                        placeholder="e.g. 1234"
-                        value={regForm.securityPin}
-                        onChange={(e) => setRegForm({ ...regForm, securityPin: e.target.value.replace(/[^0-9]/g, "") })}
                         className="w-full px-3.5 py-2 rounded-2xl border border-slate-300 text-xs font-mono font-bold text-slate-900 focus:ring-2 focus:ring-indigo-500 outline-none"
                         required
                       />
@@ -1186,261 +906,29 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
                 <div className="pt-2 flex justify-end">
                   <button
                     type="submit"
-                    disabled={isSendingOtp}
-                    className="px-8 py-3.5 rounded-2xl bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500 text-white font-black text-sm shadow-xl shadow-indigo-500/25 transition-all flex items-center space-x-2 disabled:opacity-50 cursor-pointer"
+                    disabled={isRegistering}
+                    className="px-8 py-3.5 rounded-2xl bg-gradient-to-r from-indigo-600 via-blue-600 to-emerald-600 hover:from-indigo-500 hover:to-emerald-500 text-white font-black text-sm shadow-xl shadow-indigo-500/25 transition-all flex items-center space-x-2 disabled:opacity-50 cursor-pointer"
                   >
-                    {isSendingOtp ? (
+                    {isRegistering ? (
                       <>
                         <Sparkles className="w-4 h-4 animate-spin text-white" />
-                        <span>Sending 6-Digit OTP to Email...</span>
+                        <span>Creating Health DNA Vault...</span>
+                      </>
+                    ) : registrationSuccess ? (
+                      <>
+                        <CheckCircle2 className="w-4 h-4 text-emerald-300" />
+                        <span>Vault Created! Opening...</span>
                       </>
                     ) : (
                       <>
-                        <Send className="w-4 h-4" />
-                        <span>Send OTP to Email & Continue</span>
+                        <UserPlus className="w-4 h-4" />
+                        <span>Create Patient Account & Launch Vault</span>
                         <ArrowRight className="w-4 h-4" />
                       </>
                     )}
                   </button>
                 </div>
               </form>
-            )}
-
-            {/* STEP 2: EMAIL OTP & PASSWORD CONFIRMATION */}
-            {regStep === "otp" && (
-              <div className="space-y-6 animate-fadeIn">
-                {/* Back to Edit Details */}
-                <button
-                  type="button"
-                  onClick={() => {
-                    setRegStep("form");
-                    setRegError(null);
-                  }}
-                  className="flex items-center space-x-1.5 text-xs font-bold text-slate-600 hover:text-indigo-600 transition-colors cursor-pointer"
-                >
-                  <ChevronLeft className="w-4 h-4" />
-                  <span>Back to Edit Registration Details</span>
-                </button>
-
-                {/* Email verification card */}
-                <div className="bg-gradient-to-br from-indigo-50 via-white to-blue-50/50 border border-indigo-100 rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm">
-                  <div className="flex items-start justify-between flex-wrap gap-4">
-                    <div className="flex items-center space-x-3.5">
-                      <div className={`w-12 h-12 rounded-2xl ${emailDeliveryStatus === "sent" ? "bg-emerald-600 text-white" : "bg-indigo-600 text-white"} flex items-center justify-center shadow-lg shadow-indigo-500/30 shrink-0`}>
-                        <MailCheck className="w-6 h-6" />
-                      </div>
-                      <div>
-                        <div className="flex items-center space-x-2">
-                          <h3 className="text-base font-bold text-slate-900">
-                            {emailDeliveryStatus === "sent" ? "Real Email Dispatched via Resend" : "Email OTP Dispatched"}
-                          </h3>
-                          <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                            emailDeliveryStatus === "sent"
-                              ? "bg-emerald-100 text-emerald-800"
-                              : "bg-indigo-100 text-indigo-800"
-                          }`}>
-                            {emailDeliveryStatus === "sent" ? "Delivered to Inbox" : "Active Session"}
-                          </span>
-                        </div>
-                        <p className="text-xs text-slate-600 mt-0.5">
-                          {emailDeliveryStatus === "sent" ? (
-                            <>A 6-digit security code was delivered to <strong className="text-emerald-700 font-mono">{regForm.email}</strong>. Check your inbox & spam folder.</>
-                          ) : (
-                            <>A 6-digit one-time code was sent to <strong className="text-indigo-700 font-mono">{regForm.email}</strong></>
-                          )}
-                        </p>
-                      </div>
-                    </div>
-
-                    <button
-                      type="button"
-                      onClick={() => setRegStep("form")}
-                      className="text-xs font-bold text-indigo-600 hover:text-indigo-800 bg-white px-3 py-1.5 rounded-xl border border-indigo-200 shadow-sm transition-all"
-                    >
-                      Change Email
-                    </button>
-                  </div>
-
-                  {/* Real Email Delivery Confirmed Card */}
-                  {emailDeliveryStatus === "sent" && (
-                    <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-900 flex items-start space-x-3">
-                      <div className="w-6 h-6 rounded-lg bg-emerald-600 text-white flex items-center justify-center shrink-0 mt-0.5">
-                        <Check className="w-4 h-4" />
-                      </div>
-                      <div className="text-xs space-y-1">
-                        <p className="font-bold text-emerald-950">
-                          Email successfully sent via Resend API
-                        </p>
-                        <p className="text-emerald-800">
-                          Please open your email client for <strong className="font-mono">{regForm.email}</strong> to retrieve your 6-digit registration code.
-                        </p>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Sandbox Fallback Key Banner (Only shown if Resend API Key is not yet configured) */}
-                  {!resendConfigured && simulatedOtp && (
-                    <div className="p-4 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-700 text-white shadow-md flex items-center justify-between flex-wrap gap-3">
-                      <div className="flex items-center space-x-3">
-                        <div className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center shrink-0">
-                          <Sparkles className="w-4 h-4 text-white" />
-                        </div>
-                        <div>
-                          <p className="text-[11px] font-medium text-blue-100">
-                            Resend API Key Not Detected • Sandbox Testing Code:
-                          </p>
-                          <p className="text-lg font-mono font-black tracking-widest text-white">
-                            {simulatedOtp}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <button
-                          type="button"
-                          onClick={() => {
-                            navigator.clipboard.writeText(simulatedOtp);
-                            setCopiedOtp(true);
-                            setTimeout(() => setCopiedOtp(false), 2000);
-                          }}
-                          className="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold flex items-center space-x-1 transition-colors cursor-pointer"
-                        >
-                          {copiedOtp ? <Check className="w-3.5 h-3.5 text-emerald-300" /> : <Copy className="w-3.5 h-3.5" />}
-                          <span>{copiedOtp ? "Copied" : "Copy OTP"}</span>
-                        </button>
-                        <button
-                          type="button"
-                          onClick={handleAutofillSimulatedOtp}
-                          className="px-3.5 py-1.5 rounded-xl bg-white text-indigo-700 hover:bg-blue-50 text-xs font-black shadow transition-all cursor-pointer"
-                        >
-                          Autofill OTP & Password
-                        </button>
-                      </div>
-                    </div>
-                  )}
-
-
-                  <form onSubmit={handleVerifyOtpAndRegister} className="space-y-6">
-                    {/* 6 Digit OTP Input Boxes */}
-                    <div>
-                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2 text-center sm:text-left">
-                        Enter 6-Digit Email Verification Code <span className="text-red-500">*</span>
-                      </label>
-                      <div className="flex justify-center sm:justify-start gap-2.5 sm:gap-3">
-                        {regOtpDigits.map((digit, idx) => (
-                          <input
-                            key={idx}
-                            id={`reg-otp-input-${idx}`}
-                            type="text"
-                            inputMode="numeric"
-                            maxLength={6}
-                            value={digit}
-                            onChange={(e) => handleOtpDigitChange(idx, e.target.value)}
-                            onKeyDown={(e) => handleOtpKeyDown(idx, e)}
-                            className="w-12 h-14 sm:w-14 sm:h-16 text-center text-xl sm:text-2xl font-mono font-black rounded-2xl border-2 border-slate-300 focus:border-indigo-600 focus:ring-4 focus:ring-indigo-500/20 bg-white text-slate-900 outline-none transition-all shadow-sm"
-                            placeholder="•"
-                            autoComplete="one-time-code"
-                          />
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Password Confirmation Check */}
-                    <div className="max-w-md bg-white p-4 rounded-2xl border border-slate-200 space-y-2">
-                      <div className="flex items-center justify-between">
-                        <label className="block text-xs font-bold text-slate-700">
-                          Confirm Account Password <span className="text-red-500">*</span>
-                        </label>
-                        <span className="text-[10px] font-medium text-slate-400">
-                          Re-verify for security
-                        </span>
-                      </div>
-                      <div className="relative">
-                        <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
-                        <input
-                          type={showRegOtpPassword ? "text" : "password"}
-                          placeholder="Enter account password"
-                          value={regOtpPassword}
-                          onChange={(e) => setRegOtpPassword(e.target.value)}
-                          className="w-full pl-9 pr-10 py-2.5 rounded-xl border border-slate-300 text-xs font-mono font-bold text-slate-900 focus:ring-2 focus:ring-indigo-500 outline-none"
-                          required
-                        />
-                        <button
-                          type="button"
-                          onClick={() => setShowRegOtpPassword(!showRegOtpPassword)}
-                          className="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600 cursor-pointer"
-                        >
-                          {showRegOtpPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* Resend OTP Timer & Controls */}
-                    <div className="flex items-center justify-between flex-wrap gap-2 text-xs">
-                      <div className="text-slate-500">
-                        {regOtpTimer > 0 ? (
-                          <span>
-                            Resend code in <strong className="text-indigo-600 font-mono">{regOtpTimer}s</strong>
-                          </span>
-                        ) : (
-                          <span className="text-emerald-600 font-medium">OTP code can now be resent</span>
-                        )}
-                      </div>
-                      <button
-                        type="button"
-                        onClick={handleResendRegistrationOtp}
-                        disabled={regOtpTimer > 0 || isSendingOtp}
-                        className="text-xs font-bold text-indigo-600 hover:text-indigo-800 flex items-center space-x-1.5 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
-                      >
-                        <RefreshCw className={`w-3.5 h-3.5 ${isSendingOtp ? "animate-spin" : ""}`} />
-                        <span>Resend OTP Code</span>
-                      </button>
-                    </div>
-
-                    {/* Error Box */}
-                    {regError && (
-                      <div className="p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold flex items-center space-x-2">
-                        <ShieldAlert className="w-4 h-4 text-rose-600 shrink-0" />
-                        <span>{regError}</span>
-                      </div>
-                    )}
-
-                    {/* Submit Actions */}
-                    <div className="pt-2 flex items-center justify-between flex-wrap gap-3">
-                      <button
-                        type="button"
-                        onClick={() => setRegStep("form")}
-                        className="px-5 py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition-colors cursor-pointer"
-                      >
-                        Cancel / Back
-                      </button>
-
-                      <button
-                        type="submit"
-                        disabled={isVerifyingOtp}
-                        className="px-8 py-3.5 rounded-2xl bg-gradient-to-r from-emerald-600 to-indigo-600 hover:from-emerald-500 hover:to-indigo-500 text-white font-black text-sm shadow-xl shadow-indigo-500/25 transition-all flex items-center space-x-2 disabled:opacity-50 cursor-pointer"
-                      >
-                        {isVerifyingOtp ? (
-                          <>
-                            <Sparkles className="w-4 h-4 animate-spin text-white" />
-                            <span>Verifying OTP & Creating Health DNA Vault...</span>
-                          </>
-                        ) : otpVerificationSuccess ? (
-                          <>
-                            <CheckCircle2 className="w-4 h-4 text-emerald-300" />
-                            <span>Verified! Opening Vault...</span>
-                          </>
-                        ) : (
-                          <>
-                            <ShieldCheck className="w-4 h-4" />
-                            <span>Verify OTP & Register Vault</span>
-                          </>
-                        )}
-                      </button>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            )}
           </div>
         )}
 

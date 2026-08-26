@@ -28,6 +28,8 @@ import {
   EyeOff,
   ShieldCheck,
   LogOut,
+  Info,
+  CheckCircle2,
 } from "lucide-react";
 
 interface PatientProfileViewProps {
@@ -35,6 +37,7 @@ interface PatientProfileViewProps {
   onUpdatePatient: (updated: PatientProfile) => void;
   onOpenDigitalId: () => void;
   onLogout?: () => void;
+  onOpenFhirCryptoVault?: () => void;
 }
 
 const PRESET_AVATARS = [
@@ -55,6 +58,7 @@ export const PatientProfileView: React.FC<PatientProfileViewProps> = ({
   onUpdatePatient,
   onOpenDigitalId,
   onLogout,
+  onOpenFhirCryptoVault,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false);
@@ -247,27 +251,37 @@ export const PatientProfileView: React.FC<PatientProfileViewProps> = ({
           </div>
         </div>
 
-        <div className="flex items-center space-x-3 self-end md:self-auto">
+        <div className="flex flex-wrap items-center gap-2.5 self-end md:self-auto">
+          {onOpenFhirCryptoVault && (
+            <button
+              onClick={onOpenFhirCryptoVault}
+              className="flex items-center space-x-1.5 px-3.5 py-2.5 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs transition-all shadow-md shadow-blue-500/20 cursor-pointer"
+              title="Open Zero-Knowledge AES-256 Vault & HL7 FHIR Exporter"
+            >
+              <ShieldCheck className="w-4 h-4 text-cyan-300" />
+              <span>Zero-Knowledge & FHIR R4</span>
+            </button>
+          )}
           <button
             onClick={() => {
               setTempAvatarUrl(patient.avatarUrl);
               setIsPhotoModalOpen(true);
             }}
-            className="flex items-center space-x-2 px-3.5 py-2.5 rounded-2xl bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-800 border border-cyan-300 font-bold text-xs transition-all"
+            className="flex items-center space-x-2 px-3.5 py-2.5 rounded-2xl bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-800 border border-cyan-300 font-bold text-xs transition-all cursor-pointer"
           >
             <Camera className="w-4 h-4 text-cyan-600" />
             <span>Change Photo</span>
           </button>
           <button
             onClick={onOpenDigitalId}
-            className="flex items-center space-x-2 px-4 py-2.5 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs transition-all shadow-md"
+            className="flex items-center space-x-2 px-4 py-2.5 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs transition-all shadow-md cursor-pointer"
           >
             <QrCode className="w-4 h-4 text-cyan-400" />
             <span>Digital ID Card</span>
           </button>
           <button
             onClick={() => setIsEditing(!isEditing)}
-            className="flex items-center space-x-2 px-4 py-2.5 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs transition-all shadow-md"
+            className="flex items-center space-x-2 px-4 py-2.5 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs transition-all shadow-md cursor-pointer"
           >
             <Edit2 className="w-4 h-4" />
             <span>{isEditing ? "Cancel Editing" : "Edit Profile"}</span>
@@ -650,12 +664,17 @@ export const PatientProfileView: React.FC<PatientProfileViewProps> = ({
             </div>
           </div>
 
-          {/* Biometric & Security Card */}
+          {/* Security & Identity Card */}
           <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm space-y-4">
-            <h3 className="text-base font-bold text-slate-900 flex items-center space-x-2 border-b border-slate-100 pb-3">
-              <Shield className="w-5 h-5 text-emerald-600" />
-              <span>Security & Identity</span>
-            </h3>
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <h3 className="text-base font-bold text-slate-900 flex items-center space-x-2">
+                <Shield className="w-5 h-5 text-emerald-600" />
+                <span>Security & Identity</span>
+              </h3>
+              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-100 text-emerald-800 border border-emerald-300">
+                Active & Protected
+              </span>
+            </div>
 
             <div className="space-y-3 text-xs">
               <div className="flex items-center justify-between p-3 rounded-2xl bg-slate-50 border border-slate-100">
@@ -664,15 +683,15 @@ export const PatientProfileView: React.FC<PatientProfileViewProps> = ({
               </div>
 
               <div className="flex items-center justify-between p-3 rounded-2xl bg-slate-50 border border-slate-100">
-                <span className="text-slate-600 font-semibold">Biometric Status:</span>
-                <span className="font-bold text-emerald-700 flex items-center space-x-1">
-                  <Fingerprint className="w-3.5 h-3.5" />
-                  <span>Verified</span>
+                <span className="text-slate-600 font-semibold">Vault Security Gateway:</span>
+                <span className="font-bold text-slate-800 flex items-center space-x-1">
+                  <Lock className="w-3.5 h-3.5 text-amber-600" />
+                  <span>Password Encrypted</span>
                 </span>
               </div>
 
               <div className="flex items-center justify-between p-3 rounded-2xl bg-slate-50 border border-slate-100">
-                <span className="text-slate-600 font-semibold">National Health Record Sync:</span>
+                <span className="text-slate-600 font-semibold">National Health Sync:</span>
                 <span className="font-bold text-blue-700">Connected</span>
               </div>
             </div>

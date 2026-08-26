@@ -34,6 +34,7 @@ export interface PatientProfile {
   registeredHospital: string;
   securityPin?: string; // 4-digit Account Security PIN (e.g. "1234")
   password?: string; // Account Password created during registration for self-login
+  biometricAuthEnabled?: boolean; // User setting toggle: Enable/disable simulated biometric (FaceID/Fingerprint) prompt for vault access
 }
 
 export interface DiseaseRecord {

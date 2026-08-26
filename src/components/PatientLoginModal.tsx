@@ -281,29 +281,34 @@ export const PatientLoginModal: React.FC<PatientLoginModalProps> = ({
           {/* Fast Demo Switcher */}
           <div className="space-y-2 pt-2 border-t border-slate-100">
             <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">
-              Quick Test Demo Credentials:
+              Quick Test Demo Account:
             </span>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-              {patients.slice(0, 3).map((demo) => (
+            <div className="space-y-2">
+              {patients.slice(0, 1).map((demo) => (
                 <button
                   key={demo.dnaId}
                   type="button"
                   onClick={() => handleQuickDemo(demo)}
-                  className="p-2.5 rounded-xl bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-blue-300 text-left transition-all flex flex-col space-y-1 group cursor-pointer"
+                  className="w-full p-3 rounded-2xl bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-blue-300 text-left transition-all flex items-center justify-between group cursor-pointer"
                 >
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center space-x-3 min-w-0">
                     <img
                       src={demo.avatarUrl}
                       alt={demo.fullName}
-                      className="w-6 h-6 rounded-lg object-cover"
+                      className="w-8 h-8 rounded-xl object-cover ring-1 ring-slate-200 shrink-0"
                     />
-                    <p className="text-xs font-bold text-slate-800 group-hover:text-blue-700 truncate">
-                      {demo.fullName.split(" ")[0]}
-                    </p>
+                    <div className="min-w-0">
+                      <p className="text-xs font-bold text-slate-900 group-hover:text-blue-700 truncate">
+                        {demo.fullName}
+                      </p>
+                      <p className="text-[10px] font-mono text-slate-500 truncate">
+                        {demo.dnaId} • Password: <span className="text-blue-700 font-semibold">{demo.password || "AlexMercer@2026!"}</span>
+                      </p>
+                    </div>
                   </div>
-                  <p className="text-[9px] font-mono text-slate-500 truncate">
-                    {demo.password || "AlexMercer@2026!"}
-                  </p>
+                  <span className="text-[10px] font-bold text-blue-600 bg-blue-50 px-2.5 py-1 rounded-xl group-hover:bg-blue-600 group-hover:text-white transition-colors shrink-0">
+                    Autofill
+                  </span>
                 </button>
               ))}
             </div>
