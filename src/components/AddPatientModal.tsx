@@ -325,17 +325,6 @@ export const AddPatientModal: React.FC<AddPatientModalProps> = ({
                 />
               </div>
 
-              <div>
-                <label className="block font-bold text-slate-700 mb-1">National ID / Passport No.</label>
-                <input
-                  type="text"
-                  placeholder="US-NY-991204-X"
-                  value={nationalId}
-                  onChange={(e) => setNationalId(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium"
-                />
-              </div>
-
               <div className="sm:col-span-2">
                 <label className="block font-bold text-slate-700 mb-1">Residential Address</label>
                 <input

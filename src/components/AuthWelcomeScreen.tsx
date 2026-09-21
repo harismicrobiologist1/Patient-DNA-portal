@@ -764,13 +764,13 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
 
                     <div>
                       <label className="block text-xs font-bold text-slate-700 mb-1">
-                        National / Govt ID
+                        Phone Number
                       </label>
                       <input
-                        type="text"
-                        placeholder="e.g. US-NY-7721-Z"
-                        value={regForm.nationalId}
-                        onChange={(e) => setRegForm({ ...regForm, nationalId: e.target.value })}
+                        type="tel"
+                        placeholder="+1 (555) 000-0000"
+                        value={regForm.phone}
+                        onChange={(e) => setRegForm({ ...regForm, phone: e.target.value })}
                         className="w-full px-3.5 py-2 rounded-2xl border border-slate-300 text-xs font-bold text-slate-900 focus:ring-2 focus:ring-indigo-500 outline-none"
                       />
                     </div>
@@ -792,20 +792,7 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
                       </div>
                     </div>
 
-                    <div>
-                      <label className="block text-xs font-bold text-slate-700 mb-1">
-                        Phone Number
-                      </label>
-                      <input
-                        type="tel"
-                        placeholder="+1 (555) 000-0000"
-                        value={regForm.phone}
-                        onChange={(e) => setRegForm({ ...regForm, phone: e.target.value })}
-                        className="w-full px-3.5 py-2 rounded-2xl border border-slate-300 text-xs font-bold text-slate-900 focus:ring-2 focus:ring-indigo-500 outline-none"
-                      />
-                    </div>
-
-                    <div className="sm:col-span-3">
+                    <div className="sm:col-span-2 md:col-span-4">
                       <label className="block text-xs font-bold text-slate-700 mb-1">
                         Residential Address
                       </label>
