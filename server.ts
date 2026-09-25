@@ -94,8 +94,8 @@ function getResendClient(): Resend | null {
   return resendClient;
 }
 
-// In-memory / File-backed Database Store
-const DATA_FILE_PATH = path.join(__dirname, "patients_database_store.json");
+// In-memory / File-backed Database Store (use process.cwd() so production and dev reference same path)
+const DATA_FILE_PATH = path.join(process.cwd(), "patients_database_store.json");
 
 // In-memory active OTP codes store: key = `${doctorName}-${patientDnaId}`
 interface OtpEntry {

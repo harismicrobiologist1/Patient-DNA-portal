@@ -11,43 +11,36 @@ import {
 } from "../types";
 
 export const INITIAL_PATIENT: PatientProfile = {
-  dnaId: "DNA-8924-9012",
-  fullName: "Alex R. Mercer",
-  dob: "1988-06-14",
+  dnaId: "DNA-1629-3931",
+  fullName: "Haris Amin",
+  dob: "1998-05-12",
   gender: "Male",
-  bloodGroup: "O Negative (O-)",
-  avatarUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=300",
-  phone: "+1 (555) 019-2834",
-  email: "alex.mercer@healthdna.org",
-  address: "742 Evergreen Terrace, Medical District, NY 10001",
-  nationalId: "US-NY-982104-X",
+  bloodGroup: "O Positive (O+)",
+  avatarUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=300",
+  phone: "+92 311 9286007",
+  email: "harismicrobiologist1@gmail.com",
+  address: "Yarhussain, Khyber Pakhtunkhwa",
+  nationalId: "16301-6122822-5",
   biometricStatus: "Verified",
   organDonorStatus: true,
-  registeredHospital: "Apex National University Medical Center",
-  securityPin: "8924",
-  password: "AlexMercer@2026!",
+  registeredHospital: "BKMC National Medical Center",
+  securityPin: "1234",
+  password: "Haris456?!*",
   biometricAuthEnabled: true,
   insurance: {
-    provider: "Aetna Healthcare Premier Gold",
-    policyNumber: "AET-9940218-MED",
-    groupNumber: "GRP-88210",
+    provider: "Universal Healthcare Network",
+    policyNumber: "SL-9940218-MED",
+    groupNumber: "GRP-0012",
     status: "Active",
-    coverageAmount: "$1,000,000 Total Coverage ($500 Deductible)",
+    coverageAmount: "$500,000 Total Coverage",
   },
   emergencyContacts: [
     {
       id: "ec-1",
-      name: "Dr. Sarah Mercer",
-      relationship: "Spouse",
-      phone: "+1 (555) 019-9988",
+      name: "Emergency Contact",
+      relationship: "Family",
+      phone: "+92 311 9286007",
       isPrimary: true,
-    },
-    {
-      id: "ec-2",
-      name: "Robert Mercer",
-      relationship: "Brother",
-      phone: "+1 (555) 019-3321",
-      isPrimary: false,
     },
   ],
 };
@@ -638,14 +631,14 @@ export const INITIAL_AUDIT_LOGS: AuditLog[] = [
     actor: "Dr. Marcus Vance (Cardiology)",
     role: "doctor",
     action: "View Patient Complete Record",
-    details: "Accessed clinical history, lab reports & active medication list for DNA-8924-9012",
+    details: "Accessed clinical history, lab reports & active medication list for DNA-1629-3931",
     ipAddress: "192.168.1.104 (Encrypted TLS v1.3)",
     securityHash: "0x8F92A1B7C9D2...AES256",
   },
   {
     id: "log-9002",
     timestamp: "2026-08-07 14:12:05",
-    actor: "Patient Alex Mercer (Self)",
+    actor: "Patient Haris Amin (Self)",
     role: "patient",
     action: "Generate Emergency QR Code Access",
     details: "Issued biometric verification token for mobile wallet digital ID export",
@@ -655,7 +648,7 @@ export const INITIAL_AUDIT_LOGS: AuditLog[] = [
   {
     id: "log-9003",
     timestamp: "2026-07-16 09:10:00",
-    actor: "Apex Lab System (Automated)",
+    actor: "BKMC Lab System (Automated)",
     role: "admin",
     action: "Lab Results Ingestion",
     details: "Ingested digital signed report 'lab-2026-01' into patient encrypted firestore blob",
@@ -674,7 +667,7 @@ export interface PatientFullRecord {
 }
 
 export const INITIAL_PATIENTS_DATABASE: Record<string, PatientFullRecord> = {
-  "DNA-8924-9012": {
+  "DNA-1629-3931": {
     patient: INITIAL_PATIENT,
     history: INITIAL_MEDICAL_HISTORY,
     clinicalRecords: INITIAL_CLINICAL_RECORDS,

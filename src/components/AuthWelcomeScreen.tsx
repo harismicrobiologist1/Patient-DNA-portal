@@ -9,6 +9,13 @@ import {
 } from "../utils/security";
 import { getRememberedPatient } from "../utils/sessionSecurity";
 import {
+  SUPPORTED_COUNTRIES,
+  generateNewDnaId,
+  previewDnaId,
+  getCountryByCode,
+  peekNextDnaSequence,
+} from "../utils/dnaIdGenerator";
+import {
   Lock,
   ShieldCheck,
   KeyRound,
@@ -41,6 +48,8 @@ import {
   ChevronLeft,
   Send,
   Clock,
+  Globe,
+  Users,
 } from "lucide-react";
 
 interface AuthWelcomeScreenProps {
@@ -68,7 +77,8 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
   sessionExpiredReason = null,
   lastActivePatientId = null,
 }) => {
-  const patientList = allPatients && allPatients.length > 0 ? allPatients : (patients || []);
+  const rawList = allPatients && allPatients.length > 0 ? allPatients : (patients || []);
+  const patientList = [...rawList].sort((a, b) => b.dnaId.localeCompare(a.dnaId));
   const handleRegisterCallback = onRegisterPatient || onRegisterNewPatient;
   const handleEmergencyCallback = onOpenPublicEmergency || onOpenEmergencyTriage;
 
@@ -104,6 +114,7 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
 
   // Registration states
   const [regForm, setRegForm] = useState({
+    country: "US",
     fullName: "",
     dob: "1995-04-12",
     gender: "Female",
@@ -133,6 +144,23 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
   // Password evaluation
   const loginPasswordStrength = evaluatePasswordStrength(password);
   const regPasswordStrength = evaluatePasswordStrength(regForm.password);
+
+  const regCountryObj = getCountryByCode(regForm.country || "US");
+  const regPreviewDnaId = previewDnaId(regForm.country || "US");
+  const regNextSeq = peekNextDnaSequence();
+  const currentYearShort = new Date().getFullYear() % 100;
+
+  const handleRegCountryChange = (newCountryCode: string) => {
+    const cObj = getCountryByCode(newCountryCode);
+    setRegForm((prev) => ({
+      ...prev,
+      country: newCountryCode,
+      phone:
+        !prev.phone || SUPPORTED_COUNTRIES.some((c) => prev.phone === c.dialCode || prev.phone === `${c.dialCode} `)
+          ? `${cObj.dialCode} `
+          : prev.phone,
+    }));
+  };
 
   // Emergency Search State
   const [emergencyQuery, setEmergencyQuery] = useState("");
@@ -244,10 +272,9 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
     setIsRegistering(true);
     setRegistrationSuccess(true);
 
-    // Generate unique DNA ID
-    const randomPart1 = Math.floor(1000 + Math.random() * 9000);
-    const randomPart2 = Math.floor(1000 + Math.random() * 9000);
-    const newDnaId = `DNA-${randomPart1}-${randomPart2}`;
+    // Generate unique sequential DNA ID based on selected country
+    const newDnaId = generateNewDnaId(regForm.country || "US");
+    const regCountry = getCountryByCode(regForm.country || "US");
 
     const newPatientProfile: PatientProfile = {
       dnaId: newDnaId,
@@ -259,13 +286,13 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
         regForm.gender === "Female"
           ? "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=300"
           : "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=300",
-      phone: regForm.phone.trim() || "+1 (555) 000-0000",
+      phone: regForm.phone.trim() || `${regCountry.dialCode} 000-0000`,
       email: regForm.email.trim(),
-      address: regForm.address.trim() || "Universal Medical District",
-      nationalId: regForm.nationalId.trim() || `ID-${Math.floor(100000 + Math.random() * 900000)}`,
+      address: regForm.address.trim() || `Universal Medical District, ${regCountry.name}`,
+      nationalId: regForm.nationalId.trim() || `${regCountry.code}-ID-${Math.floor(100000 + Math.random() * 900000)}`,
       biometricStatus: "Verified",
       organDonorStatus: regForm.organDonor,
-      registeredHospital: "Apex National Medical Center",
+      registeredHospital: `${regCountry.name} National Medical Center`,
       securityPin: "1234",
       password: regForm.password.trim(),
       biometricAuthEnabled: true,
@@ -453,6 +480,15 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
 
           <button
             type="button"
+            onClick={() => onSelectRoleTab("directory")}
+            className="flex-1 min-w-[140px] py-3 px-4 rounded-2xl font-bold text-xs sm:text-sm flex items-center justify-center space-x-2 transition-all cursor-pointer text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+          >
+            <Users className="w-4 h-4 text-cyan-600" />
+            <span>Patient Directory ({patientList.length})</span>
+          </button>
+
+          <button
+            type="button"
             onClick={() => setActiveMode("staff")}
             className={`flex-1 min-w-[140px] py-3 px-4 rounded-2xl font-bold text-xs sm:text-sm flex items-center justify-center space-x-2 transition-all cursor-pointer ${
               activeMode === "staff"
@@ -510,7 +546,7 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
                       <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
                       <input
                         type="text"
-                        placeholder="e.g. DNA-8924-9012, alex.mercer@healthdna.org, or phone"
+                        placeholder="e.g. DNA-1629-3931, harismicrobiologist1@gmail.com, or phone"
                         value={identifier}
                         onChange={(e) => setIdentifier(e.target.value)}
                         className="w-full pl-10 pr-4 py-2.5 rounded-2xl border border-slate-300 text-xs sm:text-sm font-mono font-bold text-slate-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-slate-50/50 focus:bg-white transition-all"
@@ -652,7 +688,7 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
                             {demoP.fullName}
                           </p>
                           <p className="text-[10px] font-mono text-slate-500 truncate">
-                            {demoP.dnaId} • {demoP.password || "AlexMercer@2026!"}
+                            {demoP.dnaId} • {demoP.password || "Haris456?!*"}
                           </p>
                         </div>
                       </div>
@@ -693,6 +729,83 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
             </div>
 
             <form onSubmit={handleDirectRegistration} className="space-y-6">
+                {/* Automated Health DNA ID Issuance & Country Selection Banner */}
+                <div className="p-4 sm:p-5 rounded-3xl bg-gradient-to-br from-slate-900 via-indigo-950 to-blue-950 text-white shadow-xl border border-indigo-500/30 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-2 text-cyan-300 text-xs font-black uppercase tracking-wider">
+                      <Dna className="w-4 h-4 animate-pulse text-cyan-400" />
+                      <span>Automated DNA Passport ID System</span>
+                    </div>
+                    <span className="px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-200 text-[10px] font-bold border border-cyan-400/30 flex items-center space-x-1">
+                      <Sparkles className="w-3 h-3 text-cyan-300" />
+                      <span>Format: DNA-[COUNTRY]-[YEAR]-[SEQ]</span>
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+                    {/* Country Selection Dropdown */}
+                    <div>
+                      <label className="block text-xs font-bold text-blue-200 mb-1.5 flex items-center space-x-1.5">
+                        <Globe className="w-3.5 h-3.5 text-cyan-300" />
+                        <span>Country / Region Jurisdiction <span className="text-rose-400">*</span></span>
+                      </label>
+                      <select
+                        value={regForm.country || "US"}
+                        onChange={(e) => handleRegCountryChange(e.target.value)}
+                        className="w-full pl-3.5 pr-8 py-2.5 rounded-xl bg-white text-slate-900 border border-indigo-300/40 font-bold text-xs focus:ring-2 focus:ring-cyan-400 outline-none transition-all cursor-pointer shadow-inner"
+                      >
+                        {SUPPORTED_COUNTRIES.map((c) => (
+                          <option key={c.code} value={c.code} className="text-slate-900 font-medium">
+                            {c.flag} {c.name} ({c.code}) — {c.region}
+                          </option>
+                        ))}
+                      </select>
+                      <p className="text-[11px] text-blue-200/80 mt-1.5 flex items-center space-x-1">
+                        <span>Selected:</span>
+                        <span className="font-bold text-cyan-300">{regCountryObj.flag} {regCountryObj.name} ({regForm.country || "US"})</span>
+                      </p>
+                    </div>
+
+                    {/* Dynamic Live DNA ID Format Preview Card */}
+                    <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-3.5 flex flex-col justify-between space-y-2">
+                      <div className="flex items-center justify-between text-[10px] font-bold">
+                        <span className="text-blue-200 uppercase tracking-wider">Assigned Health DNA ID</span>
+                        <span className="text-emerald-300 flex items-center space-x-1 bg-emerald-500/20 px-2 py-0.5 rounded-full border border-emerald-400/30">
+                          <CheckCircle2 className="w-3 h-3" />
+                          <span>Live Dynamic Sync</span>
+                        </span>
+                      </div>
+
+                      <div className="py-1">
+                        <div className="text-xl sm:text-2xl font-mono font-black tracking-widest text-cyan-300 drop-shadow flex items-center space-x-2">
+                          <span>{regPreviewDnaId}</span>
+                          <span className="text-xl" title={regCountryObj.name}>{regCountryObj.flag}</span>
+                        </div>
+                      </div>
+
+                      {/* Segment Breakdown Chips */}
+                      <div className="grid grid-cols-4 gap-1 text-[9px] font-mono text-center">
+                        <div className="bg-white/10 px-1 py-0.5 rounded border border-white/10">
+                          <span className="text-slate-400 block text-[8px]">PREFIX</span>
+                          <span className="font-bold text-white">DNA</span>
+                        </div>
+                        <div className="bg-cyan-500/30 text-cyan-200 px-1 py-0.5 rounded border border-cyan-400/40">
+                          <span className="text-cyan-300 block text-[8px]">COUNTRY</span>
+                          <span className="font-black">{regForm.country || "US"}</span>
+                        </div>
+                        <div className="bg-white/10 px-1 py-0.5 rounded border border-white/10">
+                          <span className="text-slate-400 block text-[8px]">YEAR</span>
+                          <span className="font-bold text-white">{currentYearShort}</span>
+                        </div>
+                        <div className="bg-indigo-500/40 text-indigo-100 px-1 py-0.5 rounded border border-indigo-400/40">
+                          <span className="text-indigo-200 block text-[8px]">SEQ</span>
+                          <span className="font-black">#{regNextSeq}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
                 {/* Personal Details */}
                 <div>
                   <h3 className="text-xs font-bold uppercase text-slate-500 tracking-wider mb-3">

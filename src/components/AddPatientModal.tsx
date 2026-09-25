@@ -3,6 +3,13 @@ import { PatientProfile, MedicalHistory } from "../types";
 import { PatientFullRecord } from "../data/mockDatabase";
 import { evaluatePasswordStrength } from "../utils/security";
 import {
+  SUPPORTED_COUNTRIES,
+  generateNewDnaId,
+  previewDnaId,
+  getCountryByCode,
+  peekNextDnaSequence,
+} from "../utils/dnaIdGenerator";
+import {
   UserPlus,
   X,
   User,
@@ -21,6 +28,8 @@ import {
   EyeOff,
   KeyRound,
   ShieldCheck,
+  Globe,
+  Dna,
 } from "lucide-react";
 
 interface AddPatientModalProps {
@@ -34,11 +43,12 @@ export const AddPatientModal: React.FC<AddPatientModalProps> = ({
   onClose,
   onAddPatient,
 }) => {
+  const [selectedCountry, setSelectedCountry] = useState("US");
   const [fullName, setFullName] = useState("");
   const [dob, setDob] = useState("");
   const [gender, setGender] = useState("Male");
   const [bloodGroup, setBloodGroup] = useState("O Positive (O+)");
-  const [phone, setPhone] = useState("");
+  const [phone, setPhone] = useState("+1 ");
   const [email, setEmail] = useState("");
   const [address, setAddress] = useState("");
   const [nationalId, setNationalId] = useState("");
@@ -54,6 +64,19 @@ export const AddPatientModal: React.FC<AddPatientModalProps> = ({
   if (!isOpen) return null;
 
   const passwordStrength = evaluatePasswordStrength(password);
+  const activeCountryObj = getCountryByCode(selectedCountry);
+  const currentPreviewDnaId = previewDnaId(selectedCountry);
+  const nextSeqNumber = peekNextDnaSequence();
+  const currentYearShort = new Date().getFullYear() % 100;
+
+  const handleCountryChange = (newCountryCode: string) => {
+    setSelectedCountry(newCountryCode);
+    const country = getCountryByCode(newCountryCode);
+    // Update phone prefix if phone is empty or matches another country dial code
+    if (!phone || SUPPORTED_COUNTRIES.some((c) => phone === c.dialCode || phone === `${c.dialCode} `)) {
+      setPhone(`${country.dialCode} `);
+    }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -74,9 +97,8 @@ export const AddPatientModal: React.FC<AddPatientModalProps> = ({
       return;
     }
 
-    const random1 = Math.floor(1000 + Math.random() * 9000);
-    const random2 = Math.floor(1000 + Math.random() * 9000);
-    const dnaId = `DNA-${random1}-${random2}`;
+    // Automatically generate sequential DNA ID based on selected country
+    const dnaId = generateNewDnaId(selectedCountry);
 
     // Avatar based on gender selection
     const maleAvatars = [
@@ -103,13 +125,13 @@ export const AddPatientModal: React.FC<AddPatientModalProps> = ({
       gender,
       bloodGroup,
       avatarUrl,
-      phone: phone || "+1 (555) 019-0000",
+      phone: phone.trim() || `${activeCountryObj.dialCode} 000-0000`,
       email: email || `${fullName.toLowerCase().replace(/\s+/g, ".")}@healthdna.org`,
-      address: address || "100 Medical Plaza, District 1",
-      nationalId: nationalId || `US-NY-${Math.floor(100000 + Math.random() * 900000)}-X`,
+      address: address || `Medical Center District, ${activeCountryObj.name}`,
+      nationalId: nationalId || `${selectedCountry}-NAT-${Math.floor(100000 + Math.random() * 900000)}`,
       biometricStatus: "Verified",
       organDonorStatus,
-      registeredHospital: "Apex National University Medical Center",
+      registeredHospital: `${activeCountryObj.name} National University Medical Center`,
       securityPin: "1234",
       password: password.trim(),
       biometricAuthEnabled: true,
@@ -179,6 +201,85 @@ export const AddPatientModal: React.FC<AddPatientModalProps> = ({
 
         {/* Form Body */}
         <form onSubmit={handleSubmit} className="p-6 space-y-6 max-h-[80vh] overflow-y-auto">
+          {/* Automated Health DNA ID Issuance & Country Selection Banner */}
+          <div className="p-4 sm:p-5 rounded-3xl bg-gradient-to-br from-slate-900 via-indigo-950 to-blue-950 text-white shadow-xl border border-indigo-500/30 space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2 text-cyan-300 text-xs font-black uppercase tracking-wider">
+                <Dna className="w-4 h-4 animate-pulse text-cyan-400" />
+                <span>Automated DNA Passport ID System</span>
+              </div>
+              <span className="px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-200 text-[10px] font-bold border border-cyan-400/30 flex items-center space-x-1">
+                <Sparkles className="w-3 h-3 text-cyan-300" />
+                <span>Format: DNA-[COUNTRY]-[YEAR]-[SEQ]</span>
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+              {/* Country Selection Dropdown */}
+              <div>
+                <label className="block text-xs font-bold text-blue-200 mb-1.5 flex items-center space-x-1.5">
+                  <Globe className="w-3.5 h-3.5 text-cyan-300" />
+                  <span>Country / Region Jurisdiction <span className="text-rose-400">*</span></span>
+                </label>
+                <div className="relative">
+                  <select
+                    value={selectedCountry}
+                    onChange={(e) => handleCountryChange(e.target.value)}
+                    className="w-full pl-3.5 pr-8 py-2.5 rounded-xl bg-white text-slate-900 border border-indigo-300/40 font-bold text-xs focus:ring-2 focus:ring-cyan-400 outline-none transition-all cursor-pointer shadow-inner"
+                  >
+                    {SUPPORTED_COUNTRIES.map((c) => (
+                      <option key={c.code} value={c.code} className="text-slate-900 font-medium">
+                        {c.flag} {c.name} ({c.code}) — {c.region}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <p className="text-[11px] text-blue-200/80 mt-1.5 flex items-center space-x-1">
+                  <span>Selected:</span>
+                  <span className="font-bold text-cyan-300">{activeCountryObj.flag} {activeCountryObj.name} ({selectedCountry})</span>
+                </p>
+              </div>
+
+              {/* Dynamic Live DNA ID Format Preview Card */}
+              <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-3.5 flex flex-col justify-between space-y-2">
+                <div className="flex items-center justify-between text-[10px] font-bold">
+                  <span className="text-blue-200 uppercase tracking-wider">Assigned Health DNA ID</span>
+                  <span className="text-emerald-300 flex items-center space-x-1 bg-emerald-500/20 px-2 py-0.5 rounded-full border border-emerald-400/30">
+                    <CheckCircle2 className="w-3 h-3" />
+                    <span>Live Dynamic Sync</span>
+                  </span>
+                </div>
+
+                <div className="py-1">
+                  <div className="text-xl sm:text-2xl font-mono font-black tracking-widest text-cyan-300 drop-shadow flex items-center space-x-2">
+                    <span>{currentPreviewDnaId}</span>
+                    <span className="text-xl" title={activeCountryObj.name}>{activeCountryObj.flag}</span>
+                  </div>
+                </div>
+
+                {/* Segment Breakdown Chips */}
+                <div className="grid grid-cols-4 gap-1 text-[9px] font-mono text-center">
+                  <div className="bg-white/10 px-1 py-0.5 rounded border border-white/10">
+                    <span className="text-slate-400 block text-[8px]">PREFIX</span>
+                    <span className="font-bold text-white">DNA</span>
+                  </div>
+                  <div className="bg-cyan-500/30 text-cyan-200 px-1 py-0.5 rounded border border-cyan-400/40">
+                    <span className="text-cyan-300 block text-[8px]">COUNTRY</span>
+                    <span className="font-black">{selectedCountry}</span>
+                  </div>
+                  <div className="bg-white/10 px-1 py-0.5 rounded border border-white/10">
+                    <span className="text-slate-400 block text-[8px]">YEAR</span>
+                    <span className="font-bold text-white">{currentYearShort}</span>
+                  </div>
+                  <div className="bg-indigo-500/40 text-indigo-100 px-1 py-0.5 rounded border border-indigo-400/40">
+                    <span className="text-indigo-200 block text-[8px]">SEQ</span>
+                    <span className="font-black">#{nextSeqNumber}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* Identity & Basic Info */}
           <div className="space-y-4">
             <h3 className="text-xs font-black uppercase text-blue-600 tracking-wider flex items-center space-x-2">

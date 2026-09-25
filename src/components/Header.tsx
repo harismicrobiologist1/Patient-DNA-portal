@@ -115,7 +115,7 @@ export const Header: React.FC<HeaderProps> = ({
               title="Open Universal Patient Directory"
             >
               <Users className="w-3.5 h-3.5 text-cyan-400 group-hover:scale-110 transition-transform" />
-              <span className="hidden md:inline">Patient Directory</span>
+              <span><span className="hidden sm:inline">Patient </span>Directory</span>
               <span className="px-1.5 py-0.5 rounded-full bg-blue-500/20 text-cyan-300 font-mono text-[10px] font-bold border border-blue-500/30">
                 {patientCount}
               </span>

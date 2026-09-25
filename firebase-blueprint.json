@@ -1,0 +1,54 @@
+{
+  "entities": {
+    "PatientRecord": {
+      "title": "PatientRecord",
+      "description": "Universal health passport record containing patient profile, medical history, clinical records, lab reports, prescriptions, and appointments.",
+      "type": "object",
+      "properties": {
+        "dnaId": {
+          "type": "string",
+          "description": "Unique global health DNA identifier"
+        },
+        "fullName": {
+          "type": "string",
+          "description": "Patient legal full name"
+        },
+        "patient": {
+          "type": "object",
+          "description": "Core patient demographic and identity information"
+        },
+        "history": {
+          "type": "object",
+          "description": "Medical history, conditions, lifestyle, allergies"
+        },
+        "clinicalRecords": {
+          "type": "array",
+          "description": "Clinical encounter notes and diagnoses"
+        },
+        "labReports": {
+          "type": "array",
+          "description": "Lab test results and imaging studies"
+        },
+        "prescriptions": {
+          "type": "array",
+          "description": "Active and past medication prescriptions"
+        },
+        "appointments": {
+          "type": "array",
+          "description": "Doctor appointments and scheduling history"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Last updated ISO timestamp"
+        }
+      },
+      "required": ["dnaId"]
+    }
+  },
+  "firestore": {
+    "/patients/{dnaId}": {
+      "schema": "PatientRecord",
+      "description": "Master global patient directory and health record vaults accessible across devices"
+    }
+  }
+}

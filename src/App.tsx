@@ -38,6 +38,7 @@ import { DigitalPatientCard } from "./components/DigitalPatientCard";
 import { EmergencyAccessModal } from "./components/EmergencyAccessModal";
 import { AddPatientModal } from "./components/AddPatientModal";
 import { PatientSwitcherModal } from "./components/PatientSwitcherModal";
+import { PatientDirectoryView } from "./components/PatientDirectoryView";
 import { DoctorOtpModal } from "./components/DoctorOtpModal";
 import { PatientSecurityAuthModal } from "./components/PatientSecurityAuthModal";
 import { PublicDigitalCardModal } from "./components/PublicDigitalCardModal";
@@ -46,6 +47,12 @@ import { AuthWelcomeScreen } from "./components/AuthWelcomeScreen";
 import { CreatorPortfolioModal } from "./components/CreatorPortfolioModal";
 import { SessionInactivityModal } from "./components/SessionInactivityModal";
 import { FhirCryptoVaultModal } from "./components/FhirCryptoVaultModal";
+import {
+  testFirestoreConnection,
+  savePatientToFirestore,
+  subscribeToPatientsDirectory,
+  seedInitialFirestorePatientsIfEmpty,
+} from "./firebase";
 import {
   validateCurrentSession,
   createActiveSession,
@@ -86,7 +93,7 @@ import {
   LogOut,
 } from "lucide-react";
 
-const STORAGE_KEY = "health_dna_patients_database_v4";
+const STORAGE_KEY = "health_dna_patients_database_v5";
 
 export default function App() {
   const [currentRole, setRole] = useState<UserRole>("patient");
@@ -148,8 +155,8 @@ export default function App() {
 
   // Doctor Authorized Sessions Map: { [dnaId]: DoctorAuthSession }
   const [doctorAuthSessions, setDoctorAuthSessions] = useState<Record<string, DoctorAuthSession>>({
-    "DNA-8924-9012": {
-      patientDnaId: "DNA-8924-9012",
+    "DNA-1629-3931": {
+      patientDnaId: "DNA-1629-3931",
       doctorName: "Dr. Marcus Vance, FACC",
       authorizedAt: new Date().toISOString(),
       expiresAt: new Date(Date.now() + 3600000).toISOString(),
@@ -221,25 +228,38 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    // Initial fetch
-    syncDatabaseFromServer(true);
+    // 1. Initial Firestore connection test & demo seeding if empty
+    testFirestoreConnection();
+    seedInitialFirestorePatientsIfEmpty();
 
-    // Periodic live background poll so registrations on other devices/tabs appear immediately
+    // 2. Real-time Firestore Live Subscription across all devices worldwide
+    const unsubscribeFirestore = subscribeToPatientsDirectory((firestoreDb) => {
+      if (firestoreDb && Object.keys(firestoreDb).length > 0) {
+        setPatientsDatabase((prev) => {
+          const merged = { ...prev, ...firestoreDb };
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
+          return merged;
+        });
+      }
+    });
+
+    // 3. Fallback server polling
+    syncDatabaseFromServer(true);
     const pollInterval = setInterval(() => {
       syncDatabaseFromServer(false);
-    }, 3500);
+    }, 3000);
 
-    // Also sync whenever the browser tab gains focus
     const onFocus = () => syncDatabaseFromServer(false);
     window.addEventListener("focus", onFocus);
 
     return () => {
+      unsubscribeFirestore();
       clearInterval(pollInterval);
       window.removeEventListener("focus", onFocus);
     };
   }, [syncDatabaseFromServer]);
 
-  // 2. Persistent Save on Database Mutation
+  // 2. Persistent Save on Database Mutation (Cloud Firestore + LocalStorage + Server Disk)
   const persistDatabase = useCallback(async (updatedDb: Record<string, PatientFullRecord>) => {
     try {
       setSaveStatus("saving");
@@ -247,11 +267,19 @@ export default function App() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedDb));
 
       // Asynchronous server-side file write
-      await fetch("/api/database/save", {
+      fetch("/api/database/save", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ database: updatedDb, patientsDatabase: updatedDb }),
-      });
+      }).catch((err) => console.warn("Server file write note:", err));
+
+      // Asynchronous Firestore cloud sync
+      for (const record of Object.values(updatedDb)) {
+        if (record && record.patient && record.patient.dnaId) {
+          savePatientToFirestore(record).catch((e) => console.warn("Firestore save note:", e));
+        }
+      }
+
       setSaveStatus("synced");
     } catch (err) {
       console.error("Error saving database to server:", err);
@@ -563,14 +591,21 @@ export default function App() {
     }));
     handleLoginSuccess(newDnaId);
 
-    // Broadcast to server registration endpoint for real-time network persistence
+    // Save directly to Firestore for instantaneous multi-device cloud directory availability
+    try {
+      await savePatientToFirestore(newRecord);
+      console.log("[Firestore] Registered patient pushed to live cloud:", newDnaId);
+    } catch (fsErr) {
+      console.warn("[Firestore] Live push note:", fsErr);
+    }
+
+    // Broadcast to server registration endpoint for secondary backup
     try {
       await fetch("/api/patients/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ newRecord }),
       });
-      // Force instant sync
       syncDatabaseFromServer(false);
     } catch (e) {
       console.warn("Server registration push note:", e);
@@ -684,6 +719,7 @@ export default function App() {
                 { id: "prescription", label: "Prescriptions", icon: Pill, reqAuth: true },
                 { id: "appointments", label: "Appointments", icon: Calendar, reqAuth: true },
                 { id: "ai-module", label: "AI Diagnostics", icon: Brain, isAi: true, reqAuth: true },
+                { id: "directory", label: "Patient Directory", icon: Users, reqAuth: false, badge: allPatientsList.length },
                 { id: "doctor-dash", label: "Doctor Console", icon: Stethoscope, reqAuth: false },
                 { id: "hospital-dash", label: "Hospital Admin", icon: Building2, reqAuth: false },
                 { id: "future", label: "Genetics & Labs", icon: Globe, reqAuth: true },
@@ -707,6 +743,13 @@ export default function App() {
                   >
                     <Icon className={`w-4 h-4 ${isActive ? "text-white" : "text-slate-400"}`} />
                     <span>{item.label}</span>
+                    {item.badge !== undefined && (
+                      <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-mono font-bold ${
+                        isActive ? "bg-white/20 text-white" : "bg-blue-100 text-blue-700"
+                      }`}>
+                        {item.badge}
+                      </span>
+                    )}
                     {isLocked && <Lock className="w-3 h-3 text-slate-400" />}
                   </button>
                 );
@@ -739,7 +782,7 @@ export default function App() {
       {/* Main Content Viewport */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* If user is not authenticated and is trying to access any patient view, show the AuthWelcomeScreen */}
-        {!isAuthenticated && activeTab !== "doctor-dash" && activeTab !== "hospital-dash" ? (
+        {!isAuthenticated && activeTab !== "doctor-dash" && activeTab !== "hospital-dash" && activeTab !== "directory" ? (
           <AuthWelcomeScreen
             allPatients={allPatientsList}
             patients={allPatientsList}
@@ -1037,6 +1080,19 @@ export default function App() {
             allPatients={allPatientsList}
             onSelectPatient={handleSelectPatientRequest}
             onOpenAddPatient={() => setIsAddPatientModalOpen(true)}
+            onRefresh={() => syncDatabaseFromServer(false)}
+          />
+        )}
+
+        {/* Global Universal Patient Directory View */}
+        {activeTab === "directory" && (
+          <PatientDirectoryView
+            allPatients={allPatientsList}
+            activePatientId={activePatientId || undefined}
+            currentRole={currentRole}
+            onSelectPatient={handleSelectPatientRequest}
+            onOpenAddPatient={() => setIsAddPatientModalOpen(true)}
+            onViewPublicCard={handleOpenPublicCard}
             onRefresh={() => syncDatabaseFromServer(false)}
           />
         )}

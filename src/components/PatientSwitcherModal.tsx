@@ -58,7 +58,14 @@ export const PatientSwitcherModal: React.FC<PatientSwitcherModalProps> = ({
     }
   };
 
-  const filteredPatients = patients.filter(
+  const sortedPatients = [...patients].sort((a, b) => {
+    if (a.dnaId === activePatientId) return -1;
+    if (b.dnaId === activePatientId) return 1;
+    // Newest DNA IDs tend to be sorted first
+    return b.dnaId.localeCompare(a.dnaId);
+  });
+
+  const filteredPatients = sortedPatients.filter(
     (p) =>
       p.fullName.toLowerCase().includes(searchQuery.toLowerCase()) ||
       p.dnaId.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -148,12 +155,13 @@ export const PatientSwitcherModal: React.FC<PatientSwitcherModalProps> = ({
 
         {/* Security Policy & Live Status Reminder Banner */}
         <div className="bg-slate-50 px-6 py-2 border-b border-slate-200 flex items-center justify-between text-[11px] text-slate-600">
-          <span className="flex items-center space-x-1.5">
+          <span className="flex items-center space-x-1.5 font-medium">
             <Database className="w-3.5 h-3.5 text-emerald-600" />
-            <span>All registered accounts automatically saved to persistent database</span>
+            <span>Persistent Global Cloud Database • Synced Across All Devices</span>
           </span>
-          <span className="text-emerald-700 font-semibold bg-emerald-100/60 px-2 py-0.5 rounded-full text-[10px]">
-            Live Real-time Sync Active
+          <span className="text-emerald-700 font-bold bg-emerald-100/80 px-2 py-0.5 rounded-full text-[10px] flex items-center space-x-1">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
+            <span>Firestore Live</span>
           </span>
         </div>
 
@@ -168,16 +176,44 @@ export const PatientSwitcherModal: React.FC<PatientSwitcherModalProps> = ({
         )}
 
         {/* Search Bar */}
-        <div className="p-4 bg-slate-50 border-b border-slate-200">
+        <div className="p-4 bg-slate-50 border-b border-slate-200 space-y-2">
           <div className="relative">
             <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
             <input
               type="text"
-              placeholder="Search patients by name, DNA ID (e.g. DNA-8924), blood group, phone, or hospital..."
+              placeholder="Search by DNA ID (e.g. DNA-8924, PK-8819), full name, or phone..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+              className="w-full pl-10 pr-16 py-2.5 rounded-xl border border-slate-200 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
             />
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => setSearchQuery("")}
+                className="absolute right-3.5 top-2.5 text-xs text-slate-400 hover:text-slate-600 font-bold"
+              >
+                Clear
+              </button>
+            )}
+          </div>
+
+          {/* Quick DNA ID chips */}
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-0.5 text-[10px]">
+            <span className="text-slate-400 font-medium shrink-0">DNA ID:</span>
+            {patients.slice(0, 5).map((p) => (
+              <button
+                key={p.dnaId}
+                type="button"
+                onClick={() => setSearchQuery(p.dnaId)}
+                className={`px-2 py-0.5 rounded-md font-mono font-bold shrink-0 transition-all cursor-pointer ${
+                  searchQuery.toUpperCase() === p.dnaId.toUpperCase()
+                    ? "bg-blue-600 text-white"
+                    : "bg-slate-200/70 hover:bg-slate-300 text-slate-700"
+                }`}
+              >
+                {p.dnaId}
+              </button>
+            ))}
           </div>
         </div>
 
