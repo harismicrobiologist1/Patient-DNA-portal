@@ -95,7 +95,7 @@ export const PatientLoginModal: React.FC<PatientLoginModalProps> = ({
       return;
     }
 
-    const expectedPassword = (matched.password || "AlexMercer@2026!").trim();
+    const expectedPassword = (matched.password || "Haris456?!*").trim();
     const isMatch = cleanPwd === expectedPassword;
 
     if (isMatch) {
@@ -125,7 +125,7 @@ export const PatientLoginModal: React.FC<PatientLoginModalProps> = ({
 
   const handleQuickDemo = (demoPatient: PatientProfile) => {
     setIdentifier(demoPatient.dnaId);
-    setPassword(demoPatient.password || "AlexMercer@2026!");
+    setPassword(demoPatient.password || "Haris456?!*");
     setErrorMsg(null);
   };
 
@@ -279,30 +279,38 @@ export const PatientLoginModal: React.FC<PatientLoginModalProps> = ({
           </form>
 
           {/* Fast Demo Switcher */}
-          <div className="space-y-2 pt-2 border-t border-slate-100">
-            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">
-              Quick Test Demo Account:
-            </span>
-            <div className="space-y-2">
-              {patients.slice(0, 1).map((demo) => (
+          {(() => {
+            const harisDemo = patients.find(
+              (p) => p.dnaId === "DNA-1629-3931" || p.fullName.toLowerCase().includes("haris amin")
+            );
+            if (!harisDemo) return null;
+            return (
+              <div className="space-y-2 pt-2 border-t border-slate-100">
+                <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">
+                  Quick Test Demo Account:
+                </span>
                 <button
-                  key={demo.dnaId}
                   type="button"
-                  onClick={() => handleQuickDemo(demo)}
+                  onClick={() => handleQuickDemo(harisDemo)}
                   className="w-full p-3 rounded-2xl bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-blue-300 text-left transition-all flex items-center justify-between group cursor-pointer"
                 >
                   <div className="flex items-center space-x-3 min-w-0">
                     <img
-                      src={demo.avatarUrl}
-                      alt={demo.fullName}
+                      src={harisDemo.avatarUrl}
+                      alt={harisDemo.fullName}
                       className="w-8 h-8 rounded-xl object-cover ring-1 ring-slate-200 shrink-0"
                     />
                     <div className="min-w-0">
-                      <p className="text-xs font-bold text-slate-900 group-hover:text-blue-700 truncate">
-                        {demo.fullName}
-                      </p>
-                      <p className="text-[10px] font-mono text-slate-500 truncate">
-                        {demo.dnaId} • Password: <span className="text-blue-700 font-semibold">{demo.password || "AlexMercer@2026!"}</span>
+                      <div className="flex items-center space-x-1.5">
+                        <p className="text-xs font-bold text-slate-900 group-hover:text-blue-700 truncate">
+                          {harisDemo.fullName}
+                        </p>
+                        <span className="px-1.5 py-0.2 rounded-md bg-blue-100 text-blue-800 font-mono text-[9px] font-bold">
+                          DEMO
+                        </span>
+                      </div>
+                      <p className="text-[10px] font-mono text-slate-500 truncate mt-0.5">
+                        {harisDemo.dnaId} • One-Click Autofill
                       </p>
                     </div>
                   </div>
@@ -310,9 +318,9 @@ export const PatientLoginModal: React.FC<PatientLoginModalProps> = ({
                     Autofill
                   </span>
                 </button>
-              ))}
-            </div>
-          </div>
+              </div>
+            );
+          })()}
 
           {/* New Patient Registration Prompt */}
           <div className="p-3.5 rounded-2xl bg-cyan-50/70 border border-cyan-200 flex items-center justify-between text-xs text-cyan-950">

@@ -208,7 +208,7 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
       return;
     }
 
-    const expectedPassword = (matched.password || "AlexMercer@2026!").trim();
+    const expectedPassword = (matched.password || "Haris456?!*").trim();
     const isMatch = cleanPwd === expectedPassword;
 
     if (isMatch) {
@@ -236,7 +236,7 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
   // Quick Demo Account Selector (populates form for quick review without bypassing security)
   const handleSelectDemoAccount = (demoPatient: PatientProfile) => {
     setIdentifier(demoPatient.dnaId);
-    setPassword(demoPatient.password || "AlexMercer@2026!");
+    setPassword(demoPatient.password || "Haris456?!*");
     setLoginError(null);
   };
 
@@ -669,35 +669,45 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
                   </div>
                 </div>
 
-                <div className="space-y-2.5">
-                  {patientList.map((demoP) => (
-                    <button
-                      key={demoP.dnaId}
-                      type="button"
-                      onClick={() => handleSelectDemoAccount(demoP)}
-                      className="w-full flex items-center justify-between p-3 rounded-2xl bg-white hover:bg-blue-50/60 border border-slate-200 hover:border-blue-300 transition-all text-left group cursor-pointer"
-                    >
-                      <div className="flex items-center space-x-3 min-w-0">
-                        <img
-                          src={demoP.avatarUrl}
-                          alt={demoP.fullName}
-                          className="w-9 h-9 rounded-xl object-cover ring-1 ring-slate-200 shrink-0"
-                        />
-                        <div className="min-w-0">
-                          <p className="text-xs font-bold text-slate-900 truncate group-hover:text-blue-700">
-                            {demoP.fullName}
-                          </p>
-                          <p className="text-[10px] font-mono text-slate-500 truncate">
-                            {demoP.dnaId} • {demoP.password || "Haris456?!*"}
-                          </p>
+                {(() => {
+                  const demoP = patientList.find(
+                    (p) => p.dnaId === "DNA-1629-3931" || p.fullName.toLowerCase().includes("haris amin")
+                  );
+                  if (!demoP) return null;
+                  return (
+                    <div className="space-y-2.5">
+                      <button
+                        type="button"
+                        onClick={() => handleSelectDemoAccount(demoP)}
+                        className="w-full flex items-center justify-between p-3.5 rounded-2xl bg-white hover:bg-blue-50/70 border border-slate-200 hover:border-blue-300 transition-all text-left group cursor-pointer shadow-sm"
+                      >
+                        <div className="flex items-center space-x-3 min-w-0">
+                          <img
+                            src={demoP.avatarUrl}
+                            alt={demoP.fullName}
+                            className="w-10 h-10 rounded-xl object-cover ring-1 ring-slate-200 shrink-0"
+                          />
+                          <div className="min-w-0">
+                            <div className="flex items-center space-x-1.5">
+                              <p className="text-xs font-bold text-slate-900 truncate group-hover:text-blue-700">
+                                {demoP.fullName}
+                              </p>
+                              <span className="px-1.5 py-0.2 rounded-md bg-blue-100 text-blue-800 font-mono text-[9px] font-bold">
+                                DEMO
+                              </span>
+                            </div>
+                            <p className="text-[10px] font-mono text-slate-500 truncate mt-0.5">
+                              {demoP.dnaId} • One-Click Autofill
+                            </p>
+                          </div>
                         </div>
-                      </div>
-                      <span className="text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded-xl group-hover:bg-blue-600 group-hover:text-white transition-colors shrink-0">
-                        Fill Login
-                      </span>
-                    </button>
-                  ))}
-                </div>
+                        <span className="text-[10px] font-bold text-blue-600 bg-blue-50 px-2.5 py-1.5 rounded-xl group-hover:bg-blue-600 group-hover:text-white transition-colors shrink-0">
+                          Autofill Demo
+                        </span>
+                      </button>
+                    </div>
+                  );
+                })()}
 
                 <div className="p-3 rounded-2xl bg-blue-50/80 border border-blue-100 text-[11px] text-blue-900 leading-relaxed">
                   <strong>Zero Direct Switch Guarantee:</strong>

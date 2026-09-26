@@ -95,7 +95,7 @@ export const PatientSecurityAuthModal: React.FC<PatientSecurityAuthModalProps> =
       return;
     }
 
-    const correctPassword = (targetPatient.password || "AlexMercer@2026!").trim();
+    const correctPassword = (targetPatient.password || "Haris456?!*").trim();
 
     if (cleanInput === correctPassword) {
       resetFailedAttempts(targetPatient.dnaId);
@@ -217,7 +217,7 @@ export const PatientSecurityAuthModal: React.FC<PatientSecurityAuthModalProps> =
                 <input
                   type={showPassword ? "text" : "password"}
                   disabled={lockoutTimer > 0}
-                  placeholder={`Enter password (e.g. ${targetPatient.password ? "••••••••••••" : "AlexMercer@2026!"})`}
+                  placeholder="Enter confidential account password..."
                   value={enteredPassword}
                   onChange={(e) => setEnteredPassword(e.target.value)}
                   autoFocus
@@ -243,16 +243,20 @@ export const PatientSecurityAuthModal: React.FC<PatientSecurityAuthModalProps> =
               )}
             </div>
 
-            {/* Demo Hint Banner */}
-            {targetPatient.password && (
-              <div className="p-3 rounded-2xl bg-blue-50/70 border border-blue-200/70 text-[11px] text-blue-900 flex items-start space-x-2">
-                <Info className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
-                <div>
-                  <span className="font-bold text-blue-950">Patient Password Protection:</span>
-                  <p className="text-blue-800 mt-0.5">
-                    Account password for this patient: <code className="px-1.5 py-0.5 bg-blue-200/70 rounded font-mono font-bold text-blue-900 select-all">{targetPatient.password}</code>
-                  </p>
+            {/* Demo Helper for Official Demo Account Only */}
+            {targetPatient.dnaId === "DNA-1629-3931" && (
+              <div className="p-3 rounded-2xl bg-blue-50/70 border border-blue-200/70 text-[11px] text-blue-900 flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Info className="w-4 h-4 text-blue-600 shrink-0" />
+                  <span className="font-semibold text-blue-950">Official Demo Profile: Haris Amin</span>
                 </div>
+                <button
+                  type="button"
+                  onClick={() => setEnteredPassword(targetPatient.password || "Haris456?!*")}
+                  className="px-2.5 py-1 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-[10px] transition-colors cursor-pointer"
+                >
+                  Autofill Demo Password
+                </button>
               </div>
             )}
 

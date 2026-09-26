@@ -586,7 +586,7 @@ export const FhirCryptoVaultModal: React.FC<FhirCryptoVaultModalProps> = ({
                       type={showPassword ? "text" : "password"}
                       value={decryptPasswordInput}
                       onChange={(e) => setDecryptPasswordInput(e.target.value)}
-                      placeholder={`Enter master password (e.g. ${patient.password || "AlexMercer@2026!"})`}
+                      placeholder="Enter master password to test decrypt..."
                       className="w-full pl-4 pr-10 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
                     />
                     <button
@@ -599,10 +599,10 @@ export const FhirCryptoVaultModal: React.FC<FhirCryptoVaultModalProps> = ({
                   </div>
 
                   <button
-                    onClick={() => setDecryptPasswordInput(patient.password || "AlexMercer@2026!")}
+                    onClick={() => setDecryptPasswordInput(patient.password || "Haris456?!*")}
                     className="px-3 py-2 text-xs font-bold text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-xl transition-colors cursor-pointer shrink-0"
                   >
-                    Autofill Demo Password
+                    Autofill Vault Password
                   </button>
 
                   <button
