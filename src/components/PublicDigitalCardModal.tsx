@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { PatientProfile } from "../types";
 import { QRCodeGenerator } from "./QRCodeGenerator";
+import { getDefaultAvatar } from "../utils/avatarUtils";
 import {
   ShieldCheck,
   Dna,
@@ -149,6 +150,9 @@ export const PublicDigitalCardModal: React.FC<PublicDigitalCardModalProps> = ({
             <img
               src={patient.avatarUrl}
               alt={patient.fullName}
+              onError={(e) => {
+                (e.target as HTMLImageElement).src = getDefaultAvatar(patient.gender);
+              }}
               className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl object-cover ring-4 ring-white shadow-md"
             />
             <div className="space-y-1.5 text-center sm:text-left flex-1">

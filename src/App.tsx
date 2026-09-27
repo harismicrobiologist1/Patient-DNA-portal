@@ -93,7 +93,7 @@ import {
   LogOut,
 } from "lucide-react";
 
-const STORAGE_KEY = "health_dna_patients_database_v6";
+const STORAGE_KEY = "health_dna_patients_database_v11";
 
 export default function App() {
   const [currentRole, setRole] = useState<UserRole>("patient");

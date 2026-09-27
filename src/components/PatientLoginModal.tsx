@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { PatientProfile } from "../types";
+import { getDefaultAvatar } from "../utils/avatarUtils";
 import {
   evaluatePasswordStrength,
   checkAccountLockout,
@@ -298,6 +299,9 @@ export const PatientLoginModal: React.FC<PatientLoginModalProps> = ({
                     <img
                       src={harisDemo.avatarUrl}
                       alt={harisDemo.fullName}
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = getDefaultAvatar(harisDemo.gender);
+                      }}
                       className="w-8 h-8 rounded-xl object-cover ring-1 ring-slate-200 shrink-0"
                     />
                     <div className="min-w-0">

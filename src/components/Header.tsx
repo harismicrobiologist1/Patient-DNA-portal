@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { UserRole, PatientProfile } from "../types";
+import { getDefaultAvatar } from "../utils/avatarUtils";
 import {
   Dna,
   ShieldCheck,
@@ -132,6 +133,9 @@ export const Header: React.FC<HeaderProps> = ({
                   <img
                     src={patient.avatarUrl}
                     alt={patient.fullName}
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = getDefaultAvatar(patient.gender);
+                    }}
                     className="w-7 h-7 rounded-xl object-cover ring-2 ring-cyan-500/50"
                   />
                   <div className="text-left hidden sm:block">

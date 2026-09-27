@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { PatientProfile } from "../types";
 import { QRCodeGenerator } from "./QRCodeGenerator";
+import { getDefaultAvatar } from "../utils/avatarUtils";
 import {
   ShieldCheck,
   Dna,
@@ -292,6 +293,9 @@ export const DigitalPatientCard: React.FC<DigitalPatientCardProps> = ({
               <img
                 src={patient.avatarUrl}
                 alt={patient.fullName}
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = getDefaultAvatar(patient.gender);
+                }}
                 className="w-20 h-20 rounded-2xl object-cover ring-4 ring-blue-50 shadow-md border border-slate-200"
               />
               <span className="absolute -bottom-1 -right-1 p-1 bg-emerald-500 rounded-full text-white ring-2 ring-white">

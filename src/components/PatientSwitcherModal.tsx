@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { PatientProfile, UserRole } from "../types";
+import { getDefaultAvatar } from "../utils/avatarUtils";
 import {
   Users,
   Search,
@@ -255,6 +256,9 @@ export const PatientSwitcherModal: React.FC<PatientSwitcherModalProps> = ({
                       <img
                         src={p.avatarUrl}
                         alt={p.fullName}
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).src = getDefaultAvatar(p.gender);
+                        }}
                         className="w-14 h-14 rounded-2xl object-cover border border-slate-200 shadow-sm"
                       />
                       {!isSelected && currentRole === "patient" && (

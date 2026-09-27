@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { PatientProfile } from "../types";
+import { getDefaultAvatar } from "../utils/avatarUtils";
 import {
   evaluatePasswordStrength,
   checkAccountLockout,
@@ -157,6 +158,9 @@ export const PatientSecurityAuthModal: React.FC<PatientSecurityAuthModalProps> =
               <img
                 src={targetPatient.avatarUrl}
                 alt={targetPatient.fullName}
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = getDefaultAvatar(targetPatient.gender);
+                }}
                 className="w-12 h-12 rounded-2xl object-cover ring-2 ring-cyan-500 shadow-sm"
               />
               <div>

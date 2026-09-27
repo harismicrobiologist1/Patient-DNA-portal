@@ -10,6 +10,12 @@ import {
   peekNextDnaSequence,
 } from "../utils/dnaIdGenerator";
 import {
+  getDefaultAvatar,
+  PRESET_SYMBOL_AVATARS,
+  MALE_SYMBOL_AVATAR,
+  FEMALE_SYMBOL_AVATAR,
+} from "../utils/avatarUtils";
+import {
   UserPlus,
   X,
   User,
@@ -101,22 +107,8 @@ export const AddPatientModal: React.FC<AddPatientModalProps> = ({
     // Automatically generate sequential DNA ID based on selected country
     const dnaId = generateNewDnaId(selectedCountry);
 
-    // Avatar based on gender selection
-    const maleAvatars = [
-      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=300",
-      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=300",
-      "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=300",
-    ];
-    const femaleAvatars = [
-      "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=300",
-      "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&q=80&w=300",
-      "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=300",
-    ];
-    const defaultAvatar =
-      gender === "Female"
-        ? femaleAvatars[Math.floor(Math.random() * femaleAvatars.length)]
-        : maleAvatars[Math.floor(Math.random() * maleAvatars.length)];
-
+    // Default symbol avatar based on gender (Male or Female)
+    const defaultAvatar = getDefaultAvatar(gender);
     const avatarUrl = customAvatarUrl.trim() || defaultAvatar;
 
     const newPatient: PatientProfile = {
@@ -348,34 +340,60 @@ export const AddPatientModal: React.FC<AddPatientModalProps> = ({
                 </select>
               </div>
 
-              <div className="sm:col-span-2">
-                <label className="block font-bold text-slate-700 mb-1 flex items-center justify-between">
-                  <span>Profile Photo (URL or Upload)</span>
-                  <span className="text-[10px] text-slate-400 font-normal">
-                    Optional - Defaults to medical avatar
+              <div className="sm:col-span-2 space-y-2">
+                <label className="block font-bold text-slate-700 flex items-center justify-between">
+                  <span>Photo / Standard Symbol Avatar</span>
+                  <span className="text-[10px] text-slate-500 font-normal">
+                    Select a symbol avatar or upload a personal photo
                   </span>
                 </label>
-                <div className="flex items-center space-x-3">
-                  {customAvatarUrl && (
+
+                {/* 2 Symbol Avatars: Male & Female */}
+                <div className="grid grid-cols-2 gap-3">
+                  {PRESET_SYMBOL_AVATARS.map((sym) => {
+                    const activeUrl = customAvatarUrl || getDefaultAvatar(gender);
+                    const isSelected = activeUrl === sym.url;
+                    return (
+                      <button
+                        key={sym.id}
+                        type="button"
+                        onClick={() => {
+                          setCustomAvatarUrl(sym.url);
+                          setGender(sym.gender);
+                        }}
+                        className={`p-2.5 rounded-2xl border-2 flex items-center space-x-3 transition-all text-left cursor-pointer ${
+                          isSelected
+                            ? "bg-blue-50/70 border-blue-600 ring-2 ring-blue-500/20"
+                            : "bg-slate-50 border-slate-200 hover:border-slate-300"
+                        }`}
+                      >
+                        <img
+                          src={sym.url}
+                          alt={sym.label}
+                          referrerPolicy="no-referrer"
+                          className="w-12 h-12 rounded-xl object-cover shrink-0 ring-2 ring-slate-200 shadow-sm"
+                        />
+                        <div className="min-w-0 flex-1">
+                          <p className="text-xs font-bold text-slate-900 truncate">{sym.label}</p>
+                          <span className="text-[10px] text-slate-500 block truncate">{sym.gender} Profile</span>
+                        </div>
+                        {isSelected && <CheckCircle2 className="w-4 h-4 text-blue-600 shrink-0" />}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Upload Real Photo Option */}
+                <div className="flex items-center space-x-3 pt-1">
+                  {customAvatarUrl && !customAvatarUrl.startsWith("data:image/svg+xml") && (
                     <img
                       src={customAvatarUrl}
                       alt="Custom Preview"
-                      className="w-10 h-10 rounded-xl object-cover ring-2 ring-blue-500/40 shrink-0"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src =
-                          "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=300";
-                      }}
+                      className="w-9 h-9 rounded-xl object-cover ring-2 ring-blue-500/40 shrink-0"
                     />
                   )}
-                  <input
-                    type="text"
-                    placeholder="Paste image URL (https://...) or upload file below"
-                    value={customAvatarUrl}
-                    onChange={(e) => setCustomAvatarUrl(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium text-xs"
-                  />
-                  <label className="px-3 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold cursor-pointer whitespace-nowrap">
-                    Upload
+                  <label className="flex-1 px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold cursor-pointer text-center transition-colors">
+                    <span>Upload Personal Photo From Device</span>
                     <input
                       type="file"
                       accept="image/*"
@@ -392,6 +410,15 @@ export const AddPatientModal: React.FC<AddPatientModalProps> = ({
                       }}
                     />
                   </label>
+                  {customAvatarUrl && !customAvatarUrl.startsWith("data:image/svg+xml") && (
+                    <button
+                      type="button"
+                      onClick={() => setCustomAvatarUrl(getDefaultAvatar(gender))}
+                      className="text-xs text-rose-600 hover:underline font-bold px-2"
+                    >
+                      Reset
+                    </button>
+                  )}
                 </div>
               </div>
             </div>

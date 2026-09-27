@@ -9,6 +9,7 @@ import {
   GeneticMarker,
   DoctorProfile,
 } from "../types";
+import { MALE_SYMBOL_AVATAR } from "../utils/avatarUtils";
 
 export const INITIAL_PATIENT: PatientProfile = {
   dnaId: "DNA-1629-3931",
@@ -16,7 +17,7 @@ export const INITIAL_PATIENT: PatientProfile = {
   dob: "1998-05-12",
   gender: "Male",
   bloodGroup: "O Positive (O+)",
-  avatarUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=300",
+  avatarUrl: MALE_SYMBOL_AVATAR,
   phone: "+92 311 9286007",
   email: "harismicrobiologist1@gmail.com",
   address: "Yarhussain, Khyber Pakhtunkhwa",

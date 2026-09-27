@@ -32,6 +32,13 @@ import {
   CheckCircle2,
 } from "lucide-react";
 
+import {
+  getDefaultAvatar,
+  PRESET_SYMBOL_AVATARS,
+  MALE_SYMBOL_AVATAR,
+  FEMALE_SYMBOL_AVATAR,
+} from "../utils/avatarUtils";
+
 interface PatientProfileViewProps {
   patient: PatientProfile;
   onUpdatePatient: (updated: PatientProfile) => void;
@@ -39,19 +46,6 @@ interface PatientProfileViewProps {
   onLogout?: () => void;
   onOpenFhirCryptoVault?: () => void;
 }
-
-const PRESET_AVATARS = [
-  "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=300",
-  "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=300",
-  "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=300",
-  "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=300",
-  "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=300",
-  "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&q=80&w=300",
-  "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=300",
-  "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=300",
-  "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=300",
-  "https://images.unsplash.com/photo-1567532939604-b6b5b0db2604?auto=format&fit=crop&q=80&w=300",
-];
 
 export const PatientProfileView: React.FC<PatientProfileViewProps> = ({
   patient,
@@ -185,6 +179,9 @@ export const PatientProfileView: React.FC<PatientProfileViewProps> = ({
             <img
               src={patient.avatarUrl}
               alt={patient.fullName}
+              onError={(e) => {
+                (e.target as HTMLImageElement).src = getDefaultAvatar(patient.gender);
+              }}
               className="w-24 h-24 rounded-3xl object-cover ring-4 ring-blue-100 shadow-md border border-slate-200 transition-all group-hover:brightness-90"
             />
             {/* Edit Photo Overlay Badge */}
@@ -943,8 +940,7 @@ export const PatientProfileView: React.FC<PatientProfileViewProps> = ({
                   alt="Preview"
                   className="w-28 h-28 rounded-3xl object-cover ring-4 ring-cyan-500/30 shadow-lg border-2 border-white"
                   onError={(e) => {
-                    (e.target as HTMLImageElement).src =
-                      "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=300";
+                    (e.target as HTMLImageElement).src = getDefaultAvatar(patient.gender);
                   }}
                 />
                 <div className="absolute -bottom-2 right-0 bg-cyan-600 text-white p-1.5 rounded-xl shadow border-2 border-white">
@@ -956,7 +952,7 @@ export const PatientProfileView: React.FC<PatientProfileViewProps> = ({
 
             {/* Option 1: File Upload */}
             <div className="space-y-2">
-              <label className="block text-xs font-bold text-slate-700">Option 1: Upload Image File</label>
+              <label className="block text-xs font-bold text-slate-700">Option 1: Upload Personal Photo File</label>
               <input
                 ref={fileInputRef}
                 type="file"
@@ -974,39 +970,63 @@ export const PatientProfileView: React.FC<PatientProfileViewProps> = ({
               </button>
             </div>
 
-            {/* Option 2: Custom URL */}
+            {/* Option 2: Standard Symbol Avatars (Only Male & Female) */}
             <div className="space-y-2">
-              <label className="block text-xs font-bold text-slate-700">Option 2: Paste Image URL</label>
+              <div className="flex items-center justify-between">
+                <label className="block text-xs font-bold text-slate-700">
+                  Option 2: Standard Symbol Avatar (Male / Female)
+                </label>
+                <span className="text-[10px] text-slate-400 font-medium">
+                  Ideal if you haven't uploaded a photo yet
+                </span>
+              </div>
+              <div className="grid grid-cols-2 gap-3 p-3 bg-slate-50 rounded-2xl border border-slate-200">
+                {PRESET_SYMBOL_AVATARS.map((sym) => {
+                  const isSelected = tempAvatarUrl === sym.url;
+                  return (
+                    <button
+                      key={sym.id}
+                      type="button"
+                      onClick={() => setTempAvatarUrl(sym.url)}
+                      className={`p-3 rounded-2xl border-2 flex items-center space-x-3 transition-all text-left cursor-pointer ${
+                        isSelected
+                          ? "bg-white border-cyan-500 ring-2 ring-cyan-500/30 shadow-md"
+                          : "bg-white/70 border-slate-200 hover:border-slate-300 hover:bg-white"
+                      }`}
+                    >
+                      <img
+                        src={sym.url}
+                        alt={sym.label}
+                        referrerPolicy="no-referrer"
+                        className="w-14 h-14 rounded-2xl object-cover shrink-0 ring-2 ring-slate-200 shadow-md"
+                      />
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center space-x-1">
+                          <p className="text-xs font-extrabold text-slate-900 truncate">{sym.label}</p>
+                          {isSelected && <CheckCircle2 className="w-4 h-4 text-cyan-600 shrink-0" />}
+                        </div>
+                        <span className="text-[10px] text-slate-500 block truncate mt-0.5">
+                          {sym.sublabel}
+                        </span>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Option 3: Custom URL */}
+            <div className="space-y-2">
+              <label className="block text-xs font-bold text-slate-700">Option 3: Paste Image Web URL</label>
               <div className="relative">
                 <ImageIcon className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
                 <input
                   type="text"
-                  placeholder="https://images.unsplash.com/photo-..."
+                  placeholder="https://example.com/my-photo.jpg"
                   value={tempAvatarUrl}
                   onChange={(e) => setTempAvatarUrl(e.target.value)}
                   className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-300 text-xs font-mono text-slate-800 focus:ring-2 focus:ring-cyan-500 outline-none"
                 />
-              </div>
-            </div>
-
-            {/* Option 3: Presets */}
-            <div className="space-y-2">
-              <label className="block text-xs font-bold text-slate-700">Option 3: Choose Preset Medical Avatar</label>
-              <div className="grid grid-cols-5 gap-2.5 p-3 bg-slate-50 rounded-2xl border border-slate-200">
-                {PRESET_AVATARS.map((url, idx) => (
-                  <button
-                    key={idx}
-                    type="button"
-                    onClick={() => setTempAvatarUrl(url)}
-                    className={`relative rounded-xl overflow-hidden aspect-square border-2 transition-all ${
-                      tempAvatarUrl === url
-                        ? "border-cyan-500 ring-2 ring-cyan-500/40 scale-105"
-                        : "border-transparent opacity-80 hover:opacity-100 hover:scale-105"
-                    }`}
-                  >
-                    <img src={url} alt={`Preset ${idx + 1}`} className="w-full h-full object-cover" />
-                  </button>
-                ))}
               </div>
             </div>
 
