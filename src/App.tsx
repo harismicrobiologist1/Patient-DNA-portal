@@ -93,7 +93,7 @@ import {
   LogOut,
 } from "lucide-react";
 
-const STORAGE_KEY = "health_dna_patients_database_v5";
+const STORAGE_KEY = "health_dna_patients_database_v6";
 
 export default function App() {
   const [currentRole, setRole] = useState<UserRole>("patient");
@@ -1108,7 +1108,11 @@ export default function App() {
             >
               <X className="w-6 h-6" />
             </button>
-            <DigitalPatientCard patient={patient} onUpdatePatient={handleUpdatePatient} />
+            <DigitalPatientCard
+              patient={patient}
+              allergies={history?.allergies?.map((a) => a.allergen) || []}
+              onUpdatePatient={handleUpdatePatient}
+            />
           </div>
         </div>
       )}
@@ -1183,6 +1187,11 @@ export default function App() {
             setPublicCardPatient(null);
           }}
           patient={publicCardPatient}
+          allergies={
+            publicCardPatient
+              ? patientsDatabase[publicCardPatient.dnaId]?.history?.allergies?.map((a) => a.allergen) || []
+              : []
+          }
           onRequestUnlock={(target) => {
             setPatientAuthTarget(target);
             setIsPatientAuthModalOpen(true);

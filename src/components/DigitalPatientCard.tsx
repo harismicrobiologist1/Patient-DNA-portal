@@ -22,6 +22,7 @@ import {
 
 interface DigitalPatientCardProps {
   patient: PatientProfile;
+  allergies?: string[];
   onUpdatePatient?: (updated: PatientProfile) => void;
   isOpen?: boolean;
   onClose?: () => void;
@@ -29,6 +30,7 @@ interface DigitalPatientCardProps {
 
 export const DigitalPatientCard: React.FC<DigitalPatientCardProps> = ({
   patient,
+  allergies = [],
   onUpdatePatient,
   isOpen = true,
   onClose,
@@ -55,19 +57,27 @@ export const DigitalPatientCard: React.FC<DigitalPatientCardProps> = ({
     setIsEditingCard(false);
   };
 
+  const hasAllergies = allergies && allergies.length > 0;
+
   const emergencyQrPayload = JSON.stringify({
     dnaId: patient.dnaId,
     name: patient.fullName,
     bloodGroup: patient.bloodGroup,
     dob: patient.dob,
     gender: patient.gender,
-    allergies: ["Penicillin", "NSAIDs"],
+    allergies: hasAllergies ? allergies : ["No Known Allergies (NKA)"],
     emergencyContact: patient.emergencyContacts?.[0]
       ? `${patient.emergencyContacts[0].name} (${patient.emergencyContacts[0].phone})`
       : "Not specified",
     organDonor: patient.organDonorStatus,
-    insurance: patient.insurance ? `${patient.insurance.provider} - ${patient.insurance.policyNumber}` : "Self-pay / N/A",
-    registeredHospital: patient.registeredHospital,
+    insurance:
+      patient.insurance?.provider &&
+      patient.insurance.provider !== "None / Self-Pay" &&
+      patient.insurance.provider !== "Nill" &&
+      patient.insurance.provider !== "N/A"
+        ? `${patient.insurance.provider} - ${patient.insurance.policyNumber || "Active"}`
+        : "None / Self-Pay",
+    registeredHospital: patient.registeredHospital || "General Healthcare Registry",
   });
 
   return (
@@ -327,26 +337,47 @@ export const DigitalPatientCard: React.FC<DigitalPatientCardProps> = ({
             </div>
           </div>
 
-          <div className="p-3 rounded-2xl bg-rose-50/70 border border-rose-100 text-xs">
-            <div className="flex items-center space-x-1.5 font-bold text-rose-800">
-              <AlertTriangle className="w-3.5 h-3.5 text-rose-600" />
+          <div
+            className={`p-3 rounded-2xl border text-xs ${
+              hasAllergies ? "bg-rose-50/70 border-rose-100" : "bg-emerald-50/70 border-emerald-100"
+            }`}
+          >
+            <div
+              className={`flex items-center space-x-1.5 font-bold ${
+                hasAllergies ? "text-rose-800" : "text-emerald-800"
+              }`}
+            >
+              {hasAllergies ? (
+                <AlertTriangle className="w-3.5 h-3.5 text-rose-600" />
+              ) : (
+                <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+              )}
               <span>Critical Allergies</span>
             </div>
-            <p className="text-rose-900 mt-1 font-medium">
-              Penicillin Derivatives (Critical), NSAIDs (Severe)
+            <p className={`mt-1 font-medium ${hasAllergies ? "text-rose-900" : "text-emerald-900"}`}>
+              {hasAllergies ? allergies.join(", ") : "No Known Allergies (NKA)"}
             </p>
           </div>
 
           <div className="text-xs text-slate-500 space-y-1 pt-1">
             <p>
               <strong className="text-slate-700">Primary Contact:</strong>{" "}
-              {patient.emergencyContacts[0]?.name || "Not set"} (
-              {patient.emergencyContacts[0]?.relationship || "N/A"}) -{" "}
-              {patient.emergencyContacts[0]?.phone || "N/A"}
+              {patient.emergencyContacts && patient.emergencyContacts[0]
+                ? `${patient.emergencyContacts[0].name} (${patient.emergencyContacts[0].relationship || "Contact"}) - ${patient.emergencyContacts[0].phone || "N/A"}`
+                : "None set"}
             </p>
             <p>
               <strong className="text-slate-700">Insurance:</strong>{" "}
-              {patient.insurance.provider} ({patient.insurance.policyNumber})
+              {patient.insurance?.provider &&
+              patient.insurance.provider !== "None / Self-Pay" &&
+              patient.insurance.provider !== "Nill" &&
+              patient.insurance.provider !== "N/A"
+                ? `${patient.insurance.provider} (${patient.insurance.policyNumber || "Active"})`
+                : "None / Self-Pay"}
+            </p>
+            <p>
+              <strong className="text-slate-700">Base Hospital:</strong>{" "}
+              {patient.registeredHospital || "General Healthcare Registry"}
             </p>
             <p>
               <strong className="text-slate-700">Organ Donor:</strong>{" "}

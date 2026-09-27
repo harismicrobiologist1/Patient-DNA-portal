@@ -116,14 +116,17 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
   const [regForm, setRegForm] = useState({
     country: "US",
     fullName: "",
-    dob: "1995-04-12",
-    gender: "Female",
+    dob: "",
+    gender: "Male",
     bloodGroup: "O Positive (O+)",
-    phone: "+1 (555) 234-5678",
+    phone: "",
     email: "",
-    address: "450 Medical Center Blvd, Suite 300, Boston, MA",
-    nationalId: "US-MA-882104-Z",
-    organDonor: true,
+    address: "",
+    nationalId: "",
+    hospital: "",
+    emergencyContactName: "",
+    emergencyContactPhone: "",
+    organDonor: false,
     password: "",
     confirmPassword: "",
     securityPin: "1234",
@@ -279,31 +282,41 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
     const newPatientProfile: PatientProfile = {
       dnaId: newDnaId,
       fullName: regForm.fullName.trim(),
-      dob: regForm.dob,
+      dob: regForm.dob || "Not Specified",
       gender: regForm.gender,
       bloodGroup: regForm.bloodGroup,
       avatarUrl:
         regForm.gender === "Female"
           ? "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=300"
           : "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=300",
-      phone: regForm.phone.trim() || `${regCountry.dialCode} 000-0000`,
+      phone: regForm.phone.trim() || "Not Provided",
       email: regForm.email.trim(),
-      address: regForm.address.trim() || `Universal Medical District, ${regCountry.name}`,
-      nationalId: regForm.nationalId.trim() || `${regCountry.code}-ID-${Math.floor(100000 + Math.random() * 900000)}`,
+      address: regForm.address.trim() || "Not Specified",
+      nationalId: regForm.nationalId.trim() || "Pending",
       biometricStatus: "Verified",
       organDonorStatus: regForm.organDonor,
-      registeredHospital: `${regCountry.name} National Medical Center`,
+      registeredHospital: regForm.hospital.trim() || "General Healthcare Registry",
       securityPin: "1234",
       password: regForm.password.trim(),
       biometricAuthEnabled: true,
       insurance: {
-        provider: "Universal Standard Health Network",
-        policyNumber: `POL-${Math.floor(1000000 + Math.random() * 9000000)}`,
-        groupNumber: "GRP-01",
-        status: "Active",
-        coverageAmount: "$500,000 Comprehensive",
+        provider: "None / Self-Pay",
+        policyNumber: "N/A",
+        groupNumber: "N/A",
+        status: "Pending",
+        coverageAmount: "N/A",
       },
-      emergencyContacts: [],
+      emergencyContacts: regForm.emergencyContactName.trim()
+        ? [
+            {
+              id: `ec-${Date.now()}`,
+              name: regForm.emergencyContactName.trim(),
+              relationship: "Emergency Contact",
+              phone: regForm.emergencyContactPhone.trim() || regForm.phone.trim() || "N/A",
+              isPrimary: true,
+            },
+          ]
+        : [],
     };
 
     const newRecord: PatientFullRecord = {
@@ -915,15 +928,67 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
                       </div>
                     </div>
 
-                    <div className="sm:col-span-2 md:col-span-4">
+                    <div className="sm:col-span-2">
                       <label className="block text-xs font-bold text-slate-700 mb-1">
-                        Residential Address
+                        National ID / CNIC / SSN (Optional)
                       </label>
                       <input
                         type="text"
-                        placeholder="Street Address, City, State, ZIP"
+                        placeholder="e.g. 16301-6122822-5 or National ID"
+                        value={regForm.nationalId}
+                        onChange={(e) => setRegForm({ ...regForm, nationalId: e.target.value })}
+                        className="w-full px-3.5 py-2 rounded-2xl border border-slate-300 text-xs font-mono font-bold text-slate-900 focus:ring-2 focus:ring-indigo-500 outline-none"
+                      />
+                    </div>
+
+                    <div className="sm:col-span-2">
+                      <label className="block text-xs font-bold text-slate-700 mb-1">
+                        Registered Base Hospital (Optional)
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="e.g. BKMC, Mayo Hospital, City Clinic"
+                        value={regForm.hospital}
+                        onChange={(e) => setRegForm({ ...regForm, hospital: e.target.value })}
+                        className="w-full px-3.5 py-2 rounded-2xl border border-slate-300 text-xs font-bold text-slate-900 focus:ring-2 focus:ring-indigo-500 outline-none"
+                      />
+                    </div>
+
+                    <div className="sm:col-span-2 md:col-span-4">
+                      <label className="block text-xs font-bold text-slate-700 mb-1">
+                        Residential Address (Optional)
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="City, Province / State, Country"
                         value={regForm.address}
                         onChange={(e) => setRegForm({ ...regForm, address: e.target.value })}
+                        className="w-full px-3.5 py-2 rounded-2xl border border-slate-300 text-xs font-bold text-slate-900 focus:ring-2 focus:ring-indigo-500 outline-none"
+                      />
+                    </div>
+
+                    <div className="sm:col-span-2">
+                      <label className="block text-xs font-bold text-slate-700 mb-1">
+                        Emergency Contact Name (Optional)
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Contact person's full name"
+                        value={regForm.emergencyContactName}
+                        onChange={(e) => setRegForm({ ...regForm, emergencyContactName: e.target.value })}
+                        className="w-full px-3.5 py-2 rounded-2xl border border-slate-300 text-xs font-bold text-slate-900 focus:ring-2 focus:ring-indigo-500 outline-none"
+                      />
+                    </div>
+
+                    <div className="sm:col-span-2">
+                      <label className="block text-xs font-bold text-slate-700 mb-1">
+                        Emergency Contact Phone (Optional)
+                      </label>
+                      <input
+                        type="tel"
+                        placeholder="Contact phone number"
+                        value={regForm.emergencyContactPhone}
+                        onChange={(e) => setRegForm({ ...regForm, emergencyContactPhone: e.target.value })}
                         className="w-full px-3.5 py-2 rounded-2xl border border-slate-300 text-xs font-bold text-slate-900 focus:ring-2 focus:ring-indigo-500 outline-none"
                       />
                     </div>

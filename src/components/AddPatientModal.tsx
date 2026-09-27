@@ -48,16 +48,17 @@ export const AddPatientModal: React.FC<AddPatientModalProps> = ({
   const [dob, setDob] = useState("");
   const [gender, setGender] = useState("Male");
   const [bloodGroup, setBloodGroup] = useState("O Positive (O+)");
-  const [phone, setPhone] = useState("+1 ");
+  const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [address, setAddress] = useState("");
   const [nationalId, setNationalId] = useState("");
-  const [organDonorStatus, setOrganDonorStatus] = useState(true);
+  const [hospital, setHospital] = useState("");
+  const [organDonorStatus, setOrganDonorStatus] = useState(false);
   const [customAvatarUrl, setCustomAvatarUrl] = useState("");
 
   // Account Security Credentials (for Patient Self-Login)
-  const [password, setPassword] = useState("Patient@2026!");
-  const [confirmPassword, setConfirmPassword] = useState("Patient@2026!");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
 
@@ -120,27 +121,27 @@ export const AddPatientModal: React.FC<AddPatientModalProps> = ({
 
     const newPatient: PatientProfile = {
       dnaId,
-      fullName,
-      dob,
+      fullName: fullName.trim(),
+      dob: dob || "Not Specified",
       gender,
       bloodGroup,
       avatarUrl,
-      phone: phone.trim() || `${activeCountryObj.dialCode} 000-0000`,
-      email: email || `${fullName.toLowerCase().replace(/\s+/g, ".")}@healthdna.org`,
-      address: address || `Medical Center District, ${activeCountryObj.name}`,
-      nationalId: nationalId || `${selectedCountry}-NAT-${Math.floor(100000 + Math.random() * 900000)}`,
+      phone: phone.trim() || "Not Provided",
+      email: email.trim() || "Not Specified",
+      address: address.trim() || "Not Specified",
+      nationalId: nationalId.trim() || "Pending",
       biometricStatus: "Verified",
       organDonorStatus,
-      registeredHospital: `${activeCountryObj.name} National University Medical Center`,
+      registeredHospital: hospital.trim() || "General Healthcare Registry",
       securityPin: "1234",
       password: password.trim(),
       biometricAuthEnabled: true,
       insurance: {
-        provider: "Universal Standard Health Network",
-        policyNumber: `POL-${Math.floor(100000 + Math.random() * 900000)}`,
-        groupNumber: "GRP-0012",
-        status: "Active",
-        coverageAmount: "$500,000 Standard Coverage",
+        provider: "None / Self-Pay",
+        policyNumber: "N/A",
+        groupNumber: "N/A",
+        status: "Pending",
+        coverageAmount: "N/A",
       },
       emergencyContacts: [],
     };
@@ -426,11 +427,33 @@ export const AddPatientModal: React.FC<AddPatientModalProps> = ({
                 />
               </div>
 
+              <div>
+                <label className="block font-bold text-slate-700 mb-1">National ID / CNIC / SSN</label>
+                <input
+                  type="text"
+                  placeholder="e.g. 16301-6122822-5 (Optional)"
+                  value={nationalId}
+                  onChange={(e) => setNationalId(e.target.value)}
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium"
+                />
+              </div>
+
+              <div>
+                <label className="block font-bold text-slate-700 mb-1">Registered Base Hospital</label>
+                <input
+                  type="text"
+                  placeholder="e.g. BKMC, Mayo Hospital (Optional)"
+                  value={hospital}
+                  onChange={(e) => setHospital(e.target.value)}
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium"
+                />
+              </div>
+
               <div className="sm:col-span-2">
                 <label className="block font-bold text-slate-700 mb-1">Residential Address</label>
                 <input
                   type="text"
-                  placeholder="Street, City, State, Zip Code"
+                  placeholder="Street, City, State, Zip Code (Optional)"
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
                   className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium"

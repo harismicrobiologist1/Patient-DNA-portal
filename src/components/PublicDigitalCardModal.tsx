@@ -25,6 +25,7 @@ interface PublicDigitalCardModalProps {
   isOpen: boolean;
   onClose: () => void;
   patient: PatientProfile;
+  allergies?: string[];
   onRequestUnlock?: (patient: PatientProfile) => void;
 }
 
@@ -32,6 +33,7 @@ export const PublicDigitalCardModal: React.FC<PublicDigitalCardModalProps> = ({
   isOpen,
   onClose,
   patient,
+  allergies = [],
   onRequestUnlock,
 }) => {
   const [copied, setCopied] = useState(false);
@@ -44,19 +46,27 @@ export const PublicDigitalCardModal: React.FC<PublicDigitalCardModalProps> = ({
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const hasAllergies = allergies && allergies.length > 0;
+
   const emergencyQrPayload = JSON.stringify({
     dnaId: patient.dnaId,
     name: patient.fullName,
     bloodGroup: patient.bloodGroup,
     dob: patient.dob,
     gender: patient.gender,
-    allergies: ["Penicillin (Emergency Alert)"],
+    allergies: hasAllergies ? allergies : ["No Known Allergies (NKA)"],
     emergencyContact: patient.emergencyContacts?.[0]
       ? `${patient.emergencyContacts[0].name} (${patient.emergencyContacts[0].phone})`
       : "Not specified",
     organDonor: patient.organDonorStatus,
-    insurance: patient.insurance ? `${patient.insurance.provider} - ${patient.insurance.policyNumber}` : "Self-pay / N/A",
-    registeredHospital: patient.registeredHospital,
+    insurance:
+      patient.insurance?.provider &&
+      patient.insurance.provider !== "None / Self-Pay" &&
+      patient.insurance.provider !== "Nill" &&
+      patient.insurance.provider !== "N/A"
+        ? `${patient.insurance.provider} - ${patient.insurance.policyNumber || "Active"}`
+        : "None / Self-Pay",
+    registeredHospital: patient.registeredHospital || "General Healthcare Registry",
   });
 
   return (
@@ -82,7 +92,7 @@ export const PublicDigitalCardModal: React.FC<PublicDigitalCardModalProps> = ({
                 </span>
               </div>
               <p className="text-xs text-slate-500 font-medium">
-                Universal Health Emergency Identity • Apex Health Network
+                Universal Health Emergency Identity • {patient.registeredHospital || "National Health Registry"}
               </p>
             </div>
           </div>
@@ -171,13 +181,29 @@ export const PublicDigitalCardModal: React.FC<PublicDigitalCardModalProps> = ({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {/* Left: Emergency Information */}
             <div className="space-y-3">
-              <div className="p-4 rounded-2xl bg-rose-50/60 border border-rose-100 space-y-1.5">
-                <div className="flex items-center space-x-2 text-rose-800 font-bold text-xs">
-                  <AlertTriangle className="w-4 h-4 text-rose-600" />
+              <div
+                className={`p-4 rounded-2xl border space-y-1.5 ${
+                  hasAllergies ? "bg-rose-50/60 border-rose-100" : "bg-emerald-50/60 border-emerald-100"
+                }`}
+              >
+                <div
+                  className={`flex items-center space-x-2 font-bold text-xs ${
+                    hasAllergies ? "text-rose-800" : "text-emerald-800"
+                  }`}
+                >
+                  {hasAllergies ? (
+                    <AlertTriangle className="w-4 h-4 text-rose-600" />
+                  ) : (
+                    <ShieldCheck className="w-4 h-4 text-emerald-600" />
+                  )}
                   <span>CRITICAL EMERGENCY ALLERGIES</span>
                 </div>
-                <p className="text-xs font-semibold text-rose-950">
-                  Penicillin, NSAIDs (Severe Hypersensitivity)
+                <p
+                  className={`text-xs font-semibold ${
+                    hasAllergies ? "text-rose-950" : "text-emerald-950"
+                  }`}
+                >
+                  {hasAllergies ? allergies.join(", ") : "No Known Allergies (NKA)"}
                 </p>
               </div>
 
@@ -185,10 +211,10 @@ export const PublicDigitalCardModal: React.FC<PublicDigitalCardModalProps> = ({
                 <span className="text-slate-400 font-bold uppercase text-[10px] block">
                   Primary Emergency Contact
                 </span>
-                {patient.emergencyContacts[0] ? (
+                {patient.emergencyContacts && patient.emergencyContacts[0] ? (
                   <div>
                     <p className="font-bold text-slate-800">
-                      {patient.emergencyContacts[0].name} ({patient.emergencyContacts[0].relationship})
+                      {patient.emergencyContacts[0].name} ({patient.emergencyContacts[0].relationship || "Contact"})
                     </p>
                     <p className="font-mono text-blue-700 font-semibold">
                       {patient.emergencyContacts[0].phone}
@@ -203,7 +229,21 @@ export const PublicDigitalCardModal: React.FC<PublicDigitalCardModalProps> = ({
                 <span className="text-slate-400 font-bold uppercase text-[10px] block">
                   Registered Base Hospital
                 </span>
-                <p className="font-bold text-slate-800">{patient.registeredHospital}</p>
+                <p className="font-bold text-slate-800">{patient.registeredHospital || "General Healthcare Registry"}</p>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-1 text-xs">
+                <span className="text-slate-400 font-bold uppercase text-[10px] block">
+                  Insurance Provider
+                </span>
+                <p className="font-bold text-slate-800">
+                  {patient.insurance?.provider &&
+                  patient.insurance.provider !== "None / Self-Pay" &&
+                  patient.insurance.provider !== "Nill" &&
+                  patient.insurance.provider !== "N/A"
+                    ? `${patient.insurance.provider} (${patient.insurance.policyNumber || "Active"})`
+                    : "None / Self-Pay"}
+                </p>
               </div>
             </div>
 
