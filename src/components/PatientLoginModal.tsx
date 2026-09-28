@@ -178,7 +178,7 @@ export const PatientLoginModal: React.FC<PatientLoginModalProps> = ({
                 <input
                   type="text"
                   required
-                  placeholder="e.g. DNA-8924-9012 or alex.mercer@healthdna.org"
+                  placeholder="e.g. DNA-PK-26-10025 or harismicrobiologist1@gmail.com"
                   value={identifier}
                   onChange={(e) => setIdentifier(e.target.value)}
                   className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 text-xs font-mono font-bold text-slate-900 focus:ring-2 focus:ring-blue-500 outline-none bg-white"
@@ -282,7 +282,7 @@ export const PatientLoginModal: React.FC<PatientLoginModalProps> = ({
           {/* Fast Demo Switcher */}
           {(() => {
             const harisDemo = patients.find(
-              (p) => p.dnaId === "DNA-1629-3931" || p.fullName.toLowerCase().includes("haris amin")
+              (p) => p.dnaId === "DNA-PK-26-10025" || p.fullName.toLowerCase().includes("haris amin")
             );
             if (!harisDemo) return null;
             return (

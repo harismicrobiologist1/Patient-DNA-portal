@@ -123,13 +123,13 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
 
   // Registration states
   const [regForm, setRegForm] = useState({
-    country: "US",
+    country: "PK",
     fullName: "",
     dob: "",
     gender: "Male",
     bloodGroup: "O Positive (O+)",
     customAvatar: "",
-    phone: "",
+    phone: "+92 ",
     email: "",
     address: "",
     nationalId: "",
@@ -158,9 +158,10 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
   const loginPasswordStrength = evaluatePasswordStrength(password);
   const regPasswordStrength = evaluatePasswordStrength(regForm.password);
 
-  const regCountryObj = getCountryByCode(regForm.country || "US");
-  const regPreviewDnaId = previewDnaId(regForm.country || "US");
-  const regNextSeq = peekNextDnaSequence();
+  const allExistingIds = patientList.map((p) => p.dnaId);
+  const regCountryObj = getCountryByCode(regForm.country || "PK");
+  const regPreviewDnaId = previewDnaId(regForm.country || "PK", allExistingIds);
+  const regNextSeq = peekNextDnaSequence(allExistingIds);
   const currentYearShort = new Date().getFullYear() % 100;
 
   const handleRegCountryChange = (newCountryCode: string) => {
@@ -320,9 +321,9 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
     setIsRegistering(true);
     setRegistrationSuccess(true);
 
-    // Generate unique sequential DNA ID based on selected country
-    const newDnaId = generateNewDnaId(regForm.country || "US");
-    const regCountry = getCountryByCode(regForm.country || "US");
+    // Generate unique sequential DNA ID starting at 10025 based on selected country
+    const newDnaId = generateNewDnaId(regForm.country || "PK", allExistingIds);
+    const regCountry = getCountryByCode(regForm.country || "PK");
 
     const newPatientProfile: PatientProfile = {
       dnaId: newDnaId,
@@ -601,7 +602,7 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
                       <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
                       <input
                         type="text"
-                        placeholder="e.g. DNA-1629-3931, harismicrobiologist1@gmail.com, or phone"
+                        placeholder="e.g. DNA-PK-26-10025, harismicrobiologist1@gmail.com, or phone"
                         value={identifier}
                         onChange={(e) => setIdentifier(e.target.value)}
                         className="w-full pl-10 pr-4 py-2.5 rounded-2xl border border-slate-300 text-xs sm:text-sm font-mono font-bold text-slate-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-slate-50/50 focus:bg-white transition-all"
@@ -726,7 +727,7 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
 
                 {(() => {
                   const demoP = patientList.find(
-                    (p) => p.dnaId === "DNA-1629-3931" || p.fullName.toLowerCase().includes("haris amin")
+                    (p) => p.dnaId === "DNA-PK-26-10025" || p.fullName.toLowerCase().includes("haris amin")
                   );
                   if (!demoP) return null;
                   return (
@@ -806,7 +807,7 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
                     </div>
                     <span className="px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-200 text-[10px] font-bold border border-cyan-400/30 flex items-center space-x-1">
                       <Sparkles className="w-3 h-3 text-cyan-300" />
-                      <span>Format: DNA-[COUNTRY]-[YEAR]-[SEQ]</span>
+                      <span>Format: DNA-[COUNTRY]-[YEAR]-[SEQ] (Starts from #10025)</span>
                     </span>
                   </div>
 

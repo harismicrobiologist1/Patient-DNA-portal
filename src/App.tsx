@@ -155,8 +155,8 @@ export default function App() {
 
   // Doctor Authorized Sessions Map: { [dnaId]: DoctorAuthSession }
   const [doctorAuthSessions, setDoctorAuthSessions] = useState<Record<string, DoctorAuthSession>>({
-    "DNA-1629-3931": {
-      patientDnaId: "DNA-1629-3931",
+    "DNA-PK-26-10025": {
+      patientDnaId: "DNA-PK-26-10025",
       doctorName: "Dr. Marcus Vance, FACC",
       authorizedAt: new Date().toISOString(),
       expiresAt: new Date(Date.now() + 3600000).toISOString(),
@@ -1146,6 +1146,7 @@ export default function App() {
         isOpen={isAddPatientModalOpen}
         onClose={() => setIsAddPatientModalOpen(false)}
         onAddPatient={handleRegisterPatient}
+        existingPatientIds={allPatientsList.map((p) => p.dnaId)}
       />
 
       {/* Doctor Real-Time Patient OTP Authorization Modal */}

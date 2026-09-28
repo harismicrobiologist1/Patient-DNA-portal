@@ -12,7 +12,7 @@ import {
 import { MALE_SYMBOL_AVATAR } from "../utils/avatarUtils";
 
 export const INITIAL_PATIENT: PatientProfile = {
-  dnaId: "DNA-1629-3931",
+  dnaId: "DNA-PK-26-10025",
   fullName: "Haris Amin",
   dob: "1998-05-12",
   gender: "Male",
@@ -632,7 +632,7 @@ export const INITIAL_AUDIT_LOGS: AuditLog[] = [
     actor: "Dr. Marcus Vance (Cardiology)",
     role: "doctor",
     action: "View Patient Complete Record",
-    details: "Accessed clinical history, lab reports & active medication list for DNA-1629-3931",
+    details: "Accessed clinical history, lab reports & active medication list for DNA-PK-26-10025",
     ipAddress: "192.168.1.104 (Encrypted TLS v1.3)",
     securityHash: "0x8F92A1B7C9D2...AES256",
   },
@@ -668,7 +668,7 @@ export interface PatientFullRecord {
 }
 
 export const INITIAL_PATIENTS_DATABASE: Record<string, PatientFullRecord> = {
-  "DNA-1629-3931": {
+  "DNA-PK-26-10025": {
     patient: INITIAL_PATIENT,
     history: INITIAL_MEDICAL_HISTORY,
     clinicalRecords: INITIAL_CLINICAL_RECORDS,

@@ -42,19 +42,21 @@ interface AddPatientModalProps {
   isOpen: boolean;
   onClose: () => void;
   onAddPatient: (newRecord: PatientFullRecord) => void;
+  existingPatientIds?: string[];
 }
 
 export const AddPatientModal: React.FC<AddPatientModalProps> = ({
   isOpen,
   onClose,
   onAddPatient,
+  existingPatientIds,
 }) => {
-  const [selectedCountry, setSelectedCountry] = useState("US");
+  const [selectedCountry, setSelectedCountry] = useState("PK");
   const [fullName, setFullName] = useState("");
   const [dob, setDob] = useState("");
   const [gender, setGender] = useState("Male");
   const [bloodGroup, setBloodGroup] = useState("O Positive (O+)");
-  const [phone, setPhone] = useState("");
+  const [phone, setPhone] = useState("+92 ");
   const [email, setEmail] = useState("");
   const [address, setAddress] = useState("");
   const [nationalId, setNationalId] = useState("");
@@ -72,8 +74,8 @@ export const AddPatientModal: React.FC<AddPatientModalProps> = ({
 
   const passwordStrength = evaluatePasswordStrength(password);
   const activeCountryObj = getCountryByCode(selectedCountry);
-  const currentPreviewDnaId = previewDnaId(selectedCountry);
-  const nextSeqNumber = peekNextDnaSequence();
+  const currentPreviewDnaId = previewDnaId(selectedCountry, existingPatientIds);
+  const nextSeqNumber = peekNextDnaSequence(existingPatientIds);
   const currentYearShort = new Date().getFullYear() % 100;
 
   const handleCountryChange = (newCountryCode: string) => {
@@ -104,8 +106,8 @@ export const AddPatientModal: React.FC<AddPatientModalProps> = ({
       return;
     }
 
-    // Automatically generate sequential DNA ID based on selected country
-    const dnaId = generateNewDnaId(selectedCountry);
+    // Automatically generate sequential DNA ID starting at 10025 based on selected country
+    const dnaId = generateNewDnaId(selectedCountry, existingPatientIds);
 
     // Default symbol avatar based on gender (Male or Female)
     const defaultAvatar = getDefaultAvatar(gender);
@@ -203,7 +205,7 @@ export const AddPatientModal: React.FC<AddPatientModalProps> = ({
               </div>
               <span className="px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-200 text-[10px] font-bold border border-cyan-400/30 flex items-center space-x-1">
                 <Sparkles className="w-3 h-3 text-cyan-300" />
-                <span>Format: DNA-[COUNTRY]-[YEAR]-[SEQ]</span>
+                <span>Format: DNA-[COUNTRY]-[YEAR]-[SEQ] (Starts from #10025)</span>
               </span>
             </div>
 

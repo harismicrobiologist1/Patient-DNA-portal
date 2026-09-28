@@ -117,9 +117,9 @@ export function subscribeToPatientsDirectory(
 export async function seedInitialFirestorePatientsIfEmpty() {
   try {
     // Check if primary account exists
-    const harisSnap = await getDoc(doc(db, PATIENTS_COLLECTION, "DNA-1629-3931"));
+    const harisSnap = await getDoc(doc(db, PATIENTS_COLLECTION, "DNA-PK-26-10025"));
     if (!harisSnap.exists()) {
-      const harisRecord = INITIAL_PATIENTS_DATABASE["DNA-1629-3931"];
+      const harisRecord = INITIAL_PATIENTS_DATABASE["DNA-PK-26-10025"];
       if (harisRecord) {
         console.log("[Firebase] Seeding baseline profile to Firestore...");
         await savePatientToFirestore(harisRecord);

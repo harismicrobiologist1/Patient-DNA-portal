@@ -690,6 +690,32 @@ app.post("/api/patients/register", rateLimiter(60000, 120, "Patient Registration
   }
 });
 
+// Real-time Automated Sequence Counter Endpoint (starts from 10025, increments 10026, 10027...)
+app.get("/api/patients/next-sequence", (req, res) => {
+  try {
+    const { database } = readDatabaseFromDisk();
+    const ids = Object.keys(database);
+    let maxSeq = 10024; // Base: so first patient is 10025
+    for (const id of ids) {
+      const match = id.match(/(?:-|_|^)(\d{5,})(?:-|_|$)/);
+      if (match) {
+        const num = parseInt(match[1], 10);
+        if (!isNaN(num) && num >= 10024 && num > maxSeq) {
+          maxSeq = num;
+        }
+      }
+    }
+    const nextSeq = maxSeq + 1;
+    return res.json({
+      success: true,
+      currentMaxSequence: maxSeq,
+      nextSequence: nextSeq,
+    });
+  } catch (err: any) {
+    return res.status(500).json({ success: false, error: err.message });
+  }
+});
+
 // Single Patient Worldwide Lookup Endpoint (by DNA ID, National ID, Phone, or Email)
 app.get("/api/patients/lookup", (req, res) => {
   try {
