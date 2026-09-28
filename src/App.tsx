@@ -418,14 +418,12 @@ export default function App() {
   // Authentication Logout Handler
   const handleLogout = (reason?: string) => {
     const prevId = activePatientId;
-    if (prevId) setLastActivePatientId(prevId);
     terminateActiveSession(reason);
     setActivePatientId(null);
+    setLastActivePatientId(null);
     setIsAuthenticated(false);
     setIsWarningModalOpen(false);
-    if (reason) {
-      setSessionExpiredReason(reason);
-    }
+    setSessionExpiredReason(reason && !reason.toLowerCase().includes("manual") ? reason : null);
     setActiveTab("patient-dash");
 
     const logoutAudit: AuditLog = {

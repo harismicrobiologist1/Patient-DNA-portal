@@ -643,8 +643,8 @@ app.get("/api/system/security-audit", (req, res) => {
   }
 });
 
-// Dedicated Real-time Patient Registration Endpoint
-app.post("/api/patients/register", rateLimiter(60000, 30, "Patient Registration"), (req, res) => {
+// Dedicated Real-time Patient Registration Endpoint (Generous rate limit for multi-patient creation)
+app.post("/api/patients/register", rateLimiter(60000, 120, "Patient Registration"), (req, res) => {
   try {
     const { newRecord, patient, record } = req.body;
     const patientRecord = newRecord || record || (patient ? { patient } : null);
@@ -686,6 +686,54 @@ app.post("/api/patients/register", rateLimiter(60000, 30, "Patient Registration"
     });
   } catch (err: any) {
     console.error("Error in /api/patients/register:", err);
+    return res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// Single Patient Worldwide Lookup Endpoint (by DNA ID, National ID, Phone, or Email)
+app.get("/api/patients/lookup", (req, res) => {
+  try {
+    const query = ((req.query.query || req.query.q || req.query.dnaId || "") as string).trim().toLowerCase();
+    if (!query) {
+      return res.status(400).json({ success: false, error: "Query parameter required" });
+    }
+
+    const { database } = readDatabaseFromDisk();
+    
+    // Exact or normalized match
+    let matchRecord = database[query.toUpperCase()] || database[query];
+    if (!matchRecord) {
+      const records = Object.values(database);
+      matchRecord = records.find((r: any) => {
+        const p = r?.patient;
+        if (!p) return false;
+        const dna = (p.dnaId || "").toLowerCase();
+        const dnaClean = dna.replace(/[^a-z0-9]/g, "");
+        const qClean = query.replace(/[^a-z0-9]/g, "");
+        const email = (p.email || "").toLowerCase();
+        const phone = (p.phone || "").replace(/[^0-9]/g, "");
+        const natId = (p.nationalId || "").toLowerCase();
+        return (
+          dna === query ||
+          (qClean.length > 3 && dnaClean === qClean) ||
+          email === query ||
+          (qClean.length > 5 && phone === qClean) ||
+          natId === query
+        );
+      });
+    }
+
+    if (!matchRecord) {
+      return res.status(404).json({ success: false, error: "Patient record not found" });
+    }
+
+    return res.json({
+      success: true,
+      record: matchRecord,
+      patient: matchRecord.patient,
+    });
+  } catch (err: any) {
+    console.error("Error in /api/patients/lookup:", err);
     return res.status(500).json({ success: false, error: err.message });
   }
 });

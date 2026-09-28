@@ -124,11 +124,11 @@ export const Header: React.FC<HeaderProps> = ({
 
             {isAuthenticated && patient ? (
               <>
-                {/* Active Patient Switcher Button */}
+                {/* Active Patient Profile View Button */}
                 <button
                   onClick={onOpenPatientSwitcher}
                   className="flex items-center space-x-2.5 px-3 py-1.5 rounded-2xl bg-slate-800/90 hover:bg-slate-800 text-slate-100 border border-slate-700/80 hover:border-cyan-500/50 transition-all text-xs font-semibold shadow-sm group cursor-pointer"
-                  title="Click to Switch Patient or Search Network Records"
+                  title="Click to view Patient Directory & Identity Records"
                 >
                   <img
                     src={patient.avatarUrl}

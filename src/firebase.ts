@@ -4,7 +4,7 @@ import {
   collection,
   doc,
   setDoc,
-  deleteDoc,
+  getDoc,
   getDocs,
   onSnapshot,
   getDocFromServer,
@@ -48,6 +48,23 @@ export async function savePatientToFirestore(record: PatientFullRecord): Promise
     fullName: record.patient.fullName,
     updatedAt: new Date().toISOString(),
   }, { merge: true });
+}
+
+/**
+ * Fetch a single patient by DNA ID directly from Firestore (supports millions of records globally)
+ */
+export async function getPatientFromFirestore(dnaId: string): Promise<PatientFullRecord | null> {
+  try {
+    const cleanId = (dnaId || "").trim();
+    if (!cleanId) return null;
+    const docSnap = await getDoc(doc(db, PATIENTS_COLLECTION, cleanId));
+    if (docSnap.exists()) {
+      return docSnap.data() as PatientFullRecord;
+    }
+  } catch (err) {
+    console.warn(`[Firebase] Could not fetch patient ${dnaId}:`, err);
+  }
+  return null;
 }
 
 /**
@@ -95,32 +112,21 @@ export function subscribeToPatientsDirectory(
 }
 
 /**
- * Seed initial baseline demo accounts into Firestore if empty or prune old demo records
+ * Seed initial baseline demo account into Firestore if empty
  */
 export async function seedInitialFirestorePatientsIfEmpty() {
   try {
-    const existing = await getAllPatientsFromFirestore();
-    const oldDemoIds = ["DNA-8924-9012", "DNA-4402-1920", "DNA-7718-9031", "DNA-TEST-26-99999"];
-
-    // Delete previous demo accounts if present
-    for (const oldId of oldDemoIds) {
-      if (existing[oldId]) {
-        try {
-          await deleteDoc(doc(db, PATIENTS_COLLECTION, oldId));
-          console.log(`[Firebase] Pruned old demo record ${oldId}`);
-        } catch (delErr) {
-          console.warn(`[Firebase] Could not delete old demo ${oldId}:`, delErr);
-        }
+    // Check if primary account exists
+    const harisSnap = await getDoc(doc(db, PATIENTS_COLLECTION, "DNA-1629-3931"));
+    if (!harisSnap.exists()) {
+      const harisRecord = INITIAL_PATIENTS_DATABASE["DNA-1629-3931"];
+      if (harisRecord) {
+        console.log("[Firebase] Seeding baseline profile to Firestore...");
+        await savePatientToFirestore(harisRecord);
       }
-    }
-
-    // Ensure Haris Amin (DNA-1629-3931) is seeded
-    const harisRecord = INITIAL_PATIENTS_DATABASE["DNA-1629-3931"];
-    if (harisRecord && !existing["DNA-1629-3931"]) {
-      console.log("[Firebase] Seeding Haris Amin demo profile to Firestore...");
-      await savePatientToFirestore(harisRecord);
     }
   } catch (err) {
     console.warn("[Firebase] Seed check note:", err);
   }
 }
+

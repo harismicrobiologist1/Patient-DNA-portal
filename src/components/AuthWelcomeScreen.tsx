@@ -8,6 +8,7 @@ import {
   resetFailedAttempts,
 } from "../utils/security";
 import { getRememberedPatient } from "../utils/sessionSecurity";
+import { getPatientFromFirestore } from "../firebase";
 import {
   SUPPORTED_COUNTRIES,
   generateNewDnaId,
@@ -179,8 +180,8 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
   const [emergencyResult, setEmergencyResult] = useState<PatientProfile | null>(null);
   const [emergencySearchError, setEmergencySearchError] = useState<string | null>(null);
 
-  // Handle Login
-  const handleLoginSubmit = (e: React.FormEvent) => {
+  // Handle Login with Worldwide Cloud Fallback
+  const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoginError(null);
 
@@ -196,7 +197,7 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
       return;
     }
 
-    const matched = patientList.find(
+    let matched = patientList.find(
       (p) =>
         p.dnaId.toLowerCase() === cleanId ||
         p.dnaId.toLowerCase().replace(/[^a-z0-9]/g, "") === cleanId.replace(/[^a-z0-9]/g, "") ||
@@ -204,6 +205,39 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
         p.phone.replace(/[^0-9]/g, "") === cleanId.replace(/[^0-9]/g, "") ||
         p.nationalId.toLowerCase() === cleanId
     );
+
+    // If not found in local memory cache, perform worldwide live cloud lookup (supports millions of users globally)
+    if (!matched) {
+      setIsAuthenticating(true);
+      try {
+        // 1. Try local server lookup endpoint
+        const serverRes = await fetch(`/api/patients/lookup?query=${encodeURIComponent(cleanId)}`);
+        if (serverRes.ok) {
+          const serverData = await serverRes.json();
+          if (serverData.success && serverData.record) {
+            matched = serverData.record.patient;
+            if (handleRegisterCallback) {
+              handleRegisterCallback(serverData.record);
+            }
+          }
+        }
+
+        // 2. If still not found, try direct Firestore document lookup
+        if (!matched && cleanId.startsWith("dna-")) {
+          const fsDoc = await getPatientFromFirestore(cleanId.toUpperCase());
+          if (fsDoc && fsDoc.patient) {
+            matched = fsDoc.patient;
+            if (handleRegisterCallback) {
+              handleRegisterCallback(fsDoc);
+            }
+          }
+        }
+      } catch (lookupErr) {
+        console.warn("[Cloud Lookup] note:", lookupErr);
+      } finally {
+        setIsAuthenticating(false);
+      }
+    }
 
     if (!matched) {
       setLoginError("No patient record found matching that DNA ID, Email, or Phone.");
@@ -228,8 +262,10 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
       setIsAuthenticating(true);
       setTimeout(() => {
         setIsAuthenticating(false);
-        onLoginSuccess(matched.dnaId, rememberMe);
-      }, 500);
+        if (matched) {
+          onLoginSuccess(matched.dnaId, rememberMe);
+        }
+      }, 400);
     } else {
       const failStatus = recordFailedPasswordAttempt(matched.dnaId);
       if (failStatus.isLocked) {
@@ -449,7 +485,7 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
       </div>
 
       {/* Main Authentication & Services Hub */}
-      <div className="bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden">
+      <div id="auth-main-hub" className="bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden">
         {/* Navigation Mode Switcher */}
         <div className="flex flex-wrap border-b border-slate-200 bg-slate-50/70 p-2 gap-1.5">
           <button
@@ -672,7 +708,7 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
                 </form>
               </div>
 
-              {/* Demo Accounts & Helper Section (5 cols) */}
+              {/* Demo Account & Worldwide Architecture Guidance (5 cols) */}
               <div className="lg:col-span-5 bg-slate-50 rounded-3xl p-6 border border-slate-200 space-y-4">
                 <div className="flex items-center space-x-2">
                   <div className="p-2 bg-blue-100 text-blue-700 rounded-xl">
@@ -728,11 +764,14 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
                   );
                 })()}
 
-                <div className="p-3 rounded-2xl bg-blue-50/80 border border-blue-100 text-[11px] text-blue-900 leading-relaxed">
-                  <strong>Zero Direct Switch Guarantee:</strong>
-                  <div className="mt-1 font-mono text-[10px] text-blue-800">
-                    Accounts are encrypted. Switching requires the patient's individual strong password.
+                <div className="p-4 rounded-2xl bg-blue-50/80 border border-blue-100 text-xs text-blue-900 space-y-2 leading-relaxed">
+                  <div className="flex items-center space-x-2 text-blue-800 font-bold">
+                    <ShieldCheck className="w-4 h-4 text-blue-600" />
+                    <span>Independent Worldwide Accounts</span>
                   </div>
+                  <p className="text-[11px] text-blue-800">
+                    Each patient has a completely separate, encrypted health record vault. Anyone can create an account, log out, and create or access other accounts on any device worldwide.
+                  </p>
                 </div>
               </div>
             </div>
