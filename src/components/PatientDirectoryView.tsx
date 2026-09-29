@@ -48,6 +48,7 @@ export const PatientDirectoryView: React.FC<PatientDirectoryViewProps> = ({
   const [dnaIdSearch, setDnaIdSearch] = useState("");
   const [generalSearch, setGeneralSearch] = useState("");
   const [selectedBloodGroup, setSelectedBloodGroup] = useState<string>("ALL");
+  const [sortOrder, setSortOrder] = useState<"seq_asc" | "seq_desc" | "name">("seq_asc");
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   const handleRefresh = async () => {
@@ -58,12 +59,30 @@ export const PatientDirectoryView: React.FC<PatientDirectoryViewProps> = ({
     }
   };
 
-  // Sort patients: Put newly registered ones and active ones first, followed by others
+  // Extract numerical sequence (e.g. 10025 from DNA-PK-26-10025)
+  const extractDnaSeq = (dnaId: string): number => {
+    if (!dnaId) return 0;
+    const match = dnaId.match(/(?:-|_|^)(\d{5,})(?:-|_|$)/);
+    if (match) return parseInt(match[1], 10);
+    const anyNum = dnaId.match(/(\d+)/);
+    return anyNum ? parseInt(anyNum[1], 10) : 0;
+  };
+
+  // Sort patients: default to strictly INCREASING DNA sequence order (10025 -> 10026 -> 10027 -> 10028...)
   const sortedPatients = [...allPatients].sort((a, b) => {
-    if (a.dnaId === activePatientId) return -1;
-    if (b.dnaId === activePatientId) return 1;
-    // Newest DNA IDs tend to have larger numbers or were added later
-    return b.dnaId.localeCompare(a.dnaId);
+    if (sortOrder === "seq_asc") {
+      const seqA = extractDnaSeq(a.dnaId);
+      const seqB = extractDnaSeq(b.dnaId);
+      if (seqA !== seqB) return seqA - seqB; // Strictly increasing numerical sequence order
+      return a.dnaId.localeCompare(b.dnaId);
+    }
+    if (sortOrder === "seq_desc") {
+      const seqA = extractDnaSeq(a.dnaId);
+      const seqB = extractDnaSeq(b.dnaId);
+      if (seqA !== seqB) return seqB - seqA; // Decreasing order
+      return b.dnaId.localeCompare(a.dnaId);
+    }
+    return a.fullName.localeCompare(b.fullName);
   });
 
   const filtered = sortedPatients.filter((p) => {
@@ -110,7 +129,7 @@ export const PatientDirectoryView: React.FC<PatientDirectoryViewProps> = ({
   const verifiedCount = allPatients.filter((p) => p.biometricStatus === "Verified").length;
 
   // Registered DNA ID suggestions for quick one-click lookup testing
-  const quickDnaList = allPatients.slice(0, 6).map((p) => p.dnaId);
+  const quickDnaList = sortedPatients.slice(0, 8).map((p) => p.dnaId);
 
   const hasActiveFilters = dnaIdSearch.trim().length > 0 || generalSearch.trim().length > 0 || selectedBloodGroup !== "ALL";
 
@@ -341,6 +360,52 @@ export const PatientDirectoryView: React.FC<PatientDirectoryViewProps> = ({
               ))}
             </div>
 
+            {/* Sort Order Selector */}
+            <div className="flex items-center space-x-1.5 pl-2 border-l border-slate-200 shrink-0">
+              <span className="flex items-center space-x-1 text-slate-400 text-xs font-semibold">
+                <Sparkles className="w-3.5 h-3.5 text-cyan-600" />
+                <span>Order:</span>
+              </span>
+              <div className="flex gap-1 bg-slate-100 p-0.5 rounded-xl border border-slate-200">
+                <button
+                  type="button"
+                  onClick={() => setSortOrder("seq_asc")}
+                  className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer ${
+                    sortOrder === "seq_asc"
+                      ? "bg-blue-600 text-white shadow-sm"
+                      : "text-slate-600 hover:text-slate-900"
+                  }`}
+                  title="Sequential order: starts from 10025, 10026, 10027, 10028..."
+                >
+                  10025 ↑ (Increasing)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSortOrder("seq_desc")}
+                  className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer ${
+                    sortOrder === "seq_desc"
+                      ? "bg-blue-600 text-white shadow-sm"
+                      : "text-slate-600 hover:text-slate-900"
+                  }`}
+                  title="Newest DNA ID first"
+                >
+                  Newest ↓
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSortOrder("name")}
+                  className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer ${
+                    sortOrder === "name"
+                      ? "bg-blue-600 text-white shadow-sm"
+                      : "text-slate-600 hover:text-slate-900"
+                  }`}
+                  title="Alphabetical by full name"
+                >
+                  Name A-Z
+                </button>
+              </div>
+            </div>
+
             {hasActiveFilters && (
               <button
                 type="button"
@@ -394,7 +459,6 @@ export const PatientDirectoryView: React.FC<PatientDirectoryViewProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filtered.map((patient) => {
             const isActive = patient.dnaId === activePatientId;
-            const isDemoRoot = patient.dnaId === "DNA-1629-3931";
             const isDnaMatched =
               dnaIdSearch.trim().length > 0 &&
               (patient.dnaId.toLowerCase().includes(dnaIdSearch.toLowerCase().trim()) ||
@@ -431,12 +495,10 @@ export const PatientDirectoryView: React.FC<PatientDirectoryViewProps> = ({
                       </span>
                     )}
 
-                    {!isDemoRoot && (
-                      <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-700 font-bold text-[10px] border border-emerald-500/20 flex items-center space-x-1">
-                        <Sparkles className="w-3 h-3 text-emerald-500" />
-                        <span>REGISTERED</span>
-                      </span>
-                    )}
+                    <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-700 font-bold text-[10px] border border-emerald-500/20 flex items-center space-x-1">
+                      <Sparkles className="w-3 h-3 text-emerald-500" />
+                      <span>REGISTERED</span>
+                    </span>
                   </div>
 
                   {isActive ? (

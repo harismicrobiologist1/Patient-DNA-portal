@@ -1,157 +1,297 @@
 {
   "database": {
     "DNA-PK-26-10025": {
-      "updatedAt": "2026-09-27T10:14:04.896Z",
-      "dnaId": "DNA-1629-3931",
-      "labReports": [],
-      "fullName": "Haris Amin",
+      "dnaId": "DNA-PK-26-10025",
+      "appointments": [],
+      "updatedAt": "2026-09-28T17:22:05.938Z",
       "history": {
-        "allergies": [],
-        "lifestyle": {
-          "physicalActivity": "Light (1-2 days/wk)",
-          "dietType": "Balanced",
-          "sleepAvgHours": 7.5,
-          "alcoholConsumption": "None",
-          "smokingStatus": "Non-smoker"
-        },
-        "diseases": [],
-        "medicines": [],
         "surgeries": [],
         "vaccinations": [],
+        "medicines": [],
         "chronicIllnesses": [],
-        "familyHistory": []
+        "familyHistory": [],
+        "lifestyle": {
+          "dietType": "Balanced",
+          "smokingStatus": "Non-smoker",
+          "sleepAvgHours": 8,
+          "alcoholConsumption": "None",
+          "physicalActivity": "Active (3-5 days/wk)"
+        },
+        "allergies": [],
+        "diseases": []
       },
       "clinicalRecords": [],
-      "appointments": [],
+      "fullName": "Dada",
       "prescriptions": [],
+      "labReports": [],
       "patient": {
-        "organDonorStatus": true,
-        "fullName": "Haris Amin",
-        "registeredHospital": "BKMC",
-        "password": "Haris456?!*",
-        "phone": "+923119286007",
-        "dnaId": "DNA-PK-26-10025",
-        "email": "harismicrobiologist1@gmail.com",
-        "bloodGroup": "AB Positive (AB+)",
-        "address": "Yarhussain",
-        "emergencyContacts": [
-          {
-            "id": "ec-1786729862248",
-            "name": "Haris Amin",
-            "relationship": "Spouse",
-            "phone": "+923119286007",
-            "isPrimary": true
-          }
-        ],
-        "nationalId": "16301-6122822-5",
-        "biometricStatus": "Verified",
         "insurance": {
-          "groupNumber": "GRP-0012",
-          "policyNumber": "Nill",
-          "status": "Active",
-          "provider": "Nill",
-          "coverageAmount": "$500,000 Standard Coverage"
+          "coverageAmount": "N/A",
+          "status": "Pending",
+          "provider": "None / Self-Pay",
+          "policyNumber": "N/A",
+          "groupNumber": "N/A"
         },
-        "dob": "2006-01-03",
-        "securityPin": "1234",
         "gender": "Male",
+        "organDonorStatus": false,
+        "dnaId": "DNA-PK-26-10025",
+        "biometricStatus": "Verified",
+        "securityPin": "1234",
+        "fullName": "Dada",
+        "avatarUrl": "data:image/svg+xml;utf8,%0A%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20240%20240%22%20width%3D%22240%22%20height%3D%22240%22%3E%0A%20%20%3Cdefs%3E%0A%20%20%20%20%3Cstyle%3E%0A%20%20%20%20%20%20%40keyframes%20breathe%20%7B%0A%20%20%20%20%20%20%20%200%25%2C%20100%25%20%7B%20transform%3A%20translateY(0px)%3B%20%7D%0A%20%20%20%20%20%20%20%2050%25%20%7B%20transform%3A%20translateY(-2px)%3B%20%7D%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%40keyframes%20auraGlow%20%7B%0A%20%20%20%20%20%20%20%200%25%2C%20100%25%20%7B%20stroke-opacity%3A%200.3%3B%20%7D%0A%20%20%20%20%20%20%20%2050%25%20%7B%20stroke-opacity%3A%200.8%3B%20%7D%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20.character-group%20%7B%0A%20%20%20%20%20%20%20%20transform-origin%3A%20120px%20160px%3B%0A%20%20%20%20%20%20%20%20animation%3A%20breathe%203.6s%20ease-in-out%20infinite%3B%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20.ring-pulse%20%7B%0A%20%20%20%20%20%20%20%20animation%3A%20auraGlow%203s%20ease-in-out%20infinite%3B%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%3C%2Fstyle%3E%0A%20%20%20%20%3Cfilter%20id%3D%22avatarShadow%22%20x%3D%22-10%25%22%20y%3D%22-10%25%22%20width%3D%22120%25%22%20height%3D%22120%25%22%3E%0A%20%20%20%20%20%20%3CfeDropShadow%20dx%3D%220%22%20dy%3D%224%22%20stdDeviation%3D%226%22%20flood-color%3D%22%230f172a%22%20flood-opacity%3D%220.12%22%2F%3E%0A%20%20%20%20%3C%2Ffilter%3E%0A%20%20%3C%2Fdefs%3E%0A%0A%20%20%3C!--%20Circular%20Avatar%20Badge%20with%20Clean%20Medical%20Rim%20--%3E%0A%20%20%3Ccircle%20cx%3D%22120%22%20cy%3D%22120%22%20r%3D%22108%22%20fill%3D%22%23e2e8f0%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%224.5%22%20filter%3D%22url(%23avatarShadow)%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%22120%22%20cy%3D%22120%22%20r%3D%22102%22%20fill%3D%22%23edf2f7%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%22120%22%20cy%3D%22120%22%20r%3D%22102%22%20fill%3D%22none%22%20stroke%3D%22%23cbd5e1%22%20stroke-width%3D%221.5%22%20stroke-dasharray%3D%226%204%22%20className%3D%22ring-pulse%22%2F%3E%0A%0A%20%20%3C!--%20Man%20in%20Suit%20Character%20--%3E%0A%20%20%3Cg%20className%3D%22character-group%22%3E%0A%20%20%20%20%3C!--%20Black%20Suit%20Blazer%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2038%20224%20L%2038%20200%20C%2038%20162%2C%2068%20144%2C%2098%20139%20L%20108%20178%20L%20120%20188%20L%20132%20178%20L%20142%20139%20C%20172%20144%2C%20202%20162%2C%20202%20200%20L%20202%20224%20Z%22%20fill%3D%22%2318191c%22%2F%3E%0A%0A%20%20%20%20%3C!--%20White%20Collared%20Dress%20Shirt%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%2298%2C139%20120%2C195%20142%2C139%20135%2C124%20105%2C124%22%20fill%3D%22%23ffffff%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Neck%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22105%2C110%20105%2C134%20120%2C150%20135%2C134%20135%2C110%22%20fill%3D%22%23f5d0b5%22%2F%3E%0A%20%20%20%20%3C!--%20Subtle%20Chin%20Shadow%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20105%20112%20C%20112%20123%2C%20128%20123%2C%20135%20112%20L%20135%20120%20C%20128%20131%2C%20112%20131%2C%20105%20120%20Z%22%20fill%3D%22%23e5bfa4%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Red%20Tie%20Knot%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22113%2C141%20127%2C141%20125%2C154%20120%2C157%20115%2C154%22%20fill%3D%22%23dc2626%22%2F%3E%0A%20%20%20%20%3C!--%20Red%20Tie%20Blade%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22115%2C154%20125%2C154%20130%2C198%20120%2C214%20110%2C198%22%20fill%3D%22%23ef4444%22%2F%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22120%2C157%20125%2C154%20130%2C198%20120%2C214%22%20fill%3D%22%23dc2626%22%2F%3E%0A%0A%20%20%20%20%3C!--%20White%20Shirt%20Collars%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%2297%2C139%20107%2C123%20115%2C145%22%20fill%3D%22%23ffffff%22%20stroke%3D%22%23e2e8f0%22%20stroke-width%3D%221%22%2F%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22143%2C139%20133%2C123%20125%2C145%22%20fill%3D%22%23ffffff%22%20stroke%3D%22%23e2e8f0%22%20stroke-width%3D%221%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Suit%20Lapels%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2072%20152%20L%2098%20139%20L%20109%20178%20L%2088%20185%20Z%22%20fill%3D%22%2325272c%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20168%20152%20L%20142%20139%20L%20131%20178%20L%20152%20185%20Z%22%20fill%3D%22%2325272c%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Left%20Ear%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2077%2084%20C%2069%2084%2C%2069%20105%2C%2077%20105%20Z%22%20fill%3D%22%23f5d0b5%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2076%2089%20C%2073%2089%2C%2073%2099%2C%2076%2099%22%20stroke%3D%22%23e5bfa4%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Right%20Ear%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20163%2084%20C%20171%2084%2C%20171%20105%2C%20163%20105%20Z%22%20fill%3D%22%23f5d0b5%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20164%2089%20C%20167%2089%2C%20167%2099%2C%20164%2099%22%20stroke%3D%22%23e5bfa4%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Faceless%20Head%20Contour%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2079%2082%20C%2079%2048%2C%20161%2048%2C%20161%2082%20C%20161%20114%2C%20143%20128%2C%20120%20128%20C%2097%20128%2C%2079%20114%2C%2079%2082%20Z%22%20fill%3D%22%23f5d0b5%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Styled%20Dark%20Hair%20with%20Side%20Parting%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2076%2084%20C%2076%2042%2C%20102%2030%2C%20128%2030%20C%20158%2030%2C%20166%2050%2C%20166%2084%20C%20166%2094%2C%20163%20104%2C%20160%20107%20C%20160%2082%2C%20155%2064%2C%20144%2054%20C%20130%2044%2C%20108%2050%2C%2090%2066%20C%2083%2073%2C%2080%2086%2C%2080%20107%20C%2077%20104%2C%2076%2094%2C%2076%2084%20Z%22%20fill%3D%22%23282a30%22%2F%3E%0A%20%20%20%20%3C!--%20Sweeping%20Front%20Bangs%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2086%2054%20C%20102%2044%2C%20128%2044%2C%20146%2058%20C%20156%2066%2C%20160%2078%2C%20160%2078%20C%20148%2066%2C%20130%2060%2C%20112%2064%20C%2098%2068%2C%2088%2080%2C%2088%2080%20C%2088%2080%2C%2082%2066%2C%2086%2054%20Z%22%20fill%3D%22%23282a30%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
+        "nationalId": "Pending",
+        "address": "Not Specified",
+        "password": "Asdqwe123@",
+        "phone": "+92",
+        "registeredHospital": "General Healthcare Registry",
         "biometricAuthEnabled": true,
-        "avatarUrl": "data:image/svg+xml;utf8,%0A%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20240%20240%22%20width%3D%22240%22%20height%3D%22240%22%3E%0A%20%20%3Cdefs%3E%0A%20%20%20%20%3Cstyle%3E%0A%20%20%20%20%20%20%40keyframes%20orbitRotate%20%7B%0A%20%20%20%20%20%20%20%20from%20%7B%20transform%3A%20rotate(0deg)%3B%20%7D%0A%20%20%20%20%20%20%20%20to%20%7B%20transform%3A%20rotate(360deg)%3B%20%7D%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%40keyframes%20bioPulse%20%7B%0A%20%20%20%20%20%20%20%200%25%2C%20100%25%20%7B%0A%20%20%20%20%20%20%20%20%20%20opacity%3A%200.35%3B%0A%20%20%20%20%20%20%20%20%20%20transform%3A%20scale(1)%3B%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%2050%25%20%7B%0A%20%20%20%20%20%20%20%20%20%20opacity%3A%200.8%3B%0A%20%20%20%20%20%20%20%20%20%20transform%3A%20scale(1.04)%3B%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%40keyframes%20blinkMan%20%7B%0A%20%20%20%20%20%20%20%200%25%2C%2092%25%2C%20100%25%20%7B%0A%20%20%20%20%20%20%20%20%20%20transform%3A%20scaleY(1)%3B%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%2095%25%20%7B%0A%20%20%20%20%20%20%20%20%20%20transform%3A%20scaleY(0.12)%3B%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%40keyframes%20breatheMan%20%7B%0A%20%20%20%20%20%20%20%200%25%2C%20100%25%20%7B%0A%20%20%20%20%20%20%20%20%20%20transform%3A%20translateY(0px)%3B%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%2050%25%20%7B%0A%20%20%20%20%20%20%20%20%20%20transform%3A%20translateY(-2.5px)%3B%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%40keyframes%20badgePulse%20%7B%0A%20%20%20%20%20%20%20%200%25%2C%20100%25%20%7B%0A%20%20%20%20%20%20%20%20%20%20transform%3A%20scale(1)%3B%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%2050%25%20%7B%0A%20%20%20%20%20%20%20%20%20%20transform%3A%20scale(1.08)%3B%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%40keyframes%20waveGlow%20%7B%0A%20%20%20%20%20%20%20%200%25%2C%20100%25%20%7B%0A%20%20%20%20%20%20%20%20%20%20stroke-opacity%3A%200.25%3B%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%2050%25%20%7B%0A%20%20%20%20%20%20%20%20%20%20stroke-opacity%3A%200.75%3B%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%7D%0A%0A%20%20%20%20%20%20.orbit-ring%20%7B%0A%20%20%20%20%20%20%20%20transform-origin%3A%20120px%20120px%3B%0A%20%20%20%20%20%20%20%20animation%3A%20orbitRotate%2020s%20linear%20infinite%3B%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20.pulse-glow%20%7B%0A%20%20%20%20%20%20%20%20transform-origin%3A%20120px%20120px%3B%0A%20%20%20%20%20%20%20%20animation%3A%20bioPulse%203.5s%20ease-in-out%20infinite%3B%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20.character-man%20%7B%0A%20%20%20%20%20%20%20%20transform-origin%3A%20120px%20160px%3B%0A%20%20%20%20%20%20%20%20animation%3A%20breatheMan%203.8s%20ease-in-out%20infinite%3B%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20.eyes-blink%20%7B%0A%20%20%20%20%20%20%20%20transform-origin%3A%20120px%2097px%3B%0A%20%20%20%20%20%20%20%20animation%3A%20blinkMan%204.5s%20ease-in-out%20infinite%3B%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20.symbol-badge%20%7B%0A%20%20%20%20%20%20%20%20transform-origin%3A%20188px%20188px%3B%0A%20%20%20%20%20%20%20%20animation%3A%20badgePulse%203s%20ease-in-out%20infinite%3B%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20.radar-wave%20%7B%0A%20%20%20%20%20%20%20%20animation%3A%20waveGlow%202.5s%20ease-in-out%20infinite%3B%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%3C%2Fstyle%3E%0A%0A%20%20%20%20%3ClinearGradient%20id%3D%22bgMan%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%231e293b%22%2F%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%2250%25%22%20stop-color%3D%22%230f172a%22%2F%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%23020617%22%2F%3E%0A%20%20%20%20%3C%2FlinearGradient%3E%0A%0A%20%20%20%20%3ClinearGradient%20id%3D%22shirtMan%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%232563eb%22%2F%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%231e3a8a%22%2F%3E%0A%20%20%20%20%3C%2FlinearGradient%3E%0A%0A%20%20%20%20%3ClinearGradient%20id%3D%22hairMan%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23334155%22%2F%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%230f172a%22%2F%3E%0A%20%20%20%20%3C%2FlinearGradient%3E%0A%0A%20%20%20%20%3CradialGradient%20id%3D%22auraMan%22%20cx%3D%2250%25%22%20cy%3D%2250%25%22%20r%3D%2250%25%22%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%2338bdf8%22%20stop-opacity%3D%220.38%22%2F%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%2270%25%22%20stop-color%3D%22%232563eb%22%20stop-opacity%3D%220.14%22%2F%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%230f172a%22%20stop-opacity%3D%220%22%2F%3E%0A%20%20%20%20%3C%2FradialGradient%3E%0A%20%20%3C%2Fdefs%3E%0A%0A%20%20%3C!--%20Background%20Base%20--%3E%0A%20%20%3Crect%20width%3D%22240%22%20height%3D%22240%22%20rx%3D%2252%22%20fill%3D%22url(%23bgMan)%22%2F%3E%0A%0A%20%20%3C!--%20Pulsing%20Bio-Aura%20Core%20--%3E%0A%20%20%3Ccircle%20cx%3D%22120%22%20cy%3D%22120%22%20r%3D%22102%22%20fill%3D%22url(%23auraMan)%22%20className%3D%22pulse-glow%22%2F%3E%0A%0A%20%20%3C!--%20Biometric%20Scanner%20Rings%20--%3E%0A%20%20%3Ccircle%20cx%3D%22120%22%20cy%3D%22120%22%20r%3D%22106%22%20fill%3D%22none%22%20stroke%3D%22%2338bdf8%22%20stroke-width%3D%222%22%20stroke-opacity%3D%220.25%22%20className%3D%22radar-wave%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%22120%22%20cy%3D%22120%22%20r%3D%2295%22%20fill%3D%22none%22%20stroke%3D%22%2360a5fa%22%20stroke-width%3D%222.5%22%20stroke-opacity%3D%220.5%22%20stroke-dasharray%3D%2210%208%22%20className%3D%22orbit-ring%22%2F%3E%0A%0A%20%20%3C!--%20Character%20Group%20with%20Breathing%20Animation%20--%3E%0A%20%20%3Cg%20className%3D%22character-man%22%3E%0A%20%20%20%20%3C!--%20Shoulders%20%26%20Medical%20Polo%20Shirt%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2044%20216%20C%2044%20168%2C%2074%20150%2C%20105%20148%20L%20105%20160%20C%20112%20165%2C%20128%20165%2C%20135%20160%20L%20135%20148%20C%20166%20150%2C%20196%20168%2C%20196%20216%20Z%22%20fill%3D%22url(%23shirtMan)%22%2F%3E%0A%20%20%20%20%3C!--%20Clinical%20White%20Collar%20Accent%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20105%20148%20L%20120%20168%20L%20135%20148%20Z%22%20fill%3D%22%23ffffff%22%20opacity%3D%220.95%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20112%20152%20L%20120%20164%20L%20128%20152%22%20stroke%3D%22%233b82f6%22%20stroke-width%3D%221.5%22%20fill%3D%22none%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Neck%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20106%20128%20L%20106%20154%20C%20112%20160%2C%20128%20160%2C%20134%20154%20L%20134%20128%20Z%22%20fill%3D%22%23e2ab86%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Ears%20--%3E%0A%20%20%20%20%3Ccircle%20cx%3D%2280%22%20cy%3D%2298%22%20r%3D%228%22%20fill%3D%22%23fcdbc5%22%2F%3E%0A%20%20%20%20%3Ccircle%20cx%3D%2280%22%20cy%3D%2298%22%20r%3D%224.5%22%20fill%3D%22%23e2ab86%22%20opacity%3D%220.6%22%2F%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22160%22%20cy%3D%2298%22%20r%3D%228%22%20fill%3D%22%23fcdbc5%22%2F%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22160%22%20cy%3D%2298%22%20r%3D%224.5%22%20fill%3D%22%23e2ab86%22%20opacity%3D%220.6%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Head%20%2F%20Face%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2084%2094%20C%2084%2064%2C%20156%2064%2C%20156%2094%20C%20156%20126%2C%20140%20146%2C%20120%20146%20C%20100%20146%2C%2084%20126%2C%2084%2094%20Z%22%20fill%3D%22%23fcdbc5%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Cheeks%20(Subtle%20healthy%20glow)%20--%3E%0A%20%20%20%20%3Cellipse%20cx%3D%2298%22%20cy%3D%22110%22%20rx%3D%226%22%20ry%3D%223.5%22%20fill%3D%22%23f87171%22%20opacity%3D%220.2%22%2F%3E%0A%20%20%20%20%3Cellipse%20cx%3D%22142%22%20cy%3D%22110%22%20rx%3D%226%22%20ry%3D%223.5%22%20fill%3D%22%23f87171%22%20opacity%3D%220.2%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Modern%20Styled%20Hair%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2080%2088%20C%2078%2052%2C%2098%2040%2C%20120%2040%20C%20144%2040%2C%20162%2052%2C%20160%2088%20C%20152%2074%2C%20140%2068%2C%20120%2068%20C%20100%2068%2C%2088%2074%2C%2080%2088%20Z%22%20fill%3D%22url(%23hairMan)%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20112%2040%20C%20130%2038%2C%20150%2048%2C%20156%2060%20C%20148%2054%2C%20134%2050%2C%20120%2050%20Z%22%20fill%3D%22%23475569%22%20opacity%3D%220.4%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Eyebrows%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2096%2085%20Q%20106%2080%20114%2085%22%20stroke%3D%22%231e293b%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%20fill%3D%22none%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20126%2085%20Q%20134%2080%20144%2085%22%20stroke%3D%22%231e293b%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%20fill%3D%22none%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Eyes%20with%20Blinking%20Animation%20--%3E%0A%20%20%20%20%3Cg%20className%3D%22eyes-blink%22%3E%0A%20%20%20%20%20%20%3C!--%20Left%20Eye%20--%3E%0A%20%20%20%20%20%20%3Cellipse%20cx%3D%22105%22%20cy%3D%2297%22%20rx%3D%225.5%22%20ry%3D%224.2%22%20fill%3D%22%23ffffff%22%2F%3E%0A%20%20%20%20%20%20%3Ccircle%20cx%3D%22105%22%20cy%3D%2297%22%20r%3D%223.2%22%20fill%3D%22%230f172a%22%2F%3E%0A%20%20%20%20%20%20%3Ccircle%20cx%3D%22103.8%22%20cy%3D%2295.5%22%20r%3D%221.2%22%20fill%3D%22%23ffffff%22%2F%3E%0A%0A%20%20%20%20%20%20%3C!--%20Right%20Eye%20--%3E%0A%20%20%20%20%20%20%3Cellipse%20cx%3D%22135%22%20cy%3D%2297%22%20rx%3D%225.5%22%20ry%3D%224.2%22%20fill%3D%22%23ffffff%22%2F%3E%0A%20%20%20%20%20%20%3Ccircle%20cx%3D%22135%22%20cy%3D%2297%22%20r%3D%223.2%22%20fill%3D%22%230f172a%22%2F%3E%0A%20%20%20%20%20%20%3Ccircle%20cx%3D%22133.8%22%20cy%3D%2295.5%22%20r%3D%221.2%22%20fill%3D%22%23ffffff%22%2F%3E%0A%20%20%20%20%3C%2Fg%3E%0A%0A%20%20%20%20%3C!--%20Nose%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20120%2095%20L%20118%20107%20L%20123%20107%22%20stroke%3D%22%23dca480%22%20stroke-width%3D%222.2%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20fill%3D%22none%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Friendly%20Smile%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20112%20118%20Q%20120%20126%20128%20118%22%20stroke%3D%22%23b86850%22%20stroke-width%3D%222.8%22%20stroke-linecap%3D%22round%22%20fill%3D%22none%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%0A%20%20%3C!--%20Interactive%20Animated%20Male%20Badge%20%E2%99%82%20--%3E%0A%20%20%3Cg%20className%3D%22symbol-badge%22%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22188%22%20cy%3D%22188%22%20r%3D%2228%22%20fill%3D%22%231d4ed8%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%223.5%22%20filter%3D%22drop-shadow(0%204px%206px%20rgba(0%2C0%2C0%2C0.4))%22%2F%3E%0A%20%20%20%20%3C!--%20%E2%99%82%20Icon%20--%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22183%22%20cy%3D%22193%22%20r%3D%228%22%20fill%3D%22none%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%223%22%2F%3E%0A%20%20%20%20%3Cline%20x1%3D%22189%22%20y1%3D%22187%22%20x2%3D%22201%22%20y2%3D%22175%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%2F%3E%0A%20%20%20%20%3Cpolyline%20points%3D%22193%20175%2C%20201%20175%2C%20201%20183%22%20fill%3D%22none%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A"
+        "dob": "2004-09-28",
+        "bloodGroup": "O Positive (O+)",
+        "emergencyContacts": [],
+        "email": "laladada@gmail.com"
       }
     },
     "DNA-PK-26-10026": {
       "clinicalRecords": [],
-      "fullName": "Noman",
-      "appointments": [],
-      "prescriptions": [],
       "history": {
-        "familyHistory": [],
-        "surgeries": [],
-        "diseases": [],
-        "lifestyle": {
-          "alcoholConsumption": "None",
-          "dietType": "Balanced",
-          "smokingStatus": "Non-smoker",
-          "physicalActivity": "Active (3-5 days/wk)",
-          "sleepAvgHours": 8
-        },
         "chronicIllnesses": [],
-        "vaccinations": [],
         "medicines": [],
-        "allergies": []
+        "diseases": [],
+        "vaccinations": [],
+        "surgeries": [],
+        "allergies": [],
+        "lifestyle": {
+          "sleepAvgHours": 8,
+          "dietType": "Balanced",
+          "alcoholConsumption": "None",
+          "physicalActivity": "Active (3-5 days/wk)",
+          "smokingStatus": "Non-smoker"
+        },
+        "familyHistory": []
       },
-      "dnaId": "DNA-PK-26-10026",
       "patient": {
-        "dnaId": "DNA-PK-26-10026",
-        "phone": "+1 (555) 234-5678",
-        "email": "laladada45@gmal.com",
-        "bloodGroup": "O Positive (O+)",
-        "registeredHospital": "Pakistan National Medical Center",
-        "gender": "Female",
-        "address": "450 Medical Center Blvd, Suite 300, Boston, MA",
+        "dob": "1995-04-12",
         "insurance": {
-          "policyNumber": "POL-9790811",
+          "provider": "Universal Standard Health Network",
           "status": "Active",
           "groupNumber": "GRP-01",
           "coverageAmount": "$500,000 Comprehensive",
-          "provider": "Universal Standard Health Network"
+          "policyNumber": "POL-9790811"
         },
-        "nationalId": "US-MA-882104-Z",
-        "dob": "1995-04-12",
+        "email": "laladada45@gmal.com",
         "biometricAuthEnabled": true,
+        "fullName": "Noman",
+        "phone": "+1 (555) 234-5678",
+        "registeredHospital": "Pakistan National Medical Center",
         "securityPin": "1234",
+        "emergencyContacts": [],
         "avatarUrl": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=300",
         "biometricStatus": "Verified",
+        "address": "450 Medical Center Blvd, Suite 300, Boston, MA",
+        "nationalId": "US-MA-882104-Z",
+        "gender": "Female",
+        "dnaId": "DNA-PK-26-10026",
+        "bloodGroup": "O Positive (O+)",
         "organDonorStatus": true,
-        "fullName": "Noman",
-        "emergencyContacts": [],
         "password": "Noman123-/:"
       },
-      "labReports": [],
-      "updatedAt": "2026-09-27T10:14:04.897Z"
+      "appointments": [],
+      "updatedAt": "2026-09-28T17:22:05.939Z",
+      "dnaId": "DNA-PK-26-10026",
+      "fullName": "Noman",
+      "prescriptions": [],
+      "labReports": []
     },
     "DNA-PK-26-10027": {
-      "prescriptions": [],
-      "dnaId": "DNA-PK-26-10027",
-      "fullName": "Farhan",
+      "patient": {
+        "dnaId": "DNA-PK-26-10027",
+        "emergencyContacts": [
+          {
+            "name": "Ayesha Amin",
+            "phone": "+923119286007",
+            "id": "ec-1790573968629",
+            "relationship": "Emergency Contact",
+            "isPrimary": true
+          }
+        ],
+        "organDonorStatus": false,
+        "password": "Farhan123-/:",
+        "registeredHospital": "General Healthcare Registry",
+        "biometricStatus": "Verified",
+        "fullName": "Farhan",
+        "nationalId": "Pending",
+        "email": "laladada696@gmail.com",
+        "securityPin": "1234",
+        "insurance": {
+          "coverageAmount": "N/A",
+          "groupNumber": "N/A",
+          "status": "Pending",
+          "provider": "None / Self-Pay",
+          "policyNumber": "N/A"
+        },
+        "gender": "Male",
+        "phone": "+923119286007",
+        "biometricAuthEnabled": true,
+        "address": "Not Specified",
+        "avatarUrl": "data:image/svg+xml;utf8,%0A%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20240%20240%22%20width%3D%22240%22%20height%3D%22240%22%3E%0A%20%20%3Cdefs%3E%0A%20%20%20%20%3Cstyle%3E%0A%20%20%20%20%20%20%40keyframes%20breathe%20%7B%0A%20%20%20%20%20%20%20%200%25%2C%20100%25%20%7B%20transform%3A%20translateY(0px)%3B%20%7D%0A%20%20%20%20%20%20%20%2050%25%20%7B%20transform%3A%20translateY(-2px)%3B%20%7D%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%40keyframes%20auraGlow%20%7B%0A%20%20%20%20%20%20%20%200%25%2C%20100%25%20%7B%20stroke-opacity%3A%200.3%3B%20%7D%0A%20%20%20%20%20%20%20%2050%25%20%7B%20stroke-opacity%3A%200.8%3B%20%7D%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20.character-group%20%7B%0A%20%20%20%20%20%20%20%20transform-origin%3A%20120px%20160px%3B%0A%20%20%20%20%20%20%20%20animation%3A%20breathe%203.6s%20ease-in-out%20infinite%3B%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20.ring-pulse%20%7B%0A%20%20%20%20%20%20%20%20animation%3A%20auraGlow%203s%20ease-in-out%20infinite%3B%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%3C%2Fstyle%3E%0A%20%20%20%20%3Cfilter%20id%3D%22avatarShadow%22%20x%3D%22-10%25%22%20y%3D%22-10%25%22%20width%3D%22120%25%22%20height%3D%22120%25%22%3E%0A%20%20%20%20%20%20%3CfeDropShadow%20dx%3D%220%22%20dy%3D%224%22%20stdDeviation%3D%226%22%20flood-color%3D%22%230f172a%22%20flood-opacity%3D%220.12%22%2F%3E%0A%20%20%20%20%3C%2Ffilter%3E%0A%20%20%3C%2Fdefs%3E%0A%0A%20%20%3C!--%20Circular%20Avatar%20Badge%20with%20Clean%20Medical%20Rim%20--%3E%0A%20%20%3Ccircle%20cx%3D%22120%22%20cy%3D%22120%22%20r%3D%22108%22%20fill%3D%22%23e2e8f0%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%224.5%22%20filter%3D%22url(%23avatarShadow)%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%22120%22%20cy%3D%22120%22%20r%3D%22102%22%20fill%3D%22%23edf2f7%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%22120%22%20cy%3D%22120%22%20r%3D%22102%22%20fill%3D%22none%22%20stroke%3D%22%23cbd5e1%22%20stroke-width%3D%221.5%22%20stroke-dasharray%3D%226%204%22%20className%3D%22ring-pulse%22%2F%3E%0A%0A%20%20%3C!--%20Man%20in%20Suit%20Character%20--%3E%0A%20%20%3Cg%20className%3D%22character-group%22%3E%0A%20%20%20%20%3C!--%20Black%20Suit%20Blazer%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2038%20224%20L%2038%20200%20C%2038%20162%2C%2068%20144%2C%2098%20139%20L%20108%20178%20L%20120%20188%20L%20132%20178%20L%20142%20139%20C%20172%20144%2C%20202%20162%2C%20202%20200%20L%20202%20224%20Z%22%20fill%3D%22%2318191c%22%2F%3E%0A%0A%20%20%20%20%3C!--%20White%20Collared%20Dress%20Shirt%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%2298%2C139%20120%2C195%20142%2C139%20135%2C124%20105%2C124%22%20fill%3D%22%23ffffff%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Neck%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22105%2C110%20105%2C134%20120%2C150%20135%2C134%20135%2C110%22%20fill%3D%22%23f5d0b5%22%2F%3E%0A%20%20%20%20%3C!--%20Subtle%20Chin%20Shadow%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20105%20112%20C%20112%20123%2C%20128%20123%2C%20135%20112%20L%20135%20120%20C%20128%20131%2C%20112%20131%2C%20105%20120%20Z%22%20fill%3D%22%23e5bfa4%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Red%20Tie%20Knot%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22113%2C141%20127%2C141%20125%2C154%20120%2C157%20115%2C154%22%20fill%3D%22%23dc2626%22%2F%3E%0A%20%20%20%20%3C!--%20Red%20Tie%20Blade%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22115%2C154%20125%2C154%20130%2C198%20120%2C214%20110%2C198%22%20fill%3D%22%23ef4444%22%2F%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22120%2C157%20125%2C154%20130%2C198%20120%2C214%22%20fill%3D%22%23dc2626%22%2F%3E%0A%0A%20%20%20%20%3C!--%20White%20Shirt%20Collars%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%2297%2C139%20107%2C123%20115%2C145%22%20fill%3D%22%23ffffff%22%20stroke%3D%22%23e2e8f0%22%20stroke-width%3D%221%22%2F%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22143%2C139%20133%2C123%20125%2C145%22%20fill%3D%22%23ffffff%22%20stroke%3D%22%23e2e8f0%22%20stroke-width%3D%221%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Suit%20Lapels%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2072%20152%20L%2098%20139%20L%20109%20178%20L%2088%20185%20Z%22%20fill%3D%22%2325272c%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20168%20152%20L%20142%20139%20L%20131%20178%20L%20152%20185%20Z%22%20fill%3D%22%2325272c%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Left%20Ear%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2077%2084%20C%2069%2084%2C%2069%20105%2C%2077%20105%20Z%22%20fill%3D%22%23f5d0b5%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2076%2089%20C%2073%2089%2C%2073%2099%2C%2076%2099%22%20stroke%3D%22%23e5bfa4%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Right%20Ear%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20163%2084%20C%20171%2084%2C%20171%20105%2C%20163%20105%20Z%22%20fill%3D%22%23f5d0b5%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20164%2089%20C%20167%2089%2C%20167%2099%2C%20164%2099%22%20stroke%3D%22%23e5bfa4%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Faceless%20Head%20Contour%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2079%2082%20C%2079%2048%2C%20161%2048%2C%20161%2082%20C%20161%20114%2C%20143%20128%2C%20120%20128%20C%2097%20128%2C%2079%20114%2C%2079%2082%20Z%22%20fill%3D%22%23f5d0b5%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Styled%20Dark%20Hair%20with%20Side%20Parting%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2076%2084%20C%2076%2042%2C%20102%2030%2C%20128%2030%20C%20158%2030%2C%20166%2050%2C%20166%2084%20C%20166%2094%2C%20163%20104%2C%20160%20107%20C%20160%2082%2C%20155%2064%2C%20144%2054%20C%20130%2044%2C%20108%2050%2C%2090%2066%20C%2083%2073%2C%2080%2086%2C%2080%20107%20C%2077%20104%2C%2076%2094%2C%2076%2084%20Z%22%20fill%3D%22%23282a30%22%2F%3E%0A%20%20%20%20%3C!--%20Sweeping%20Front%20Bangs%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2086%2054%20C%20102%2044%2C%20128%2044%2C%20146%2058%20C%20156%2066%2C%20160%2078%2C%20160%2078%20C%20148%2066%2C%20130%2060%2C%20112%2064%20C%2098%2068%2C%2088%2080%2C%2088%2080%20C%2088%2080%2C%2082%2066%2C%2086%2054%20Z%22%20fill%3D%22%23282a30%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
+        "bloodGroup": "B Positive (B+)",
+        "dob": "2002-09-28"
+      },
       "labReports": [],
-      "appointments": [],
+      "dnaId": "DNA-PK-26-10027",
       "history": {
-        "surgeries": [],
+        "vaccinations": [],
         "medicines": [],
+        "surgeries": [],
+        "diseases": [],
+        "allergies": [],
+        "familyHistory": [],
+        "chronicIllnesses": [],
+        "lifestyle": {
+          "smokingStatus": "Non-smoker",
+          "alcoholConsumption": "None",
+          "physicalActivity": "Active (3-5 days/wk)",
+          "dietType": "Balanced",
+          "sleepAvgHours": 8
+        }
+      },
+      "prescriptions": [],
+      "updatedAt": "2026-09-28T17:22:05.942Z",
+      "fullName": "Farhan",
+      "appointments": [],
+      "clinicalRecords": []
+    },
+    "DNA-PK-26-10028": {
+      "clinicalRecords": [],
+      "labReports": [],
+      "prescriptions": [],
+      "updatedAt": "2026-09-28T17:22:05.950Z",
+      "fullName": "Nomi",
+      "dnaId": "DNA-PK-26-10028",
+      "history": {
+        "lifestyle": {
+          "sleepAvgHours": 8,
+          "smokingStatus": "Non-smoker",
+          "dietType": "Balanced",
+          "alcoholConsumption": "None",
+          "physicalActivity": "Active (3-5 days/wk)"
+        },
+        "vaccinations": [],
+        "chronicIllnesses": [],
+        "allergies": [],
+        "surgeries": [],
+        "diseases": [],
+        "familyHistory": [],
+        "medicines": []
+      },
+      "appointments": [],
+      "patient": {
+        "insurance": {
+          "provider": "None / Self-Pay",
+          "groupNumber": "N/A",
+          "status": "Pending",
+          "coverageAmount": "N/A",
+          "policyNumber": "N/A"
+        },
+        "email": "nomandgisa@gmail.com",
+        "password": "Nomi123@#$",
+        "phone": "+92",
+        "address": "Not Specified",
+        "emergencyContacts": [],
+        "biometricAuthEnabled": true,
+        "avatarUrl": "data:image/svg+xml;utf8,%0A%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20240%20240%22%20width%3D%22240%22%20height%3D%22240%22%3E%0A%20%20%3Cdefs%3E%0A%20%20%20%20%3Cstyle%3E%0A%20%20%20%20%20%20%40keyframes%20breathe%20%7B%0A%20%20%20%20%20%20%20%200%25%2C%20100%25%20%7B%20transform%3A%20translateY(0px)%3B%20%7D%0A%20%20%20%20%20%20%20%2050%25%20%7B%20transform%3A%20translateY(-2px)%3B%20%7D%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%40keyframes%20auraGlow%20%7B%0A%20%20%20%20%20%20%20%200%25%2C%20100%25%20%7B%20stroke-opacity%3A%200.3%3B%20%7D%0A%20%20%20%20%20%20%20%2050%25%20%7B%20stroke-opacity%3A%200.8%3B%20%7D%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20.character-group%20%7B%0A%20%20%20%20%20%20%20%20transform-origin%3A%20120px%20160px%3B%0A%20%20%20%20%20%20%20%20animation%3A%20breathe%203.6s%20ease-in-out%20infinite%3B%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20.ring-pulse%20%7B%0A%20%20%20%20%20%20%20%20animation%3A%20auraGlow%203s%20ease-in-out%20infinite%3B%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%3C%2Fstyle%3E%0A%20%20%20%20%3Cfilter%20id%3D%22avatarShadow%22%20x%3D%22-10%25%22%20y%3D%22-10%25%22%20width%3D%22120%25%22%20height%3D%22120%25%22%3E%0A%20%20%20%20%20%20%3CfeDropShadow%20dx%3D%220%22%20dy%3D%224%22%20stdDeviation%3D%226%22%20flood-color%3D%22%230f172a%22%20flood-opacity%3D%220.12%22%2F%3E%0A%20%20%20%20%3C%2Ffilter%3E%0A%20%20%3C%2Fdefs%3E%0A%0A%20%20%3C!--%20Circular%20Avatar%20Badge%20with%20Clean%20Medical%20Rim%20--%3E%0A%20%20%3Ccircle%20cx%3D%22120%22%20cy%3D%22120%22%20r%3D%22108%22%20fill%3D%22%23e2e8f0%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%224.5%22%20filter%3D%22url(%23avatarShadow)%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%22120%22%20cy%3D%22120%22%20r%3D%22102%22%20fill%3D%22%23edf2f7%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%22120%22%20cy%3D%22120%22%20r%3D%22102%22%20fill%3D%22none%22%20stroke%3D%22%23cbd5e1%22%20stroke-width%3D%221.5%22%20stroke-dasharray%3D%226%204%22%20className%3D%22ring-pulse%22%2F%3E%0A%0A%20%20%3C!--%20Man%20in%20Suit%20Character%20--%3E%0A%20%20%3Cg%20className%3D%22character-group%22%3E%0A%20%20%20%20%3C!--%20Black%20Suit%20Blazer%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2038%20224%20L%2038%20200%20C%2038%20162%2C%2068%20144%2C%2098%20139%20L%20108%20178%20L%20120%20188%20L%20132%20178%20L%20142%20139%20C%20172%20144%2C%20202%20162%2C%20202%20200%20L%20202%20224%20Z%22%20fill%3D%22%2318191c%22%2F%3E%0A%0A%20%20%20%20%3C!--%20White%20Collared%20Dress%20Shirt%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%2298%2C139%20120%2C195%20142%2C139%20135%2C124%20105%2C124%22%20fill%3D%22%23ffffff%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Neck%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22105%2C110%20105%2C134%20120%2C150%20135%2C134%20135%2C110%22%20fill%3D%22%23f5d0b5%22%2F%3E%0A%20%20%20%20%3C!--%20Subtle%20Chin%20Shadow%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20105%20112%20C%20112%20123%2C%20128%20123%2C%20135%20112%20L%20135%20120%20C%20128%20131%2C%20112%20131%2C%20105%20120%20Z%22%20fill%3D%22%23e5bfa4%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Red%20Tie%20Knot%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22113%2C141%20127%2C141%20125%2C154%20120%2C157%20115%2C154%22%20fill%3D%22%23dc2626%22%2F%3E%0A%20%20%20%20%3C!--%20Red%20Tie%20Blade%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22115%2C154%20125%2C154%20130%2C198%20120%2C214%20110%2C198%22%20fill%3D%22%23ef4444%22%2F%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22120%2C157%20125%2C154%20130%2C198%20120%2C214%22%20fill%3D%22%23dc2626%22%2F%3E%0A%0A%20%20%20%20%3C!--%20White%20Shirt%20Collars%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%2297%2C139%20107%2C123%20115%2C145%22%20fill%3D%22%23ffffff%22%20stroke%3D%22%23e2e8f0%22%20stroke-width%3D%221%22%2F%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22143%2C139%20133%2C123%20125%2C145%22%20fill%3D%22%23ffffff%22%20stroke%3D%22%23e2e8f0%22%20stroke-width%3D%221%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Suit%20Lapels%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2072%20152%20L%2098%20139%20L%20109%20178%20L%2088%20185%20Z%22%20fill%3D%22%2325272c%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20168%20152%20L%20142%20139%20L%20131%20178%20L%20152%20185%20Z%22%20fill%3D%22%2325272c%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Left%20Ear%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2077%2084%20C%2069%2084%2C%2069%20105%2C%2077%20105%20Z%22%20fill%3D%22%23f5d0b5%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2076%2089%20C%2073%2089%2C%2073%2099%2C%2076%2099%22%20stroke%3D%22%23e5bfa4%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Right%20Ear%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20163%2084%20C%20171%2084%2C%20171%20105%2C%20163%20105%20Z%22%20fill%3D%22%23f5d0b5%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20164%2089%20C%20167%2089%2C%20167%2099%2C%20164%2099%22%20stroke%3D%22%23e5bfa4%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Faceless%20Head%20Contour%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2079%2082%20C%2079%2048%2C%20161%2048%2C%20161%2082%20C%20161%20114%2C%20143%20128%2C%20120%20128%20C%2097%20128%2C%2079%20114%2C%2079%2082%20Z%22%20fill%3D%22%23f5d0b5%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Styled%20Dark%20Hair%20with%20Side%20Parting%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2076%2084%20C%2076%2042%2C%20102%2030%2C%20128%2030%20C%20158%2030%2C%20166%2050%2C%20166%2084%20C%20166%2094%2C%20163%20104%2C%20160%20107%20C%20160%2082%2C%20155%2064%2C%20144%2054%20C%20130%2044%2C%20108%2050%2C%2090%2066%20C%2083%2073%2C%2080%2086%2C%2080%20107%20C%2077%20104%2C%2076%2094%2C%2076%2084%20Z%22%20fill%3D%22%23282a30%22%2F%3E%0A%20%20%20%20%3C!--%20Sweeping%20Front%20Bangs%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2086%2054%20C%20102%2044%2C%20128%2044%2C%20146%2058%20C%20156%2066%2C%20160%2078%2C%20160%2078%20C%20148%2066%2C%20130%2060%2C%20112%2064%20C%2098%2068%2C%2088%2080%2C%2088%2080%20C%2088%2080%2C%2082%2066%2C%2086%2054%20Z%22%20fill%3D%22%23282a30%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
+        "nationalId": "Pending",
+        "biometricStatus": "Verified",
+        "securityPin": "1234",
+        "dnaId": "DNA-PK-26-10028",
+        "organDonorStatus": false,
+        "dob": "2026-09-28",
+        "registeredHospital": "General Healthcare Registry",
+        "bloodGroup": "O Positive (O+)",
+        "gender": "Male",
+        "fullName": "Nomi"
+      }
+    },
+    "DNA-US-26-10029": {
+      "dnaId": "DNA-US-26-10029",
+      "patient": {
+        "avatarUrl": "data:image/svg+xml;utf8,%0A%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20240%20240%22%20width%3D%22240%22%20height%3D%22240%22%3E%0A%20%20%3Cdefs%3E%0A%20%20%20%20%3Cstyle%3E%0A%20%20%20%20%20%20%40keyframes%20breathe%20%7B%0A%20%20%20%20%20%20%20%200%25%2C%20100%25%20%7B%20transform%3A%20translateY(0px)%3B%20%7D%0A%20%20%20%20%20%20%20%2050%25%20%7B%20transform%3A%20translateY(-2px)%3B%20%7D%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%40keyframes%20auraGlow%20%7B%0A%20%20%20%20%20%20%20%200%25%2C%20100%25%20%7B%20stroke-opacity%3A%200.3%3B%20%7D%0A%20%20%20%20%20%20%20%2050%25%20%7B%20stroke-opacity%3A%200.8%3B%20%7D%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20.character-group%20%7B%0A%20%20%20%20%20%20%20%20transform-origin%3A%20120px%20160px%3B%0A%20%20%20%20%20%20%20%20animation%3A%20breathe%203.6s%20ease-in-out%20infinite%3B%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20.ring-pulse%20%7B%0A%20%20%20%20%20%20%20%20animation%3A%20auraGlow%203s%20ease-in-out%20infinite%3B%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%3C%2Fstyle%3E%0A%20%20%20%20%3Cfilter%20id%3D%22avatarShadow%22%20x%3D%22-10%25%22%20y%3D%22-10%25%22%20width%3D%22120%25%22%20height%3D%22120%25%22%3E%0A%20%20%20%20%20%20%3CfeDropShadow%20dx%3D%220%22%20dy%3D%224%22%20stdDeviation%3D%226%22%20flood-color%3D%22%230f172a%22%20flood-opacity%3D%220.12%22%2F%3E%0A%20%20%20%20%3C%2Ffilter%3E%0A%20%20%3C%2Fdefs%3E%0A%0A%20%20%3C!--%20Circular%20Avatar%20Badge%20with%20Clean%20Medical%20Rim%20--%3E%0A%20%20%3Ccircle%20cx%3D%22120%22%20cy%3D%22120%22%20r%3D%22108%22%20fill%3D%22%23e2e8f0%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%224.5%22%20filter%3D%22url(%23avatarShadow)%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%22120%22%20cy%3D%22120%22%20r%3D%22102%22%20fill%3D%22%23edf2f7%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%22120%22%20cy%3D%22120%22%20r%3D%22102%22%20fill%3D%22none%22%20stroke%3D%22%23cbd5e1%22%20stroke-width%3D%221.5%22%20stroke-dasharray%3D%226%204%22%20className%3D%22ring-pulse%22%2F%3E%0A%0A%20%20%3C!--%20Man%20in%20Suit%20Character%20--%3E%0A%20%20%3Cg%20className%3D%22character-group%22%3E%0A%20%20%20%20%3C!--%20Black%20Suit%20Blazer%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2038%20224%20L%2038%20200%20C%2038%20162%2C%2068%20144%2C%2098%20139%20L%20108%20178%20L%20120%20188%20L%20132%20178%20L%20142%20139%20C%20172%20144%2C%20202%20162%2C%20202%20200%20L%20202%20224%20Z%22%20fill%3D%22%2318191c%22%2F%3E%0A%0A%20%20%20%20%3C!--%20White%20Collared%20Dress%20Shirt%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%2298%2C139%20120%2C195%20142%2C139%20135%2C124%20105%2C124%22%20fill%3D%22%23ffffff%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Neck%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22105%2C110%20105%2C134%20120%2C150%20135%2C134%20135%2C110%22%20fill%3D%22%23f5d0b5%22%2F%3E%0A%20%20%20%20%3C!--%20Subtle%20Chin%20Shadow%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20105%20112%20C%20112%20123%2C%20128%20123%2C%20135%20112%20L%20135%20120%20C%20128%20131%2C%20112%20131%2C%20105%20120%20Z%22%20fill%3D%22%23e5bfa4%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Red%20Tie%20Knot%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22113%2C141%20127%2C141%20125%2C154%20120%2C157%20115%2C154%22%20fill%3D%22%23dc2626%22%2F%3E%0A%20%20%20%20%3C!--%20Red%20Tie%20Blade%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22115%2C154%20125%2C154%20130%2C198%20120%2C214%20110%2C198%22%20fill%3D%22%23ef4444%22%2F%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22120%2C157%20125%2C154%20130%2C198%20120%2C214%22%20fill%3D%22%23dc2626%22%2F%3E%0A%0A%20%20%20%20%3C!--%20White%20Shirt%20Collars%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%2297%2C139%20107%2C123%20115%2C145%22%20fill%3D%22%23ffffff%22%20stroke%3D%22%23e2e8f0%22%20stroke-width%3D%221%22%2F%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22143%2C139%20133%2C123%20125%2C145%22%20fill%3D%22%23ffffff%22%20stroke%3D%22%23e2e8f0%22%20stroke-width%3D%221%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Suit%20Lapels%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2072%20152%20L%2098%20139%20L%20109%20178%20L%2088%20185%20Z%22%20fill%3D%22%2325272c%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20168%20152%20L%20142%20139%20L%20131%20178%20L%20152%20185%20Z%22%20fill%3D%22%2325272c%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Left%20Ear%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2077%2084%20C%2069%2084%2C%2069%20105%2C%2077%20105%20Z%22%20fill%3D%22%23f5d0b5%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2076%2089%20C%2073%2089%2C%2073%2099%2C%2076%2099%22%20stroke%3D%22%23e5bfa4%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Right%20Ear%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20163%2084%20C%20171%2084%2C%20171%20105%2C%20163%20105%20Z%22%20fill%3D%22%23f5d0b5%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20164%2089%20C%20167%2089%2C%20167%2099%2C%20164%2099%22%20stroke%3D%22%23e5bfa4%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Faceless%20Head%20Contour%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2079%2082%20C%2079%2048%2C%20161%2048%2C%20161%2082%20C%20161%20114%2C%20143%20128%2C%20120%20128%20C%2097%20128%2C%2079%20114%2C%2079%2082%20Z%22%20fill%3D%22%23f5d0b5%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Styled%20Dark%20Hair%20with%20Side%20Parting%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2076%2084%20C%2076%2042%2C%20102%2030%2C%20128%2030%20C%20158%2030%2C%20166%2050%2C%20166%2084%20C%20166%2094%2C%20163%20104%2C%20160%20107%20C%20160%2082%2C%20155%2064%2C%20144%2054%20C%20130%2044%2C%20108%2050%2C%2090%2066%20C%2083%2073%2C%2080%2086%2C%2080%20107%20C%2077%20104%2C%2076%2094%2C%2076%2084%20Z%22%20fill%3D%22%23282a30%22%2F%3E%0A%20%20%20%20%3C!--%20Sweeping%20Front%20Bangs%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2086%2054%20C%20102%2044%2C%20128%2044%2C%20146%2058%20C%20156%2066%2C%20160%2078%2C%20160%2078%20C%20148%2066%2C%20130%2060%2C%20112%2064%20C%2098%2068%2C%2088%2080%2C%2088%2080%20C%2088%2080%2C%2082%2066%2C%2086%2054%20Z%22%20fill%3D%22%23282a30%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
+        "biometricStatus": "Verified",
+        "bloodGroup": "O Positive (O+)",
+        "address": "Not Specified",
+        "nationalId": "Pending",
+        "phone": "Not Provided",
+        "email": "nomikaj@gmail.com",
+        "insurance": {
+          "groupNumber": "N/A",
+          "policyNumber": "N/A",
+          "coverageAmount": "N/A",
+          "status": "Pending",
+          "provider": "None / Self-Pay"
+        },
+        "password": "Dady123@",
+        "securityPin": "1234",
+        "registeredHospital": "General Healthcare Registry",
+        "organDonorStatus": false,
+        "dob": "2026-09-28",
+        "fullName": "Dady",
+        "emergencyContacts": [],
+        "biometricAuthEnabled": true,
+        "dnaId": "DNA-US-26-10029",
+        "gender": "Male"
+      },
+      "clinicalRecords": [],
+      "history": {
+        "allergies": [],
+        "familyHistory": [],
+        "vaccinations": [],
         "lifestyle": {
           "sleepAvgHours": 8,
           "alcoholConsumption": "None",
+          "dietType": "Balanced",
+          "physicalActivity": "Active (3-5 days/wk)",
+          "smokingStatus": "Non-smoker"
+        },
+        "medicines": [],
+        "surgeries": [],
+        "chronicIllnesses": [],
+        "diseases": []
+      },
+      "prescriptions": [],
+      "updatedAt": "2026-09-29T17:25:57.229Z",
+      "labReports": [],
+      "fullName": "Dady",
+      "appointments": []
+    },
+    "DNA-US-26-10030": {
+      "fullName": "Mhrn",
+      "appointments": [],
+      "history": {
+        "allergies": [],
+        "familyHistory": [],
+        "diseases": [],
+        "lifestyle": {
+          "sleepAvgHours": 7.5,
+          "alcoholConsumption": "None",
           "smokingStatus": "Non-smoker",
           "dietType": "Balanced",
-          "physicalActivity": "Active (3-5 days/wk)"
+          "physicalActivity": "Light (1-2 days/wk)"
         },
-        "diseases": [],
-        "allergies": [],
+        "medicines": [],
         "vaccinations": [],
         "chronicIllnesses": [],
-        "familyHistory": []
+        "surgeries": []
       },
-      "updatedAt": "2026-09-28T06:05:08.646Z",
+      "updatedAt": "2026-09-29T17:25:57.363Z",
       "patient": {
+        "biometricAuthEnabled": true,
+        "emergencyContacts": [],
         "address": "Not Specified",
         "registeredHospital": "General Healthcare Registry",
-        "emergencyContacts": [
-          {
-            "phone": "+923119286007",
-            "isPrimary": true,
-            "relationship": "Emergency Contact",
-            "name": "Ayesha Amin",
-            "id": "ec-1790573968629"
-          }
-        ],
-        "biometricStatus": "Verified",
-        "dnaId": "DNA-PK-26-10027",
-        "phone": "+923119286007",
-        "dob": "2002-09-28",
-        "password": "Farhan123-/:",
         "gender": "Male",
-        "fullName": "Farhan",
+        "securityPin": "1234",
+        "dnaId": "DNA-US-26-10030",
+        "fullName": "Mhrn",
         "insurance": {
           "coverageAmount": "N/A",
           "provider": "None / Self-Pay",
@@ -159,269 +299,315 @@
           "groupNumber": "N/A",
           "policyNumber": "N/A"
         },
-        "organDonorStatus": false,
-        "bloodGroup": "B Positive (B+)",
-        "biometricAuthEnabled": true,
-        "avatarUrl": "data:image/svg+xml;utf8,%0A%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20240%20240%22%20width%3D%22240%22%20height%3D%22240%22%3E%0A%20%20%3Cdefs%3E%0A%20%20%20%20%3Cstyle%3E%0A%20%20%20%20%20%20%40keyframes%20breathe%20%7B%0A%20%20%20%20%20%20%20%200%25%2C%20100%25%20%7B%20transform%3A%20translateY(0px)%3B%20%7D%0A%20%20%20%20%20%20%20%2050%25%20%7B%20transform%3A%20translateY(-2px)%3B%20%7D%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%40keyframes%20auraGlow%20%7B%0A%20%20%20%20%20%20%20%200%25%2C%20100%25%20%7B%20stroke-opacity%3A%200.3%3B%20%7D%0A%20%20%20%20%20%20%20%2050%25%20%7B%20stroke-opacity%3A%200.8%3B%20%7D%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20.character-group%20%7B%0A%20%20%20%20%20%20%20%20transform-origin%3A%20120px%20160px%3B%0A%20%20%20%20%20%20%20%20animation%3A%20breathe%203.6s%20ease-in-out%20infinite%3B%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20.ring-pulse%20%7B%0A%20%20%20%20%20%20%20%20animation%3A%20auraGlow%203s%20ease-in-out%20infinite%3B%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%3C%2Fstyle%3E%0A%20%20%20%20%3Cfilter%20id%3D%22avatarShadow%22%20x%3D%22-10%25%22%20y%3D%22-10%25%22%20width%3D%22120%25%22%20height%3D%22120%25%22%3E%0A%20%20%20%20%20%20%3CfeDropShadow%20dx%3D%220%22%20dy%3D%224%22%20stdDeviation%3D%226%22%20flood-color%3D%22%230f172a%22%20flood-opacity%3D%220.12%22%2F%3E%0A%20%20%20%20%3C%2Ffilter%3E%0A%20%20%3C%2Fdefs%3E%0A%0A%20%20%3C!--%20Circular%20Avatar%20Badge%20with%20Clean%20Medical%20Rim%20--%3E%0A%20%20%3Ccircle%20cx%3D%22120%22%20cy%3D%22120%22%20r%3D%22108%22%20fill%3D%22%23e2e8f0%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%224.5%22%20filter%3D%22url(%23avatarShadow)%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%22120%22%20cy%3D%22120%22%20r%3D%22102%22%20fill%3D%22%23edf2f7%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%22120%22%20cy%3D%22120%22%20r%3D%22102%22%20fill%3D%22none%22%20stroke%3D%22%23cbd5e1%22%20stroke-width%3D%221.5%22%20stroke-dasharray%3D%226%204%22%20className%3D%22ring-pulse%22%2F%3E%0A%0A%20%20%3C!--%20Man%20in%20Suit%20Character%20--%3E%0A%20%20%3Cg%20className%3D%22character-group%22%3E%0A%20%20%20%20%3C!--%20Black%20Suit%20Blazer%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2038%20224%20L%2038%20200%20C%2038%20162%2C%2068%20144%2C%2098%20139%20L%20108%20178%20L%20120%20188%20L%20132%20178%20L%20142%20139%20C%20172%20144%2C%20202%20162%2C%20202%20200%20L%20202%20224%20Z%22%20fill%3D%22%2318191c%22%2F%3E%0A%0A%20%20%20%20%3C!--%20White%20Collared%20Dress%20Shirt%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%2298%2C139%20120%2C195%20142%2C139%20135%2C124%20105%2C124%22%20fill%3D%22%23ffffff%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Neck%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22105%2C110%20105%2C134%20120%2C150%20135%2C134%20135%2C110%22%20fill%3D%22%23f5d0b5%22%2F%3E%0A%20%20%20%20%3C!--%20Subtle%20Chin%20Shadow%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20105%20112%20C%20112%20123%2C%20128%20123%2C%20135%20112%20L%20135%20120%20C%20128%20131%2C%20112%20131%2C%20105%20120%20Z%22%20fill%3D%22%23e5bfa4%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Red%20Tie%20Knot%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22113%2C141%20127%2C141%20125%2C154%20120%2C157%20115%2C154%22%20fill%3D%22%23dc2626%22%2F%3E%0A%20%20%20%20%3C!--%20Red%20Tie%20Blade%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22115%2C154%20125%2C154%20130%2C198%20120%2C214%20110%2C198%22%20fill%3D%22%23ef4444%22%2F%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22120%2C157%20125%2C154%20130%2C198%20120%2C214%22%20fill%3D%22%23dc2626%22%2F%3E%0A%0A%20%20%20%20%3C!--%20White%20Shirt%20Collars%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%2297%2C139%20107%2C123%20115%2C145%22%20fill%3D%22%23ffffff%22%20stroke%3D%22%23e2e8f0%22%20stroke-width%3D%221%22%2F%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22143%2C139%20133%2C123%20125%2C145%22%20fill%3D%22%23ffffff%22%20stroke%3D%22%23e2e8f0%22%20stroke-width%3D%221%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Suit%20Lapels%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2072%20152%20L%2098%20139%20L%20109%20178%20L%2088%20185%20Z%22%20fill%3D%22%2325272c%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20168%20152%20L%20142%20139%20L%20131%20178%20L%20152%20185%20Z%22%20fill%3D%22%2325272c%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Left%20Ear%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2077%2084%20C%2069%2084%2C%2069%20105%2C%2077%20105%20Z%22%20fill%3D%22%23f5d0b5%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2076%2089%20C%2073%2089%2C%2073%2099%2C%2076%2099%22%20stroke%3D%22%23e5bfa4%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Right%20Ear%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20163%2084%20C%20171%2084%2C%20171%20105%2C%20163%20105%20Z%22%20fill%3D%22%23f5d0b5%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20164%2089%20C%20167%2089%2C%20167%2099%2C%20164%2099%22%20stroke%3D%22%23e5bfa4%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Faceless%20Head%20Contour%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2079%2082%20C%2079%2048%2C%20161%2048%2C%20161%2082%20C%20161%20114%2C%20143%20128%2C%20120%20128%20C%2097%20128%2C%2079%20114%2C%2079%2082%20Z%22%20fill%3D%22%23f5d0b5%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Styled%20Dark%20Hair%20with%20Side%20Parting%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2076%2084%20C%2076%2042%2C%20102%2030%2C%20128%2030%20C%20158%2030%2C%20166%2050%2C%20166%2084%20C%20166%2094%2C%20163%20104%2C%20160%20107%20C%20160%2082%2C%20155%2064%2C%20144%2054%20C%20130%2044%2C%20108%2050%2C%2090%2066%20C%2083%2073%2C%2080%2086%2C%2080%20107%20C%2077%20104%2C%2076%2094%2C%2076%2084%20Z%22%20fill%3D%22%23282a30%22%2F%3E%0A%20%20%20%20%3C!--%20Sweeping%20Front%20Bangs%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2086%2054%20C%20102%2044%2C%20128%2044%2C%20146%2058%20C%20156%2066%2C%20160%2078%2C%20160%2078%20C%20148%2066%2C%20130%2060%2C%20112%2064%20C%2098%2068%2C%2088%2080%2C%2088%2080%20C%2088%2080%2C%2082%2066%2C%2086%2054%20Z%22%20fill%3D%22%23282a30%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
-        "nationalId": "Pending",
-        "email": "laladada696@gmail.com",
-        "securityPin": "1234"
-      },
-      "clinicalRecords": []
-    },
-    "DNA-US-26-10026": {
-      "appointments": [],
-      "clinicalRecords": [],
-      "dnaId": "DNA-US-26-10026",
-      "fullName": "Dady",
-      "history": {
-        "allergies": [],
-        "chronicIllnesses": [],
-        "diseases": [],
-        "familyHistory": [],
-        "lifestyle": {
-          "alcoholConsumption": "None",
-          "dietType": "Balanced",
-          "physicalActivity": "Active (3-5 days/wk)",
-          "sleepAvgHours": 8,
-          "smokingStatus": "Non-smoker"
-        },
-        "medicines": [],
-        "surgeries": [],
-        "vaccinations": []
-      },
-      "labReports": [],
-      "patient": {
-        "address": "Not Specified",
-        "avatarUrl": "data:image/svg+xml;utf8,%0A%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20240%20240%22%20width%3D%22240%22%20height%3D%22240%22%3E%0A%20%20%3Cdefs%3E%0A%20%20%20%20%3Cstyle%3E%0A%20%20%20%20%20%20%40keyframes%20breathe%20%7B%0A%20%20%20%20%20%20%20%200%25%2C%20100%25%20%7B%20transform%3A%20translateY(0px)%3B%20%7D%0A%20%20%20%20%20%20%20%2050%25%20%7B%20transform%3A%20translateY(-2px)%3B%20%7D%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%40keyframes%20auraGlow%20%7B%0A%20%20%20%20%20%20%20%200%25%2C%20100%25%20%7B%20stroke-opacity%3A%200.3%3B%20%7D%0A%20%20%20%20%20%20%20%2050%25%20%7B%20stroke-opacity%3A%200.8%3B%20%7D%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20.character-group%20%7B%0A%20%20%20%20%20%20%20%20transform-origin%3A%20120px%20160px%3B%0A%20%20%20%20%20%20%20%20animation%3A%20breathe%203.6s%20ease-in-out%20infinite%3B%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20.ring-pulse%20%7B%0A%20%20%20%20%20%20%20%20animation%3A%20auraGlow%203s%20ease-in-out%20infinite%3B%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%3C%2Fstyle%3E%0A%20%20%20%20%3Cfilter%20id%3D%22avatarShadow%22%20x%3D%22-10%25%22%20y%3D%22-10%25%22%20width%3D%22120%25%22%20height%3D%22120%25%22%3E%0A%20%20%20%20%20%20%3CfeDropShadow%20dx%3D%220%22%20dy%3D%224%22%20stdDeviation%3D%226%22%20flood-color%3D%22%230f172a%22%20flood-opacity%3D%220.12%22%2F%3E%0A%20%20%20%20%3C%2Ffilter%3E%0A%20%20%3C%2Fdefs%3E%0A%0A%20%20%3C!--%20Circular%20Avatar%20Badge%20with%20Clean%20Medical%20Rim%20--%3E%0A%20%20%3Ccircle%20cx%3D%22120%22%20cy%3D%22120%22%20r%3D%22108%22%20fill%3D%22%23e2e8f0%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%224.5%22%20filter%3D%22url(%23avatarShadow)%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%22120%22%20cy%3D%22120%22%20r%3D%22102%22%20fill%3D%22%23edf2f7%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%22120%22%20cy%3D%22120%22%20r%3D%22102%22%20fill%3D%22none%22%20stroke%3D%22%23cbd5e1%22%20stroke-width%3D%221.5%22%20stroke-dasharray%3D%226%204%22%20className%3D%22ring-pulse%22%2F%3E%0A%0A%20%20%3C!--%20Man%20in%20Suit%20Character%20--%3E%0A%20%20%3Cg%20className%3D%22character-group%22%3E%0A%20%20%20%20%3C!--%20Black%20Suit%20Blazer%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2038%20224%20L%2038%20200%20C%2038%20162%2C%2068%20144%2C%2098%20139%20L%20108%20178%20L%20120%20188%20L%20132%20178%20L%20142%20139%20C%20172%20144%2C%20202%20162%2C%20202%20200%20L%20202%20224%20Z%22%20fill%3D%22%2318191c%22%2F%3E%0A%0A%20%20%20%20%3C!--%20White%20Collared%20Dress%20Shirt%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%2298%2C139%20120%2C195%20142%2C139%20135%2C124%20105%2C124%22%20fill%3D%22%23ffffff%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Neck%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22105%2C110%20105%2C134%20120%2C150%20135%2C134%20135%2C110%22%20fill%3D%22%23f5d0b5%22%2F%3E%0A%20%20%20%20%3C!--%20Subtle%20Chin%20Shadow%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20105%20112%20C%20112%20123%2C%20128%20123%2C%20135%20112%20L%20135%20120%20C%20128%20131%2C%20112%20131%2C%20105%20120%20Z%22%20fill%3D%22%23e5bfa4%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Red%20Tie%20Knot%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22113%2C141%20127%2C141%20125%2C154%20120%2C157%20115%2C154%22%20fill%3D%22%23dc2626%22%2F%3E%0A%20%20%20%20%3C!--%20Red%20Tie%20Blade%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22115%2C154%20125%2C154%20130%2C198%20120%2C214%20110%2C198%22%20fill%3D%22%23ef4444%22%2F%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22120%2C157%20125%2C154%20130%2C198%20120%2C214%22%20fill%3D%22%23dc2626%22%2F%3E%0A%0A%20%20%20%20%3C!--%20White%20Shirt%20Collars%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%2297%2C139%20107%2C123%20115%2C145%22%20fill%3D%22%23ffffff%22%20stroke%3D%22%23e2e8f0%22%20stroke-width%3D%221%22%2F%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22143%2C139%20133%2C123%20125%2C145%22%20fill%3D%22%23ffffff%22%20stroke%3D%22%23e2e8f0%22%20stroke-width%3D%221%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Suit%20Lapels%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2072%20152%20L%2098%20139%20L%20109%20178%20L%2088%20185%20Z%22%20fill%3D%22%2325272c%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20168%20152%20L%20142%20139%20L%20131%20178%20L%20152%20185%20Z%22%20fill%3D%22%2325272c%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Left%20Ear%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2077%2084%20C%2069%2084%2C%2069%20105%2C%2077%20105%20Z%22%20fill%3D%22%23f5d0b5%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2076%2089%20C%2073%2089%2C%2073%2099%2C%2076%2099%22%20stroke%3D%22%23e5bfa4%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Right%20Ear%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20163%2084%20C%20171%2084%2C%20171%20105%2C%20163%20105%20Z%22%20fill%3D%22%23f5d0b5%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20164%2089%20C%20167%2089%2C%20167%2099%2C%20164%2099%22%20stroke%3D%22%23e5bfa4%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Faceless%20Head%20Contour%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2079%2082%20C%2079%2048%2C%20161%2048%2C%20161%2082%20C%20161%20114%2C%20143%20128%2C%20120%20128%20C%2097%20128%2C%2079%20114%2C%2079%2082%20Z%22%20fill%3D%22%23f5d0b5%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Styled%20Dark%20Hair%20with%20Side%20Parting%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2076%2084%20C%2076%2042%2C%20102%2030%2C%20128%2030%20C%20158%2030%2C%20166%2050%2C%20166%2084%20C%20166%2094%2C%20163%20104%2C%20160%20107%20C%20160%2082%2C%20155%2064%2C%20144%2054%20C%20130%2044%2C%20108%2050%2C%2090%2066%20C%2083%2073%2C%2080%2086%2C%2080%20107%20C%2077%20104%2C%2076%2094%2C%2076%2084%20Z%22%20fill%3D%22%23282a30%22%2F%3E%0A%20%20%20%20%3C!--%20Sweeping%20Front%20Bangs%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2086%2054%20C%20102%2044%2C%20128%2044%2C%20146%2058%20C%20156%2066%2C%20160%2078%2C%20160%2078%20C%20148%2066%2C%20130%2060%2C%20112%2064%20C%2098%2068%2C%2088%2080%2C%2088%2080%20C%2088%2080%2C%2082%2066%2C%2086%2054%20Z%22%20fill%3D%22%23282a30%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
-        "biometricAuthEnabled": true,
-        "biometricStatus": "Verified",
-        "bloodGroup": "O Positive (O+)",
-        "dnaId": "DNA-US-26-10026",
-        "dob": "2026-09-28",
-        "email": "nomikaj@gmail.com",
-        "emergencyContacts": [],
-        "fullName": "Dady",
-        "gender": "Male",
-        "insurance": {
-          "coverageAmount": "N/A",
-          "groupNumber": "N/A",
-          "policyNumber": "N/A",
-          "provider": "None / Self-Pay",
-          "status": "Pending"
-        },
-        "nationalId": "Pending",
-        "organDonorStatus": false,
-        "password": "Dady123@",
-        "phone": "Not Provided",
-        "registeredHospital": "General Healthcare Registry",
-        "securityPin": "1234"
-      },
-      "prescriptions": [],
-      "updatedAt": "2026-09-28T16:06:10.756Z"
-    },
-    "DNA-US-26-10027": {
-      "patient": {
-        "dnaId": "DNA-US-26-10027",
-        "fullName": "Mhrn",
-        "dob": "2026-09-28",
-        "gender": "Male",
-        "bloodGroup": "O Positive (O+)",
-        "avatarUrl": "data:image/svg+xml;utf8,%0A%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20240%20240%22%20width%3D%22240%22%20height%3D%22240%22%3E%0A%20%20%3Cdefs%3E%0A%20%20%20%20%3Cstyle%3E%0A%20%20%20%20%20%20%40keyframes%20breathe%20%7B%0A%20%20%20%20%20%20%20%200%25%2C%20100%25%20%7B%20transform%3A%20translateY(0px)%3B%20%7D%0A%20%20%20%20%20%20%20%2050%25%20%7B%20transform%3A%20translateY(-2px)%3B%20%7D%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%40keyframes%20auraGlow%20%7B%0A%20%20%20%20%20%20%20%200%25%2C%20100%25%20%7B%20stroke-opacity%3A%200.3%3B%20%7D%0A%20%20%20%20%20%20%20%2050%25%20%7B%20stroke-opacity%3A%200.8%3B%20%7D%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20.character-group%20%7B%0A%20%20%20%20%20%20%20%20transform-origin%3A%20120px%20160px%3B%0A%20%20%20%20%20%20%20%20animation%3A%20breathe%203.6s%20ease-in-out%20infinite%3B%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20.ring-pulse%20%7B%0A%20%20%20%20%20%20%20%20animation%3A%20auraGlow%203s%20ease-in-out%20infinite%3B%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%3C%2Fstyle%3E%0A%20%20%20%20%3Cfilter%20id%3D%22avatarShadow%22%20x%3D%22-10%25%22%20y%3D%22-10%25%22%20width%3D%22120%25%22%20height%3D%22120%25%22%3E%0A%20%20%20%20%20%20%3CfeDropShadow%20dx%3D%220%22%20dy%3D%224%22%20stdDeviation%3D%226%22%20flood-color%3D%22%230f172a%22%20flood-opacity%3D%220.12%22%2F%3E%0A%20%20%20%20%3C%2Ffilter%3E%0A%20%20%3C%2Fdefs%3E%0A%0A%20%20%3C!--%20Circular%20Avatar%20Badge%20with%20Clean%20Medical%20Rim%20--%3E%0A%20%20%3Ccircle%20cx%3D%22120%22%20cy%3D%22120%22%20r%3D%22108%22%20fill%3D%22%23e2e8f0%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%224.5%22%20filter%3D%22url(%23avatarShadow)%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%22120%22%20cy%3D%22120%22%20r%3D%22102%22%20fill%3D%22%23edf2f7%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%22120%22%20cy%3D%22120%22%20r%3D%22102%22%20fill%3D%22none%22%20stroke%3D%22%23cbd5e1%22%20stroke-width%3D%221.5%22%20stroke-dasharray%3D%226%204%22%20className%3D%22ring-pulse%22%2F%3E%0A%0A%20%20%3C!--%20Man%20in%20Suit%20Character%20--%3E%0A%20%20%3Cg%20className%3D%22character-group%22%3E%0A%20%20%20%20%3C!--%20Black%20Suit%20Blazer%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2038%20224%20L%2038%20200%20C%2038%20162%2C%2068%20144%2C%2098%20139%20L%20108%20178%20L%20120%20188%20L%20132%20178%20L%20142%20139%20C%20172%20144%2C%20202%20162%2C%20202%20200%20L%20202%20224%20Z%22%20fill%3D%22%2318191c%22%2F%3E%0A%0A%20%20%20%20%3C!--%20White%20Collared%20Dress%20Shirt%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%2298%2C139%20120%2C195%20142%2C139%20135%2C124%20105%2C124%22%20fill%3D%22%23ffffff%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Neck%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22105%2C110%20105%2C134%20120%2C150%20135%2C134%20135%2C110%22%20fill%3D%22%23f5d0b5%22%2F%3E%0A%20%20%20%20%3C!--%20Subtle%20Chin%20Shadow%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20105%20112%20C%20112%20123%2C%20128%20123%2C%20135%20112%20L%20135%20120%20C%20128%20131%2C%20112%20131%2C%20105%20120%20Z%22%20fill%3D%22%23e5bfa4%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Red%20Tie%20Knot%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22113%2C141%20127%2C141%20125%2C154%20120%2C157%20115%2C154%22%20fill%3D%22%23dc2626%22%2F%3E%0A%20%20%20%20%3C!--%20Red%20Tie%20Blade%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22115%2C154%20125%2C154%20130%2C198%20120%2C214%20110%2C198%22%20fill%3D%22%23ef4444%22%2F%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22120%2C157%20125%2C154%20130%2C198%20120%2C214%22%20fill%3D%22%23dc2626%22%2F%3E%0A%0A%20%20%20%20%3C!--%20White%20Shirt%20Collars%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%2297%2C139%20107%2C123%20115%2C145%22%20fill%3D%22%23ffffff%22%20stroke%3D%22%23e2e8f0%22%20stroke-width%3D%221%22%2F%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22143%2C139%20133%2C123%20125%2C145%22%20fill%3D%22%23ffffff%22%20stroke%3D%22%23e2e8f0%22%20stroke-width%3D%221%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Suit%20Lapels%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2072%20152%20L%2098%20139%20L%20109%20178%20L%2088%20185%20Z%22%20fill%3D%22%2325272c%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20168%20152%20L%20142%20139%20L%20131%20178%20L%20152%20185%20Z%22%20fill%3D%22%2325272c%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Left%20Ear%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2077%2084%20C%2069%2084%2C%2069%20105%2C%2077%20105%20Z%22%20fill%3D%22%23f5d0b5%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2076%2089%20C%2073%2089%2C%2073%2099%2C%2076%2099%22%20stroke%3D%22%23e5bfa4%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Right%20Ear%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20163%2084%20C%20171%2084%2C%20171%20105%2C%20163%20105%20Z%22%20fill%3D%22%23f5d0b5%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20164%2089%20C%20167%2089%2C%20167%2099%2C%20164%2099%22%20stroke%3D%22%23e5bfa4%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Faceless%20Head%20Contour%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2079%2082%20C%2079%2048%2C%20161%2048%2C%20161%2082%20C%20161%20114%2C%20143%20128%2C%20120%20128%20C%2097%20128%2C%2079%20114%2C%2079%2082%20Z%22%20fill%3D%22%23f5d0b5%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Styled%20Dark%20Hair%20with%20Side%20Parting%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2076%2084%20C%2076%2042%2C%20102%2030%2C%20128%2030%20C%20158%2030%2C%20166%2050%2C%20166%2084%20C%20166%2094%2C%20163%20104%2C%20160%20107%20C%20160%2082%2C%20155%2064%2C%20144%2054%20C%20130%2044%2C%20108%2050%2C%2090%2066%20C%2083%2073%2C%2080%2086%2C%2080%20107%20C%2077%20104%2C%2076%2094%2C%2076%2084%20Z%22%20fill%3D%22%23282a30%22%2F%3E%0A%20%20%20%20%3C!--%20Sweeping%20Front%20Bangs%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2086%2054%20C%20102%2044%2C%20128%2044%2C%20146%2058%20C%20156%2066%2C%20160%2078%2C%20160%2078%20C%20148%2066%2C%20130%2060%2C%20112%2064%20C%2098%2068%2C%2088%2080%2C%2088%2080%20C%2088%2080%2C%2082%2066%2C%2086%2054%20Z%22%20fill%3D%22%23282a30%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
-        "phone": "Not Provided",
-        "email": "Not Specified",
-        "address": "Not Specified",
-        "nationalId": "Pending",
-        "biometricStatus": "Verified",
-        "organDonorStatus": false,
-        "registeredHospital": "General Healthcare Registry",
-        "securityPin": "1234",
         "password": "Nmr123@$",
-        "biometricAuthEnabled": true,
-        "insurance": {
-          "provider": "None / Self-Pay",
-          "policyNumber": "N/A",
-          "groupNumber": "N/A",
-          "status": "Pending",
-          "coverageAmount": "N/A"
-        },
-        "emergencyContacts": []
+        "nationalId": "Pending",
+        "bloodGroup": "O Positive (O+)",
+        "email": "Not Specified",
+        "organDonorStatus": false,
+        "dob": "2026-09-28",
+        "phone": "Not Provided",
+        "avatarUrl": "data:image/svg+xml;utf8,%0A%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20240%20240%22%20width%3D%22240%22%20height%3D%22240%22%3E%0A%20%20%3Cdefs%3E%0A%20%20%20%20%3Cstyle%3E%0A%20%20%20%20%20%20%40keyframes%20breathe%20%7B%0A%20%20%20%20%20%20%20%200%25%2C%20100%25%20%7B%20transform%3A%20translateY(0px)%3B%20%7D%0A%20%20%20%20%20%20%20%2050%25%20%7B%20transform%3A%20translateY(-2px)%3B%20%7D%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%40keyframes%20auraGlow%20%7B%0A%20%20%20%20%20%20%20%200%25%2C%20100%25%20%7B%20stroke-opacity%3A%200.3%3B%20%7D%0A%20%20%20%20%20%20%20%2050%25%20%7B%20stroke-opacity%3A%200.8%3B%20%7D%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20.character-group%20%7B%0A%20%20%20%20%20%20%20%20transform-origin%3A%20120px%20160px%3B%0A%20%20%20%20%20%20%20%20animation%3A%20breathe%203.6s%20ease-in-out%20infinite%3B%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20.ring-pulse%20%7B%0A%20%20%20%20%20%20%20%20animation%3A%20auraGlow%203s%20ease-in-out%20infinite%3B%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%3C%2Fstyle%3E%0A%20%20%20%20%3Cfilter%20id%3D%22avatarShadow%22%20x%3D%22-10%25%22%20y%3D%22-10%25%22%20width%3D%22120%25%22%20height%3D%22120%25%22%3E%0A%20%20%20%20%20%20%3CfeDropShadow%20dx%3D%220%22%20dy%3D%224%22%20stdDeviation%3D%226%22%20flood-color%3D%22%230f172a%22%20flood-opacity%3D%220.12%22%2F%3E%0A%20%20%20%20%3C%2Ffilter%3E%0A%20%20%3C%2Fdefs%3E%0A%0A%20%20%3C!--%20Circular%20Avatar%20Badge%20with%20Clean%20Medical%20Rim%20--%3E%0A%20%20%3Ccircle%20cx%3D%22120%22%20cy%3D%22120%22%20r%3D%22108%22%20fill%3D%22%23e2e8f0%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%224.5%22%20filter%3D%22url(%23avatarShadow)%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%22120%22%20cy%3D%22120%22%20r%3D%22102%22%20fill%3D%22%23edf2f7%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%22120%22%20cy%3D%22120%22%20r%3D%22102%22%20fill%3D%22none%22%20stroke%3D%22%23cbd5e1%22%20stroke-width%3D%221.5%22%20stroke-dasharray%3D%226%204%22%20className%3D%22ring-pulse%22%2F%3E%0A%0A%20%20%3C!--%20Man%20in%20Suit%20Character%20--%3E%0A%20%20%3Cg%20className%3D%22character-group%22%3E%0A%20%20%20%20%3C!--%20Black%20Suit%20Blazer%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2038%20224%20L%2038%20200%20C%2038%20162%2C%2068%20144%2C%2098%20139%20L%20108%20178%20L%20120%20188%20L%20132%20178%20L%20142%20139%20C%20172%20144%2C%20202%20162%2C%20202%20200%20L%20202%20224%20Z%22%20fill%3D%22%2318191c%22%2F%3E%0A%0A%20%20%20%20%3C!--%20White%20Collared%20Dress%20Shirt%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%2298%2C139%20120%2C195%20142%2C139%20135%2C124%20105%2C124%22%20fill%3D%22%23ffffff%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Neck%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22105%2C110%20105%2C134%20120%2C150%20135%2C134%20135%2C110%22%20fill%3D%22%23f5d0b5%22%2F%3E%0A%20%20%20%20%3C!--%20Subtle%20Chin%20Shadow%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20105%20112%20C%20112%20123%2C%20128%20123%2C%20135%20112%20L%20135%20120%20C%20128%20131%2C%20112%20131%2C%20105%20120%20Z%22%20fill%3D%22%23e5bfa4%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Red%20Tie%20Knot%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22113%2C141%20127%2C141%20125%2C154%20120%2C157%20115%2C154%22%20fill%3D%22%23dc2626%22%2F%3E%0A%20%20%20%20%3C!--%20Red%20Tie%20Blade%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22115%2C154%20125%2C154%20130%2C198%20120%2C214%20110%2C198%22%20fill%3D%22%23ef4444%22%2F%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22120%2C157%20125%2C154%20130%2C198%20120%2C214%22%20fill%3D%22%23dc2626%22%2F%3E%0A%0A%20%20%20%20%3C!--%20White%20Shirt%20Collars%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%2297%2C139%20107%2C123%20115%2C145%22%20fill%3D%22%23ffffff%22%20stroke%3D%22%23e2e8f0%22%20stroke-width%3D%221%22%2F%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22143%2C139%20133%2C123%20125%2C145%22%20fill%3D%22%23ffffff%22%20stroke%3D%22%23e2e8f0%22%20stroke-width%3D%221%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Suit%20Lapels%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2072%20152%20L%2098%20139%20L%20109%20178%20L%2088%20185%20Z%22%20fill%3D%22%2325272c%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20168%20152%20L%20142%20139%20L%20131%20178%20L%20152%20185%20Z%22%20fill%3D%22%2325272c%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Left%20Ear%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2077%2084%20C%2069%2084%2C%2069%20105%2C%2077%20105%20Z%22%20fill%3D%22%23f5d0b5%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2076%2089%20C%2073%2089%2C%2073%2099%2C%2076%2099%22%20stroke%3D%22%23e5bfa4%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Right%20Ear%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20163%2084%20C%20171%2084%2C%20171%20105%2C%20163%20105%20Z%22%20fill%3D%22%23f5d0b5%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20164%2089%20C%20167%2089%2C%20167%2099%2C%20164%2099%22%20stroke%3D%22%23e5bfa4%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Faceless%20Head%20Contour%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2079%2082%20C%2079%2048%2C%20161%2048%2C%20161%2082%20C%20161%20114%2C%20143%20128%2C%20120%20128%20C%2097%20128%2C%2079%20114%2C%2079%2082%20Z%22%20fill%3D%22%23f5d0b5%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Styled%20Dark%20Hair%20with%20Side%20Parting%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2076%2084%20C%2076%2042%2C%20102%2030%2C%20128%2030%20C%20158%2030%2C%20166%2050%2C%20166%2084%20C%20166%2094%2C%20163%20104%2C%20160%20107%20C%20160%2082%2C%20155%2064%2C%20144%2054%20C%20130%2044%2C%20108%2050%2C%2090%2066%20C%2083%2073%2C%2080%2086%2C%2080%20107%20C%2077%20104%2C%2076%2094%2C%2076%2084%20Z%22%20fill%3D%22%23282a30%22%2F%3E%0A%20%20%20%20%3C!--%20Sweeping%20Front%20Bangs%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2086%2054%20C%20102%2044%2C%20128%2044%2C%20146%2058%20C%20156%2066%2C%20160%2078%2C%20160%2078%20C%20148%2066%2C%20130%2060%2C%20112%2064%20C%2098%2068%2C%2088%2080%2C%2088%2080%20C%2088%2080%2C%2082%2066%2C%2086%2054%20Z%22%20fill%3D%22%23282a30%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
+        "biometricStatus": "Verified"
       },
-      "history": {
-        "diseases": [],
-        "surgeries": [],
-        "vaccinations": [],
-        "medicines": [],
-        "allergies": [],
-        "familyHistory": [],
-        "chronicIllnesses": [],
-        "lifestyle": {
-          "smokingStatus": "Non-smoker",
-          "alcoholConsumption": "None",
-          "physicalActivity": "Light (1-2 days/wk)",
-          "sleepAvgHours": 7.5,
-          "dietType": "Balanced"
-        }
-      },
-      "clinicalRecords": [],
       "labReports": [],
-      "prescriptions": [],
-      "appointments": []
+      "clinicalRecords": [],
+      "dnaId": "DNA-US-26-10030",
+      "prescriptions": []
     }
   },
   "patientsDatabase": {
     "DNA-PK-26-10025": {
-      "updatedAt": "2026-09-27T10:14:04.896Z",
-      "dnaId": "DNA-1629-3931",
-      "labReports": [],
-      "fullName": "Haris Amin",
+      "dnaId": "DNA-PK-26-10025",
+      "appointments": [],
+      "updatedAt": "2026-09-28T17:22:05.938Z",
       "history": {
-        "allergies": [],
-        "lifestyle": {
-          "physicalActivity": "Light (1-2 days/wk)",
-          "dietType": "Balanced",
-          "sleepAvgHours": 7.5,
-          "alcoholConsumption": "None",
-          "smokingStatus": "Non-smoker"
-        },
-        "diseases": [],
-        "medicines": [],
         "surgeries": [],
         "vaccinations": [],
+        "medicines": [],
         "chronicIllnesses": [],
-        "familyHistory": []
+        "familyHistory": [],
+        "lifestyle": {
+          "dietType": "Balanced",
+          "smokingStatus": "Non-smoker",
+          "sleepAvgHours": 8,
+          "alcoholConsumption": "None",
+          "physicalActivity": "Active (3-5 days/wk)"
+        },
+        "allergies": [],
+        "diseases": []
       },
       "clinicalRecords": [],
-      "appointments": [],
+      "fullName": "Dada",
       "prescriptions": [],
+      "labReports": [],
       "patient": {
-        "organDonorStatus": true,
-        "fullName": "Haris Amin",
-        "registeredHospital": "BKMC",
-        "password": "Haris456?!*",
-        "phone": "+923119286007",
-        "dnaId": "DNA-PK-26-10025",
-        "email": "harismicrobiologist1@gmail.com",
-        "bloodGroup": "AB Positive (AB+)",
-        "address": "Yarhussain",
-        "emergencyContacts": [
-          {
-            "id": "ec-1786729862248",
-            "name": "Haris Amin",
-            "relationship": "Spouse",
-            "phone": "+923119286007",
-            "isPrimary": true
-          }
-        ],
-        "nationalId": "16301-6122822-5",
-        "biometricStatus": "Verified",
         "insurance": {
-          "groupNumber": "GRP-0012",
-          "policyNumber": "Nill",
-          "status": "Active",
-          "provider": "Nill",
-          "coverageAmount": "$500,000 Standard Coverage"
+          "coverageAmount": "N/A",
+          "status": "Pending",
+          "provider": "None / Self-Pay",
+          "policyNumber": "N/A",
+          "groupNumber": "N/A"
         },
-        "dob": "2006-01-03",
-        "securityPin": "1234",
         "gender": "Male",
+        "organDonorStatus": false,
+        "dnaId": "DNA-PK-26-10025",
+        "biometricStatus": "Verified",
+        "securityPin": "1234",
+        "fullName": "Dada",
+        "avatarUrl": "data:image/svg+xml;utf8,%0A%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20240%20240%22%20width%3D%22240%22%20height%3D%22240%22%3E%0A%20%20%3Cdefs%3E%0A%20%20%20%20%3Cstyle%3E%0A%20%20%20%20%20%20%40keyframes%20breathe%20%7B%0A%20%20%20%20%20%20%20%200%25%2C%20100%25%20%7B%20transform%3A%20translateY(0px)%3B%20%7D%0A%20%20%20%20%20%20%20%2050%25%20%7B%20transform%3A%20translateY(-2px)%3B%20%7D%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%40keyframes%20auraGlow%20%7B%0A%20%20%20%20%20%20%20%200%25%2C%20100%25%20%7B%20stroke-opacity%3A%200.3%3B%20%7D%0A%20%20%20%20%20%20%20%2050%25%20%7B%20stroke-opacity%3A%200.8%3B%20%7D%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20.character-group%20%7B%0A%20%20%20%20%20%20%20%20transform-origin%3A%20120px%20160px%3B%0A%20%20%20%20%20%20%20%20animation%3A%20breathe%203.6s%20ease-in-out%20infinite%3B%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20.ring-pulse%20%7B%0A%20%20%20%20%20%20%20%20animation%3A%20auraGlow%203s%20ease-in-out%20infinite%3B%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%3C%2Fstyle%3E%0A%20%20%20%20%3Cfilter%20id%3D%22avatarShadow%22%20x%3D%22-10%25%22%20y%3D%22-10%25%22%20width%3D%22120%25%22%20height%3D%22120%25%22%3E%0A%20%20%20%20%20%20%3CfeDropShadow%20dx%3D%220%22%20dy%3D%224%22%20stdDeviation%3D%226%22%20flood-color%3D%22%230f172a%22%20flood-opacity%3D%220.12%22%2F%3E%0A%20%20%20%20%3C%2Ffilter%3E%0A%20%20%3C%2Fdefs%3E%0A%0A%20%20%3C!--%20Circular%20Avatar%20Badge%20with%20Clean%20Medical%20Rim%20--%3E%0A%20%20%3Ccircle%20cx%3D%22120%22%20cy%3D%22120%22%20r%3D%22108%22%20fill%3D%22%23e2e8f0%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%224.5%22%20filter%3D%22url(%23avatarShadow)%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%22120%22%20cy%3D%22120%22%20r%3D%22102%22%20fill%3D%22%23edf2f7%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%22120%22%20cy%3D%22120%22%20r%3D%22102%22%20fill%3D%22none%22%20stroke%3D%22%23cbd5e1%22%20stroke-width%3D%221.5%22%20stroke-dasharray%3D%226%204%22%20className%3D%22ring-pulse%22%2F%3E%0A%0A%20%20%3C!--%20Man%20in%20Suit%20Character%20--%3E%0A%20%20%3Cg%20className%3D%22character-group%22%3E%0A%20%20%20%20%3C!--%20Black%20Suit%20Blazer%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2038%20224%20L%2038%20200%20C%2038%20162%2C%2068%20144%2C%2098%20139%20L%20108%20178%20L%20120%20188%20L%20132%20178%20L%20142%20139%20C%20172%20144%2C%20202%20162%2C%20202%20200%20L%20202%20224%20Z%22%20fill%3D%22%2318191c%22%2F%3E%0A%0A%20%20%20%20%3C!--%20White%20Collared%20Dress%20Shirt%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%2298%2C139%20120%2C195%20142%2C139%20135%2C124%20105%2C124%22%20fill%3D%22%23ffffff%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Neck%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22105%2C110%20105%2C134%20120%2C150%20135%2C134%20135%2C110%22%20fill%3D%22%23f5d0b5%22%2F%3E%0A%20%20%20%20%3C!--%20Subtle%20Chin%20Shadow%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20105%20112%20C%20112%20123%2C%20128%20123%2C%20135%20112%20L%20135%20120%20C%20128%20131%2C%20112%20131%2C%20105%20120%20Z%22%20fill%3D%22%23e5bfa4%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Red%20Tie%20Knot%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22113%2C141%20127%2C141%20125%2C154%20120%2C157%20115%2C154%22%20fill%3D%22%23dc2626%22%2F%3E%0A%20%20%20%20%3C!--%20Red%20Tie%20Blade%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22115%2C154%20125%2C154%20130%2C198%20120%2C214%20110%2C198%22%20fill%3D%22%23ef4444%22%2F%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22120%2C157%20125%2C154%20130%2C198%20120%2C214%22%20fill%3D%22%23dc2626%22%2F%3E%0A%0A%20%20%20%20%3C!--%20White%20Shirt%20Collars%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%2297%2C139%20107%2C123%20115%2C145%22%20fill%3D%22%23ffffff%22%20stroke%3D%22%23e2e8f0%22%20stroke-width%3D%221%22%2F%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22143%2C139%20133%2C123%20125%2C145%22%20fill%3D%22%23ffffff%22%20stroke%3D%22%23e2e8f0%22%20stroke-width%3D%221%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Suit%20Lapels%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2072%20152%20L%2098%20139%20L%20109%20178%20L%2088%20185%20Z%22%20fill%3D%22%2325272c%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20168%20152%20L%20142%20139%20L%20131%20178%20L%20152%20185%20Z%22%20fill%3D%22%2325272c%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Left%20Ear%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2077%2084%20C%2069%2084%2C%2069%20105%2C%2077%20105%20Z%22%20fill%3D%22%23f5d0b5%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2076%2089%20C%2073%2089%2C%2073%2099%2C%2076%2099%22%20stroke%3D%22%23e5bfa4%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Right%20Ear%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20163%2084%20C%20171%2084%2C%20171%20105%2C%20163%20105%20Z%22%20fill%3D%22%23f5d0b5%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20164%2089%20C%20167%2089%2C%20167%2099%2C%20164%2099%22%20stroke%3D%22%23e5bfa4%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Faceless%20Head%20Contour%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2079%2082%20C%2079%2048%2C%20161%2048%2C%20161%2082%20C%20161%20114%2C%20143%20128%2C%20120%20128%20C%2097%20128%2C%2079%20114%2C%2079%2082%20Z%22%20fill%3D%22%23f5d0b5%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Styled%20Dark%20Hair%20with%20Side%20Parting%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2076%2084%20C%2076%2042%2C%20102%2030%2C%20128%2030%20C%20158%2030%2C%20166%2050%2C%20166%2084%20C%20166%2094%2C%20163%20104%2C%20160%20107%20C%20160%2082%2C%20155%2064%2C%20144%2054%20C%20130%2044%2C%20108%2050%2C%2090%2066%20C%2083%2073%2C%2080%2086%2C%2080%20107%20C%2077%20104%2C%2076%2094%2C%2076%2084%20Z%22%20fill%3D%22%23282a30%22%2F%3E%0A%20%20%20%20%3C!--%20Sweeping%20Front%20Bangs%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2086%2054%20C%20102%2044%2C%20128%2044%2C%20146%2058%20C%20156%2066%2C%20160%2078%2C%20160%2078%20C%20148%2066%2C%20130%2060%2C%20112%2064%20C%2098%2068%2C%2088%2080%2C%2088%2080%20C%2088%2080%2C%2082%2066%2C%2086%2054%20Z%22%20fill%3D%22%23282a30%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
+        "nationalId": "Pending",
+        "address": "Not Specified",
+        "password": "Asdqwe123@",
+        "phone": "+92",
+        "registeredHospital": "General Healthcare Registry",
         "biometricAuthEnabled": true,
-        "avatarUrl": "data:image/svg+xml;utf8,%0A%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20240%20240%22%20width%3D%22240%22%20height%3D%22240%22%3E%0A%20%20%3Cdefs%3E%0A%20%20%20%20%3Cstyle%3E%0A%20%20%20%20%20%20%40keyframes%20orbitRotate%20%7B%0A%20%20%20%20%20%20%20%20from%20%7B%20transform%3A%20rotate(0deg)%3B%20%7D%0A%20%20%20%20%20%20%20%20to%20%7B%20transform%3A%20rotate(360deg)%3B%20%7D%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%40keyframes%20bioPulse%20%7B%0A%20%20%20%20%20%20%20%200%25%2C%20100%25%20%7B%0A%20%20%20%20%20%20%20%20%20%20opacity%3A%200.35%3B%0A%20%20%20%20%20%20%20%20%20%20transform%3A%20scale(1)%3B%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%2050%25%20%7B%0A%20%20%20%20%20%20%20%20%20%20opacity%3A%200.8%3B%0A%20%20%20%20%20%20%20%20%20%20transform%3A%20scale(1.04)%3B%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%40keyframes%20blinkMan%20%7B%0A%20%20%20%20%20%20%20%200%25%2C%2092%25%2C%20100%25%20%7B%0A%20%20%20%20%20%20%20%20%20%20transform%3A%20scaleY(1)%3B%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%2095%25%20%7B%0A%20%20%20%20%20%20%20%20%20%20transform%3A%20scaleY(0.12)%3B%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%40keyframes%20breatheMan%20%7B%0A%20%20%20%20%20%20%20%200%25%2C%20100%25%20%7B%0A%20%20%20%20%20%20%20%20%20%20transform%3A%20translateY(0px)%3B%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%2050%25%20%7B%0A%20%20%20%20%20%20%20%20%20%20transform%3A%20translateY(-2.5px)%3B%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%40keyframes%20badgePulse%20%7B%0A%20%20%20%20%20%20%20%200%25%2C%20100%25%20%7B%0A%20%20%20%20%20%20%20%20%20%20transform%3A%20scale(1)%3B%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%2050%25%20%7B%0A%20%20%20%20%20%20%20%20%20%20transform%3A%20scale(1.08)%3B%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%40keyframes%20waveGlow%20%7B%0A%20%20%20%20%20%20%20%200%25%2C%20100%25%20%7B%0A%20%20%20%20%20%20%20%20%20%20stroke-opacity%3A%200.25%3B%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%2050%25%20%7B%0A%20%20%20%20%20%20%20%20%20%20stroke-opacity%3A%200.75%3B%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%7D%0A%0A%20%20%20%20%20%20.orbit-ring%20%7B%0A%20%20%20%20%20%20%20%20transform-origin%3A%20120px%20120px%3B%0A%20%20%20%20%20%20%20%20animation%3A%20orbitRotate%2020s%20linear%20infinite%3B%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20.pulse-glow%20%7B%0A%20%20%20%20%20%20%20%20transform-origin%3A%20120px%20120px%3B%0A%20%20%20%20%20%20%20%20animation%3A%20bioPulse%203.5s%20ease-in-out%20infinite%3B%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20.character-man%20%7B%0A%20%20%20%20%20%20%20%20transform-origin%3A%20120px%20160px%3B%0A%20%20%20%20%20%20%20%20animation%3A%20breatheMan%203.8s%20ease-in-out%20infinite%3B%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20.eyes-blink%20%7B%0A%20%20%20%20%20%20%20%20transform-origin%3A%20120px%2097px%3B%0A%20%20%20%20%20%20%20%20animation%3A%20blinkMan%204.5s%20ease-in-out%20infinite%3B%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20.symbol-badge%20%7B%0A%20%20%20%20%20%20%20%20transform-origin%3A%20188px%20188px%3B%0A%20%20%20%20%20%20%20%20animation%3A%20badgePulse%203s%20ease-in-out%20infinite%3B%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20.radar-wave%20%7B%0A%20%20%20%20%20%20%20%20animation%3A%20waveGlow%202.5s%20ease-in-out%20infinite%3B%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%3C%2Fstyle%3E%0A%0A%20%20%20%20%3ClinearGradient%20id%3D%22bgMan%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%231e293b%22%2F%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%2250%25%22%20stop-color%3D%22%230f172a%22%2F%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%23020617%22%2F%3E%0A%20%20%20%20%3C%2FlinearGradient%3E%0A%0A%20%20%20%20%3ClinearGradient%20id%3D%22shirtMan%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%232563eb%22%2F%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%231e3a8a%22%2F%3E%0A%20%20%20%20%3C%2FlinearGradient%3E%0A%0A%20%20%20%20%3ClinearGradient%20id%3D%22hairMan%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23334155%22%2F%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%230f172a%22%2F%3E%0A%20%20%20%20%3C%2FlinearGradient%3E%0A%0A%20%20%20%20%3CradialGradient%20id%3D%22auraMan%22%20cx%3D%2250%25%22%20cy%3D%2250%25%22%20r%3D%2250%25%22%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%2338bdf8%22%20stop-opacity%3D%220.38%22%2F%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%2270%25%22%20stop-color%3D%22%232563eb%22%20stop-opacity%3D%220.14%22%2F%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%230f172a%22%20stop-opacity%3D%220%22%2F%3E%0A%20%20%20%20%3C%2FradialGradient%3E%0A%20%20%3C%2Fdefs%3E%0A%0A%20%20%3C!--%20Background%20Base%20--%3E%0A%20%20%3Crect%20width%3D%22240%22%20height%3D%22240%22%20rx%3D%2252%22%20fill%3D%22url(%23bgMan)%22%2F%3E%0A%0A%20%20%3C!--%20Pulsing%20Bio-Aura%20Core%20--%3E%0A%20%20%3Ccircle%20cx%3D%22120%22%20cy%3D%22120%22%20r%3D%22102%22%20fill%3D%22url(%23auraMan)%22%20className%3D%22pulse-glow%22%2F%3E%0A%0A%20%20%3C!--%20Biometric%20Scanner%20Rings%20--%3E%0A%20%20%3Ccircle%20cx%3D%22120%22%20cy%3D%22120%22%20r%3D%22106%22%20fill%3D%22none%22%20stroke%3D%22%2338bdf8%22%20stroke-width%3D%222%22%20stroke-opacity%3D%220.25%22%20className%3D%22radar-wave%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%22120%22%20cy%3D%22120%22%20r%3D%2295%22%20fill%3D%22none%22%20stroke%3D%22%2360a5fa%22%20stroke-width%3D%222.5%22%20stroke-opacity%3D%220.5%22%20stroke-dasharray%3D%2210%208%22%20className%3D%22orbit-ring%22%2F%3E%0A%0A%20%20%3C!--%20Character%20Group%20with%20Breathing%20Animation%20--%3E%0A%20%20%3Cg%20className%3D%22character-man%22%3E%0A%20%20%20%20%3C!--%20Shoulders%20%26%20Medical%20Polo%20Shirt%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2044%20216%20C%2044%20168%2C%2074%20150%2C%20105%20148%20L%20105%20160%20C%20112%20165%2C%20128%20165%2C%20135%20160%20L%20135%20148%20C%20166%20150%2C%20196%20168%2C%20196%20216%20Z%22%20fill%3D%22url(%23shirtMan)%22%2F%3E%0A%20%20%20%20%3C!--%20Clinical%20White%20Collar%20Accent%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20105%20148%20L%20120%20168%20L%20135%20148%20Z%22%20fill%3D%22%23ffffff%22%20opacity%3D%220.95%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20112%20152%20L%20120%20164%20L%20128%20152%22%20stroke%3D%22%233b82f6%22%20stroke-width%3D%221.5%22%20fill%3D%22none%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Neck%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20106%20128%20L%20106%20154%20C%20112%20160%2C%20128%20160%2C%20134%20154%20L%20134%20128%20Z%22%20fill%3D%22%23e2ab86%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Ears%20--%3E%0A%20%20%20%20%3Ccircle%20cx%3D%2280%22%20cy%3D%2298%22%20r%3D%228%22%20fill%3D%22%23fcdbc5%22%2F%3E%0A%20%20%20%20%3Ccircle%20cx%3D%2280%22%20cy%3D%2298%22%20r%3D%224.5%22%20fill%3D%22%23e2ab86%22%20opacity%3D%220.6%22%2F%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22160%22%20cy%3D%2298%22%20r%3D%228%22%20fill%3D%22%23fcdbc5%22%2F%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22160%22%20cy%3D%2298%22%20r%3D%224.5%22%20fill%3D%22%23e2ab86%22%20opacity%3D%220.6%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Head%20%2F%20Face%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2084%2094%20C%2084%2064%2C%20156%2064%2C%20156%2094%20C%20156%20126%2C%20140%20146%2C%20120%20146%20C%20100%20146%2C%2084%20126%2C%2084%2094%20Z%22%20fill%3D%22%23fcdbc5%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Cheeks%20(Subtle%20healthy%20glow)%20--%3E%0A%20%20%20%20%3Cellipse%20cx%3D%2298%22%20cy%3D%22110%22%20rx%3D%226%22%20ry%3D%223.5%22%20fill%3D%22%23f87171%22%20opacity%3D%220.2%22%2F%3E%0A%20%20%20%20%3Cellipse%20cx%3D%22142%22%20cy%3D%22110%22%20rx%3D%226%22%20ry%3D%223.5%22%20fill%3D%22%23f87171%22%20opacity%3D%220.2%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Modern%20Styled%20Hair%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2080%2088%20C%2078%2052%2C%2098%2040%2C%20120%2040%20C%20144%2040%2C%20162%2052%2C%20160%2088%20C%20152%2074%2C%20140%2068%2C%20120%2068%20C%20100%2068%2C%2088%2074%2C%2080%2088%20Z%22%20fill%3D%22url(%23hairMan)%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20112%2040%20C%20130%2038%2C%20150%2048%2C%20156%2060%20C%20148%2054%2C%20134%2050%2C%20120%2050%20Z%22%20fill%3D%22%23475569%22%20opacity%3D%220.4%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Eyebrows%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2096%2085%20Q%20106%2080%20114%2085%22%20stroke%3D%22%231e293b%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%20fill%3D%22none%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20126%2085%20Q%20134%2080%20144%2085%22%20stroke%3D%22%231e293b%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%20fill%3D%22none%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Eyes%20with%20Blinking%20Animation%20--%3E%0A%20%20%20%20%3Cg%20className%3D%22eyes-blink%22%3E%0A%20%20%20%20%20%20%3C!--%20Left%20Eye%20--%3E%0A%20%20%20%20%20%20%3Cellipse%20cx%3D%22105%22%20cy%3D%2297%22%20rx%3D%225.5%22%20ry%3D%224.2%22%20fill%3D%22%23ffffff%22%2F%3E%0A%20%20%20%20%20%20%3Ccircle%20cx%3D%22105%22%20cy%3D%2297%22%20r%3D%223.2%22%20fill%3D%22%230f172a%22%2F%3E%0A%20%20%20%20%20%20%3Ccircle%20cx%3D%22103.8%22%20cy%3D%2295.5%22%20r%3D%221.2%22%20fill%3D%22%23ffffff%22%2F%3E%0A%0A%20%20%20%20%20%20%3C!--%20Right%20Eye%20--%3E%0A%20%20%20%20%20%20%3Cellipse%20cx%3D%22135%22%20cy%3D%2297%22%20rx%3D%225.5%22%20ry%3D%224.2%22%20fill%3D%22%23ffffff%22%2F%3E%0A%20%20%20%20%20%20%3Ccircle%20cx%3D%22135%22%20cy%3D%2297%22%20r%3D%223.2%22%20fill%3D%22%230f172a%22%2F%3E%0A%20%20%20%20%20%20%3Ccircle%20cx%3D%22133.8%22%20cy%3D%2295.5%22%20r%3D%221.2%22%20fill%3D%22%23ffffff%22%2F%3E%0A%20%20%20%20%3C%2Fg%3E%0A%0A%20%20%20%20%3C!--%20Nose%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20120%2095%20L%20118%20107%20L%20123%20107%22%20stroke%3D%22%23dca480%22%20stroke-width%3D%222.2%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20fill%3D%22none%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Friendly%20Smile%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20112%20118%20Q%20120%20126%20128%20118%22%20stroke%3D%22%23b86850%22%20stroke-width%3D%222.8%22%20stroke-linecap%3D%22round%22%20fill%3D%22none%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%0A%20%20%3C!--%20Interactive%20Animated%20Male%20Badge%20%E2%99%82%20--%3E%0A%20%20%3Cg%20className%3D%22symbol-badge%22%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22188%22%20cy%3D%22188%22%20r%3D%2228%22%20fill%3D%22%231d4ed8%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%223.5%22%20filter%3D%22drop-shadow(0%204px%206px%20rgba(0%2C0%2C0%2C0.4))%22%2F%3E%0A%20%20%20%20%3C!--%20%E2%99%82%20Icon%20--%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22183%22%20cy%3D%22193%22%20r%3D%228%22%20fill%3D%22none%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%223%22%2F%3E%0A%20%20%20%20%3Cline%20x1%3D%22189%22%20y1%3D%22187%22%20x2%3D%22201%22%20y2%3D%22175%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%2F%3E%0A%20%20%20%20%3Cpolyline%20points%3D%22193%20175%2C%20201%20175%2C%20201%20183%22%20fill%3D%22none%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A"
+        "dob": "2004-09-28",
+        "bloodGroup": "O Positive (O+)",
+        "emergencyContacts": [],
+        "email": "laladada@gmail.com"
       }
     },
     "DNA-PK-26-10026": {
       "clinicalRecords": [],
-      "fullName": "Noman",
-      "appointments": [],
-      "prescriptions": [],
       "history": {
-        "familyHistory": [],
-        "surgeries": [],
-        "diseases": [],
-        "lifestyle": {
-          "alcoholConsumption": "None",
-          "dietType": "Balanced",
-          "smokingStatus": "Non-smoker",
-          "physicalActivity": "Active (3-5 days/wk)",
-          "sleepAvgHours": 8
-        },
         "chronicIllnesses": [],
-        "vaccinations": [],
         "medicines": [],
-        "allergies": []
+        "diseases": [],
+        "vaccinations": [],
+        "surgeries": [],
+        "allergies": [],
+        "lifestyle": {
+          "sleepAvgHours": 8,
+          "dietType": "Balanced",
+          "alcoholConsumption": "None",
+          "physicalActivity": "Active (3-5 days/wk)",
+          "smokingStatus": "Non-smoker"
+        },
+        "familyHistory": []
       },
-      "dnaId": "DNA-PK-26-10026",
       "patient": {
-        "dnaId": "DNA-PK-26-10026",
-        "phone": "+1 (555) 234-5678",
-        "email": "laladada45@gmal.com",
-        "bloodGroup": "O Positive (O+)",
-        "registeredHospital": "Pakistan National Medical Center",
-        "gender": "Female",
-        "address": "450 Medical Center Blvd, Suite 300, Boston, MA",
+        "dob": "1995-04-12",
         "insurance": {
-          "policyNumber": "POL-9790811",
+          "provider": "Universal Standard Health Network",
           "status": "Active",
           "groupNumber": "GRP-01",
           "coverageAmount": "$500,000 Comprehensive",
-          "provider": "Universal Standard Health Network"
+          "policyNumber": "POL-9790811"
         },
-        "nationalId": "US-MA-882104-Z",
-        "dob": "1995-04-12",
+        "email": "laladada45@gmal.com",
         "biometricAuthEnabled": true,
+        "fullName": "Noman",
+        "phone": "+1 (555) 234-5678",
+        "registeredHospital": "Pakistan National Medical Center",
         "securityPin": "1234",
+        "emergencyContacts": [],
         "avatarUrl": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=300",
         "biometricStatus": "Verified",
+        "address": "450 Medical Center Blvd, Suite 300, Boston, MA",
+        "nationalId": "US-MA-882104-Z",
+        "gender": "Female",
+        "dnaId": "DNA-PK-26-10026",
+        "bloodGroup": "O Positive (O+)",
         "organDonorStatus": true,
-        "fullName": "Noman",
-        "emergencyContacts": [],
         "password": "Noman123-/:"
       },
-      "labReports": [],
-      "updatedAt": "2026-09-27T10:14:04.897Z"
+      "appointments": [],
+      "updatedAt": "2026-09-28T17:22:05.939Z",
+      "dnaId": "DNA-PK-26-10026",
+      "fullName": "Noman",
+      "prescriptions": [],
+      "labReports": []
     },
     "DNA-PK-26-10027": {
-      "prescriptions": [],
-      "dnaId": "DNA-PK-26-10027",
-      "fullName": "Farhan",
+      "patient": {
+        "dnaId": "DNA-PK-26-10027",
+        "emergencyContacts": [
+          {
+            "name": "Ayesha Amin",
+            "phone": "+923119286007",
+            "id": "ec-1790573968629",
+            "relationship": "Emergency Contact",
+            "isPrimary": true
+          }
+        ],
+        "organDonorStatus": false,
+        "password": "Farhan123-/:",
+        "registeredHospital": "General Healthcare Registry",
+        "biometricStatus": "Verified",
+        "fullName": "Farhan",
+        "nationalId": "Pending",
+        "email": "laladada696@gmail.com",
+        "securityPin": "1234",
+        "insurance": {
+          "coverageAmount": "N/A",
+          "groupNumber": "N/A",
+          "status": "Pending",
+          "provider": "None / Self-Pay",
+          "policyNumber": "N/A"
+        },
+        "gender": "Male",
+        "phone": "+923119286007",
+        "biometricAuthEnabled": true,
+        "address": "Not Specified",
+        "avatarUrl": "data:image/svg+xml;utf8,%0A%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20240%20240%22%20width%3D%22240%22%20height%3D%22240%22%3E%0A%20%20%3Cdefs%3E%0A%20%20%20%20%3Cstyle%3E%0A%20%20%20%20%20%20%40keyframes%20breathe%20%7B%0A%20%20%20%20%20%20%20%200%25%2C%20100%25%20%7B%20transform%3A%20translateY(0px)%3B%20%7D%0A%20%20%20%20%20%20%20%2050%25%20%7B%20transform%3A%20translateY(-2px)%3B%20%7D%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%40keyframes%20auraGlow%20%7B%0A%20%20%20%20%20%20%20%200%25%2C%20100%25%20%7B%20stroke-opacity%3A%200.3%3B%20%7D%0A%20%20%20%20%20%20%20%2050%25%20%7B%20stroke-opacity%3A%200.8%3B%20%7D%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20.character-group%20%7B%0A%20%20%20%20%20%20%20%20transform-origin%3A%20120px%20160px%3B%0A%20%20%20%20%20%20%20%20animation%3A%20breathe%203.6s%20ease-in-out%20infinite%3B%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20.ring-pulse%20%7B%0A%20%20%20%20%20%20%20%20animation%3A%20auraGlow%203s%20ease-in-out%20infinite%3B%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%3C%2Fstyle%3E%0A%20%20%20%20%3Cfilter%20id%3D%22avatarShadow%22%20x%3D%22-10%25%22%20y%3D%22-10%25%22%20width%3D%22120%25%22%20height%3D%22120%25%22%3E%0A%20%20%20%20%20%20%3CfeDropShadow%20dx%3D%220%22%20dy%3D%224%22%20stdDeviation%3D%226%22%20flood-color%3D%22%230f172a%22%20flood-opacity%3D%220.12%22%2F%3E%0A%20%20%20%20%3C%2Ffilter%3E%0A%20%20%3C%2Fdefs%3E%0A%0A%20%20%3C!--%20Circular%20Avatar%20Badge%20with%20Clean%20Medical%20Rim%20--%3E%0A%20%20%3Ccircle%20cx%3D%22120%22%20cy%3D%22120%22%20r%3D%22108%22%20fill%3D%22%23e2e8f0%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%224.5%22%20filter%3D%22url(%23avatarShadow)%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%22120%22%20cy%3D%22120%22%20r%3D%22102%22%20fill%3D%22%23edf2f7%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%22120%22%20cy%3D%22120%22%20r%3D%22102%22%20fill%3D%22none%22%20stroke%3D%22%23cbd5e1%22%20stroke-width%3D%221.5%22%20stroke-dasharray%3D%226%204%22%20className%3D%22ring-pulse%22%2F%3E%0A%0A%20%20%3C!--%20Man%20in%20Suit%20Character%20--%3E%0A%20%20%3Cg%20className%3D%22character-group%22%3E%0A%20%20%20%20%3C!--%20Black%20Suit%20Blazer%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2038%20224%20L%2038%20200%20C%2038%20162%2C%2068%20144%2C%2098%20139%20L%20108%20178%20L%20120%20188%20L%20132%20178%20L%20142%20139%20C%20172%20144%2C%20202%20162%2C%20202%20200%20L%20202%20224%20Z%22%20fill%3D%22%2318191c%22%2F%3E%0A%0A%20%20%20%20%3C!--%20White%20Collared%20Dress%20Shirt%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%2298%2C139%20120%2C195%20142%2C139%20135%2C124%20105%2C124%22%20fill%3D%22%23ffffff%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Neck%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22105%2C110%20105%2C134%20120%2C150%20135%2C134%20135%2C110%22%20fill%3D%22%23f5d0b5%22%2F%3E%0A%20%20%20%20%3C!--%20Subtle%20Chin%20Shadow%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20105%20112%20C%20112%20123%2C%20128%20123%2C%20135%20112%20L%20135%20120%20C%20128%20131%2C%20112%20131%2C%20105%20120%20Z%22%20fill%3D%22%23e5bfa4%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Red%20Tie%20Knot%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22113%2C141%20127%2C141%20125%2C154%20120%2C157%20115%2C154%22%20fill%3D%22%23dc2626%22%2F%3E%0A%20%20%20%20%3C!--%20Red%20Tie%20Blade%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22115%2C154%20125%2C154%20130%2C198%20120%2C214%20110%2C198%22%20fill%3D%22%23ef4444%22%2F%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22120%2C157%20125%2C154%20130%2C198%20120%2C214%22%20fill%3D%22%23dc2626%22%2F%3E%0A%0A%20%20%20%20%3C!--%20White%20Shirt%20Collars%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%2297%2C139%20107%2C123%20115%2C145%22%20fill%3D%22%23ffffff%22%20stroke%3D%22%23e2e8f0%22%20stroke-width%3D%221%22%2F%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22143%2C139%20133%2C123%20125%2C145%22%20fill%3D%22%23ffffff%22%20stroke%3D%22%23e2e8f0%22%20stroke-width%3D%221%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Suit%20Lapels%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2072%20152%20L%2098%20139%20L%20109%20178%20L%2088%20185%20Z%22%20fill%3D%22%2325272c%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20168%20152%20L%20142%20139%20L%20131%20178%20L%20152%20185%20Z%22%20fill%3D%22%2325272c%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Left%20Ear%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2077%2084%20C%2069%2084%2C%2069%20105%2C%2077%20105%20Z%22%20fill%3D%22%23f5d0b5%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2076%2089%20C%2073%2089%2C%2073%2099%2C%2076%2099%22%20stroke%3D%22%23e5bfa4%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Right%20Ear%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20163%2084%20C%20171%2084%2C%20171%20105%2C%20163%20105%20Z%22%20fill%3D%22%23f5d0b5%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20164%2089%20C%20167%2089%2C%20167%2099%2C%20164%2099%22%20stroke%3D%22%23e5bfa4%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Faceless%20Head%20Contour%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2079%2082%20C%2079%2048%2C%20161%2048%2C%20161%2082%20C%20161%20114%2C%20143%20128%2C%20120%20128%20C%2097%20128%2C%2079%20114%2C%2079%2082%20Z%22%20fill%3D%22%23f5d0b5%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Styled%20Dark%20Hair%20with%20Side%20Parting%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2076%2084%20C%2076%2042%2C%20102%2030%2C%20128%2030%20C%20158%2030%2C%20166%2050%2C%20166%2084%20C%20166%2094%2C%20163%20104%2C%20160%20107%20C%20160%2082%2C%20155%2064%2C%20144%2054%20C%20130%2044%2C%20108%2050%2C%2090%2066%20C%2083%2073%2C%2080%2086%2C%2080%20107%20C%2077%20104%2C%2076%2094%2C%2076%2084%20Z%22%20fill%3D%22%23282a30%22%2F%3E%0A%20%20%20%20%3C!--%20Sweeping%20Front%20Bangs%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2086%2054%20C%20102%2044%2C%20128%2044%2C%20146%2058%20C%20156%2066%2C%20160%2078%2C%20160%2078%20C%20148%2066%2C%20130%2060%2C%20112%2064%20C%2098%2068%2C%2088%2080%2C%2088%2080%20C%2088%2080%2C%2082%2066%2C%2086%2054%20Z%22%20fill%3D%22%23282a30%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
+        "bloodGroup": "B Positive (B+)",
+        "dob": "2002-09-28"
+      },
       "labReports": [],
-      "appointments": [],
+      "dnaId": "DNA-PK-26-10027",
       "history": {
-        "surgeries": [],
+        "vaccinations": [],
         "medicines": [],
+        "surgeries": [],
+        "diseases": [],
+        "allergies": [],
+        "familyHistory": [],
+        "chronicIllnesses": [],
+        "lifestyle": {
+          "smokingStatus": "Non-smoker",
+          "alcoholConsumption": "None",
+          "physicalActivity": "Active (3-5 days/wk)",
+          "dietType": "Balanced",
+          "sleepAvgHours": 8
+        }
+      },
+      "prescriptions": [],
+      "updatedAt": "2026-09-28T17:22:05.942Z",
+      "fullName": "Farhan",
+      "appointments": [],
+      "clinicalRecords": []
+    },
+    "DNA-PK-26-10028": {
+      "clinicalRecords": [],
+      "labReports": [],
+      "prescriptions": [],
+      "updatedAt": "2026-09-28T17:22:05.950Z",
+      "fullName": "Nomi",
+      "dnaId": "DNA-PK-26-10028",
+      "history": {
+        "lifestyle": {
+          "sleepAvgHours": 8,
+          "smokingStatus": "Non-smoker",
+          "dietType": "Balanced",
+          "alcoholConsumption": "None",
+          "physicalActivity": "Active (3-5 days/wk)"
+        },
+        "vaccinations": [],
+        "chronicIllnesses": [],
+        "allergies": [],
+        "surgeries": [],
+        "diseases": [],
+        "familyHistory": [],
+        "medicines": []
+      },
+      "appointments": [],
+      "patient": {
+        "insurance": {
+          "provider": "None / Self-Pay",
+          "groupNumber": "N/A",
+          "status": "Pending",
+          "coverageAmount": "N/A",
+          "policyNumber": "N/A"
+        },
+        "email": "nomandgisa@gmail.com",
+        "password": "Nomi123@#$",
+        "phone": "+92",
+        "address": "Not Specified",
+        "emergencyContacts": [],
+        "biometricAuthEnabled": true,
+        "avatarUrl": "data:image/svg+xml;utf8,%0A%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20240%20240%22%20width%3D%22240%22%20height%3D%22240%22%3E%0A%20%20%3Cdefs%3E%0A%20%20%20%20%3Cstyle%3E%0A%20%20%20%20%20%20%40keyframes%20breathe%20%7B%0A%20%20%20%20%20%20%20%200%25%2C%20100%25%20%7B%20transform%3A%20translateY(0px)%3B%20%7D%0A%20%20%20%20%20%20%20%2050%25%20%7B%20transform%3A%20translateY(-2px)%3B%20%7D%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%40keyframes%20auraGlow%20%7B%0A%20%20%20%20%20%20%20%200%25%2C%20100%25%20%7B%20stroke-opacity%3A%200.3%3B%20%7D%0A%20%20%20%20%20%20%20%2050%25%20%7B%20stroke-opacity%3A%200.8%3B%20%7D%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20.character-group%20%7B%0A%20%20%20%20%20%20%20%20transform-origin%3A%20120px%20160px%3B%0A%20%20%20%20%20%20%20%20animation%3A%20breathe%203.6s%20ease-in-out%20infinite%3B%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20.ring-pulse%20%7B%0A%20%20%20%20%20%20%20%20animation%3A%20auraGlow%203s%20ease-in-out%20infinite%3B%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%3C%2Fstyle%3E%0A%20%20%20%20%3Cfilter%20id%3D%22avatarShadow%22%20x%3D%22-10%25%22%20y%3D%22-10%25%22%20width%3D%22120%25%22%20height%3D%22120%25%22%3E%0A%20%20%20%20%20%20%3CfeDropShadow%20dx%3D%220%22%20dy%3D%224%22%20stdDeviation%3D%226%22%20flood-color%3D%22%230f172a%22%20flood-opacity%3D%220.12%22%2F%3E%0A%20%20%20%20%3C%2Ffilter%3E%0A%20%20%3C%2Fdefs%3E%0A%0A%20%20%3C!--%20Circular%20Avatar%20Badge%20with%20Clean%20Medical%20Rim%20--%3E%0A%20%20%3Ccircle%20cx%3D%22120%22%20cy%3D%22120%22%20r%3D%22108%22%20fill%3D%22%23e2e8f0%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%224.5%22%20filter%3D%22url(%23avatarShadow)%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%22120%22%20cy%3D%22120%22%20r%3D%22102%22%20fill%3D%22%23edf2f7%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%22120%22%20cy%3D%22120%22%20r%3D%22102%22%20fill%3D%22none%22%20stroke%3D%22%23cbd5e1%22%20stroke-width%3D%221.5%22%20stroke-dasharray%3D%226%204%22%20className%3D%22ring-pulse%22%2F%3E%0A%0A%20%20%3C!--%20Man%20in%20Suit%20Character%20--%3E%0A%20%20%3Cg%20className%3D%22character-group%22%3E%0A%20%20%20%20%3C!--%20Black%20Suit%20Blazer%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2038%20224%20L%2038%20200%20C%2038%20162%2C%2068%20144%2C%2098%20139%20L%20108%20178%20L%20120%20188%20L%20132%20178%20L%20142%20139%20C%20172%20144%2C%20202%20162%2C%20202%20200%20L%20202%20224%20Z%22%20fill%3D%22%2318191c%22%2F%3E%0A%0A%20%20%20%20%3C!--%20White%20Collared%20Dress%20Shirt%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%2298%2C139%20120%2C195%20142%2C139%20135%2C124%20105%2C124%22%20fill%3D%22%23ffffff%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Neck%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22105%2C110%20105%2C134%20120%2C150%20135%2C134%20135%2C110%22%20fill%3D%22%23f5d0b5%22%2F%3E%0A%20%20%20%20%3C!--%20Subtle%20Chin%20Shadow%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20105%20112%20C%20112%20123%2C%20128%20123%2C%20135%20112%20L%20135%20120%20C%20128%20131%2C%20112%20131%2C%20105%20120%20Z%22%20fill%3D%22%23e5bfa4%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Red%20Tie%20Knot%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22113%2C141%20127%2C141%20125%2C154%20120%2C157%20115%2C154%22%20fill%3D%22%23dc2626%22%2F%3E%0A%20%20%20%20%3C!--%20Red%20Tie%20Blade%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22115%2C154%20125%2C154%20130%2C198%20120%2C214%20110%2C198%22%20fill%3D%22%23ef4444%22%2F%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22120%2C157%20125%2C154%20130%2C198%20120%2C214%22%20fill%3D%22%23dc2626%22%2F%3E%0A%0A%20%20%20%20%3C!--%20White%20Shirt%20Collars%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%2297%2C139%20107%2C123%20115%2C145%22%20fill%3D%22%23ffffff%22%20stroke%3D%22%23e2e8f0%22%20stroke-width%3D%221%22%2F%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22143%2C139%20133%2C123%20125%2C145%22%20fill%3D%22%23ffffff%22%20stroke%3D%22%23e2e8f0%22%20stroke-width%3D%221%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Suit%20Lapels%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2072%20152%20L%2098%20139%20L%20109%20178%20L%2088%20185%20Z%22%20fill%3D%22%2325272c%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20168%20152%20L%20142%20139%20L%20131%20178%20L%20152%20185%20Z%22%20fill%3D%22%2325272c%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Left%20Ear%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2077%2084%20C%2069%2084%2C%2069%20105%2C%2077%20105%20Z%22%20fill%3D%22%23f5d0b5%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2076%2089%20C%2073%2089%2C%2073%2099%2C%2076%2099%22%20stroke%3D%22%23e5bfa4%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Right%20Ear%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20163%2084%20C%20171%2084%2C%20171%20105%2C%20163%20105%20Z%22%20fill%3D%22%23f5d0b5%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20164%2089%20C%20167%2089%2C%20167%2099%2C%20164%2099%22%20stroke%3D%22%23e5bfa4%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Faceless%20Head%20Contour%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2079%2082%20C%2079%2048%2C%20161%2048%2C%20161%2082%20C%20161%20114%2C%20143%20128%2C%20120%20128%20C%2097%20128%2C%2079%20114%2C%2079%2082%20Z%22%20fill%3D%22%23f5d0b5%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Styled%20Dark%20Hair%20with%20Side%20Parting%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2076%2084%20C%2076%2042%2C%20102%2030%2C%20128%2030%20C%20158%2030%2C%20166%2050%2C%20166%2084%20C%20166%2094%2C%20163%20104%2C%20160%20107%20C%20160%2082%2C%20155%2064%2C%20144%2054%20C%20130%2044%2C%20108%2050%2C%2090%2066%20C%2083%2073%2C%2080%2086%2C%2080%20107%20C%2077%20104%2C%2076%2094%2C%2076%2084%20Z%22%20fill%3D%22%23282a30%22%2F%3E%0A%20%20%20%20%3C!--%20Sweeping%20Front%20Bangs%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2086%2054%20C%20102%2044%2C%20128%2044%2C%20146%2058%20C%20156%2066%2C%20160%2078%2C%20160%2078%20C%20148%2066%2C%20130%2060%2C%20112%2064%20C%2098%2068%2C%2088%2080%2C%2088%2080%20C%2088%2080%2C%2082%2066%2C%2086%2054%20Z%22%20fill%3D%22%23282a30%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
+        "nationalId": "Pending",
+        "biometricStatus": "Verified",
+        "securityPin": "1234",
+        "dnaId": "DNA-PK-26-10028",
+        "organDonorStatus": false,
+        "dob": "2026-09-28",
+        "registeredHospital": "General Healthcare Registry",
+        "bloodGroup": "O Positive (O+)",
+        "gender": "Male",
+        "fullName": "Nomi"
+      }
+    },
+    "DNA-US-26-10029": {
+      "dnaId": "DNA-US-26-10029",
+      "patient": {
+        "avatarUrl": "data:image/svg+xml;utf8,%0A%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20240%20240%22%20width%3D%22240%22%20height%3D%22240%22%3E%0A%20%20%3Cdefs%3E%0A%20%20%20%20%3Cstyle%3E%0A%20%20%20%20%20%20%40keyframes%20breathe%20%7B%0A%20%20%20%20%20%20%20%200%25%2C%20100%25%20%7B%20transform%3A%20translateY(0px)%3B%20%7D%0A%20%20%20%20%20%20%20%2050%25%20%7B%20transform%3A%20translateY(-2px)%3B%20%7D%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%40keyframes%20auraGlow%20%7B%0A%20%20%20%20%20%20%20%200%25%2C%20100%25%20%7B%20stroke-opacity%3A%200.3%3B%20%7D%0A%20%20%20%20%20%20%20%2050%25%20%7B%20stroke-opacity%3A%200.8%3B%20%7D%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20.character-group%20%7B%0A%20%20%20%20%20%20%20%20transform-origin%3A%20120px%20160px%3B%0A%20%20%20%20%20%20%20%20animation%3A%20breathe%203.6s%20ease-in-out%20infinite%3B%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20.ring-pulse%20%7B%0A%20%20%20%20%20%20%20%20animation%3A%20auraGlow%203s%20ease-in-out%20infinite%3B%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%3C%2Fstyle%3E%0A%20%20%20%20%3Cfilter%20id%3D%22avatarShadow%22%20x%3D%22-10%25%22%20y%3D%22-10%25%22%20width%3D%22120%25%22%20height%3D%22120%25%22%3E%0A%20%20%20%20%20%20%3CfeDropShadow%20dx%3D%220%22%20dy%3D%224%22%20stdDeviation%3D%226%22%20flood-color%3D%22%230f172a%22%20flood-opacity%3D%220.12%22%2F%3E%0A%20%20%20%20%3C%2Ffilter%3E%0A%20%20%3C%2Fdefs%3E%0A%0A%20%20%3C!--%20Circular%20Avatar%20Badge%20with%20Clean%20Medical%20Rim%20--%3E%0A%20%20%3Ccircle%20cx%3D%22120%22%20cy%3D%22120%22%20r%3D%22108%22%20fill%3D%22%23e2e8f0%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%224.5%22%20filter%3D%22url(%23avatarShadow)%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%22120%22%20cy%3D%22120%22%20r%3D%22102%22%20fill%3D%22%23edf2f7%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%22120%22%20cy%3D%22120%22%20r%3D%22102%22%20fill%3D%22none%22%20stroke%3D%22%23cbd5e1%22%20stroke-width%3D%221.5%22%20stroke-dasharray%3D%226%204%22%20className%3D%22ring-pulse%22%2F%3E%0A%0A%20%20%3C!--%20Man%20in%20Suit%20Character%20--%3E%0A%20%20%3Cg%20className%3D%22character-group%22%3E%0A%20%20%20%20%3C!--%20Black%20Suit%20Blazer%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2038%20224%20L%2038%20200%20C%2038%20162%2C%2068%20144%2C%2098%20139%20L%20108%20178%20L%20120%20188%20L%20132%20178%20L%20142%20139%20C%20172%20144%2C%20202%20162%2C%20202%20200%20L%20202%20224%20Z%22%20fill%3D%22%2318191c%22%2F%3E%0A%0A%20%20%20%20%3C!--%20White%20Collared%20Dress%20Shirt%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%2298%2C139%20120%2C195%20142%2C139%20135%2C124%20105%2C124%22%20fill%3D%22%23ffffff%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Neck%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22105%2C110%20105%2C134%20120%2C150%20135%2C134%20135%2C110%22%20fill%3D%22%23f5d0b5%22%2F%3E%0A%20%20%20%20%3C!--%20Subtle%20Chin%20Shadow%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20105%20112%20C%20112%20123%2C%20128%20123%2C%20135%20112%20L%20135%20120%20C%20128%20131%2C%20112%20131%2C%20105%20120%20Z%22%20fill%3D%22%23e5bfa4%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Red%20Tie%20Knot%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22113%2C141%20127%2C141%20125%2C154%20120%2C157%20115%2C154%22%20fill%3D%22%23dc2626%22%2F%3E%0A%20%20%20%20%3C!--%20Red%20Tie%20Blade%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22115%2C154%20125%2C154%20130%2C198%20120%2C214%20110%2C198%22%20fill%3D%22%23ef4444%22%2F%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22120%2C157%20125%2C154%20130%2C198%20120%2C214%22%20fill%3D%22%23dc2626%22%2F%3E%0A%0A%20%20%20%20%3C!--%20White%20Shirt%20Collars%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%2297%2C139%20107%2C123%20115%2C145%22%20fill%3D%22%23ffffff%22%20stroke%3D%22%23e2e8f0%22%20stroke-width%3D%221%22%2F%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22143%2C139%20133%2C123%20125%2C145%22%20fill%3D%22%23ffffff%22%20stroke%3D%22%23e2e8f0%22%20stroke-width%3D%221%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Suit%20Lapels%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2072%20152%20L%2098%20139%20L%20109%20178%20L%2088%20185%20Z%22%20fill%3D%22%2325272c%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20168%20152%20L%20142%20139%20L%20131%20178%20L%20152%20185%20Z%22%20fill%3D%22%2325272c%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Left%20Ear%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2077%2084%20C%2069%2084%2C%2069%20105%2C%2077%20105%20Z%22%20fill%3D%22%23f5d0b5%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2076%2089%20C%2073%2089%2C%2073%2099%2C%2076%2099%22%20stroke%3D%22%23e5bfa4%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Right%20Ear%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20163%2084%20C%20171%2084%2C%20171%20105%2C%20163%20105%20Z%22%20fill%3D%22%23f5d0b5%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20164%2089%20C%20167%2089%2C%20167%2099%2C%20164%2099%22%20stroke%3D%22%23e5bfa4%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Faceless%20Head%20Contour%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2079%2082%20C%2079%2048%2C%20161%2048%2C%20161%2082%20C%20161%20114%2C%20143%20128%2C%20120%20128%20C%2097%20128%2C%2079%20114%2C%2079%2082%20Z%22%20fill%3D%22%23f5d0b5%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Styled%20Dark%20Hair%20with%20Side%20Parting%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2076%2084%20C%2076%2042%2C%20102%2030%2C%20128%2030%20C%20158%2030%2C%20166%2050%2C%20166%2084%20C%20166%2094%2C%20163%20104%2C%20160%20107%20C%20160%2082%2C%20155%2064%2C%20144%2054%20C%20130%2044%2C%20108%2050%2C%2090%2066%20C%2083%2073%2C%2080%2086%2C%2080%20107%20C%2077%20104%2C%2076%2094%2C%2076%2084%20Z%22%20fill%3D%22%23282a30%22%2F%3E%0A%20%20%20%20%3C!--%20Sweeping%20Front%20Bangs%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2086%2054%20C%20102%2044%2C%20128%2044%2C%20146%2058%20C%20156%2066%2C%20160%2078%2C%20160%2078%20C%20148%2066%2C%20130%2060%2C%20112%2064%20C%2098%2068%2C%2088%2080%2C%2088%2080%20C%2088%2080%2C%2082%2066%2C%2086%2054%20Z%22%20fill%3D%22%23282a30%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
+        "biometricStatus": "Verified",
+        "bloodGroup": "O Positive (O+)",
+        "address": "Not Specified",
+        "nationalId": "Pending",
+        "phone": "Not Provided",
+        "email": "nomikaj@gmail.com",
+        "insurance": {
+          "groupNumber": "N/A",
+          "policyNumber": "N/A",
+          "coverageAmount": "N/A",
+          "status": "Pending",
+          "provider": "None / Self-Pay"
+        },
+        "password": "Dady123@",
+        "securityPin": "1234",
+        "registeredHospital": "General Healthcare Registry",
+        "organDonorStatus": false,
+        "dob": "2026-09-28",
+        "fullName": "Dady",
+        "emergencyContacts": [],
+        "biometricAuthEnabled": true,
+        "dnaId": "DNA-US-26-10029",
+        "gender": "Male"
+      },
+      "clinicalRecords": [],
+      "history": {
+        "allergies": [],
+        "familyHistory": [],
+        "vaccinations": [],
         "lifestyle": {
           "sleepAvgHours": 8,
           "alcoholConsumption": "None",
+          "dietType": "Balanced",
+          "physicalActivity": "Active (3-5 days/wk)",
+          "smokingStatus": "Non-smoker"
+        },
+        "medicines": [],
+        "surgeries": [],
+        "chronicIllnesses": [],
+        "diseases": []
+      },
+      "prescriptions": [],
+      "updatedAt": "2026-09-29T17:25:57.229Z",
+      "labReports": [],
+      "fullName": "Dady",
+      "appointments": []
+    },
+    "DNA-US-26-10030": {
+      "fullName": "Mhrn",
+      "appointments": [],
+      "history": {
+        "allergies": [],
+        "familyHistory": [],
+        "diseases": [],
+        "lifestyle": {
+          "sleepAvgHours": 7.5,
+          "alcoholConsumption": "None",
           "smokingStatus": "Non-smoker",
           "dietType": "Balanced",
-          "physicalActivity": "Active (3-5 days/wk)"
+          "physicalActivity": "Light (1-2 days/wk)"
         },
-        "diseases": [],
-        "allergies": [],
+        "medicines": [],
         "vaccinations": [],
         "chronicIllnesses": [],
-        "familyHistory": []
+        "surgeries": []
       },
-      "updatedAt": "2026-09-28T06:05:08.646Z",
+      "updatedAt": "2026-09-29T17:25:57.363Z",
       "patient": {
+        "biometricAuthEnabled": true,
+        "emergencyContacts": [],
         "address": "Not Specified",
         "registeredHospital": "General Healthcare Registry",
-        "emergencyContacts": [
-          {
-            "phone": "+923119286007",
-            "isPrimary": true,
-            "relationship": "Emergency Contact",
-            "name": "Ayesha Amin",
-            "id": "ec-1790573968629"
-          }
-        ],
-        "biometricStatus": "Verified",
-        "dnaId": "DNA-PK-26-10027",
-        "phone": "+923119286007",
-        "dob": "2002-09-28",
-        "password": "Farhan123-/:",
         "gender": "Male",
-        "fullName": "Farhan",
+        "securityPin": "1234",
+        "dnaId": "DNA-US-26-10030",
+        "fullName": "Mhrn",
         "insurance": {
           "coverageAmount": "N/A",
           "provider": "None / Self-Pay",
@@ -429,150 +615,21 @@
           "groupNumber": "N/A",
           "policyNumber": "N/A"
         },
-        "organDonorStatus": false,
-        "bloodGroup": "B Positive (B+)",
-        "biometricAuthEnabled": true,
-        "avatarUrl": "data:image/svg+xml;utf8,%0A%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20240%20240%22%20width%3D%22240%22%20height%3D%22240%22%3E%0A%20%20%3Cdefs%3E%0A%20%20%20%20%3Cstyle%3E%0A%20%20%20%20%20%20%40keyframes%20breathe%20%7B%0A%20%20%20%20%20%20%20%200%25%2C%20100%25%20%7B%20transform%3A%20translateY(0px)%3B%20%7D%0A%20%20%20%20%20%20%20%2050%25%20%7B%20transform%3A%20translateY(-2px)%3B%20%7D%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%40keyframes%20auraGlow%20%7B%0A%20%20%20%20%20%20%20%200%25%2C%20100%25%20%7B%20stroke-opacity%3A%200.3%3B%20%7D%0A%20%20%20%20%20%20%20%2050%25%20%7B%20stroke-opacity%3A%200.8%3B%20%7D%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20.character-group%20%7B%0A%20%20%20%20%20%20%20%20transform-origin%3A%20120px%20160px%3B%0A%20%20%20%20%20%20%20%20animation%3A%20breathe%203.6s%20ease-in-out%20infinite%3B%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20.ring-pulse%20%7B%0A%20%20%20%20%20%20%20%20animation%3A%20auraGlow%203s%20ease-in-out%20infinite%3B%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%3C%2Fstyle%3E%0A%20%20%20%20%3Cfilter%20id%3D%22avatarShadow%22%20x%3D%22-10%25%22%20y%3D%22-10%25%22%20width%3D%22120%25%22%20height%3D%22120%25%22%3E%0A%20%20%20%20%20%20%3CfeDropShadow%20dx%3D%220%22%20dy%3D%224%22%20stdDeviation%3D%226%22%20flood-color%3D%22%230f172a%22%20flood-opacity%3D%220.12%22%2F%3E%0A%20%20%20%20%3C%2Ffilter%3E%0A%20%20%3C%2Fdefs%3E%0A%0A%20%20%3C!--%20Circular%20Avatar%20Badge%20with%20Clean%20Medical%20Rim%20--%3E%0A%20%20%3Ccircle%20cx%3D%22120%22%20cy%3D%22120%22%20r%3D%22108%22%20fill%3D%22%23e2e8f0%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%224.5%22%20filter%3D%22url(%23avatarShadow)%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%22120%22%20cy%3D%22120%22%20r%3D%22102%22%20fill%3D%22%23edf2f7%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%22120%22%20cy%3D%22120%22%20r%3D%22102%22%20fill%3D%22none%22%20stroke%3D%22%23cbd5e1%22%20stroke-width%3D%221.5%22%20stroke-dasharray%3D%226%204%22%20className%3D%22ring-pulse%22%2F%3E%0A%0A%20%20%3C!--%20Man%20in%20Suit%20Character%20--%3E%0A%20%20%3Cg%20className%3D%22character-group%22%3E%0A%20%20%20%20%3C!--%20Black%20Suit%20Blazer%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2038%20224%20L%2038%20200%20C%2038%20162%2C%2068%20144%2C%2098%20139%20L%20108%20178%20L%20120%20188%20L%20132%20178%20L%20142%20139%20C%20172%20144%2C%20202%20162%2C%20202%20200%20L%20202%20224%20Z%22%20fill%3D%22%2318191c%22%2F%3E%0A%0A%20%20%20%20%3C!--%20White%20Collared%20Dress%20Shirt%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%2298%2C139%20120%2C195%20142%2C139%20135%2C124%20105%2C124%22%20fill%3D%22%23ffffff%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Neck%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22105%2C110%20105%2C134%20120%2C150%20135%2C134%20135%2C110%22%20fill%3D%22%23f5d0b5%22%2F%3E%0A%20%20%20%20%3C!--%20Subtle%20Chin%20Shadow%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20105%20112%20C%20112%20123%2C%20128%20123%2C%20135%20112%20L%20135%20120%20C%20128%20131%2C%20112%20131%2C%20105%20120%20Z%22%20fill%3D%22%23e5bfa4%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Red%20Tie%20Knot%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22113%2C141%20127%2C141%20125%2C154%20120%2C157%20115%2C154%22%20fill%3D%22%23dc2626%22%2F%3E%0A%20%20%20%20%3C!--%20Red%20Tie%20Blade%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22115%2C154%20125%2C154%20130%2C198%20120%2C214%20110%2C198%22%20fill%3D%22%23ef4444%22%2F%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22120%2C157%20125%2C154%20130%2C198%20120%2C214%22%20fill%3D%22%23dc2626%22%2F%3E%0A%0A%20%20%20%20%3C!--%20White%20Shirt%20Collars%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%2297%2C139%20107%2C123%20115%2C145%22%20fill%3D%22%23ffffff%22%20stroke%3D%22%23e2e8f0%22%20stroke-width%3D%221%22%2F%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22143%2C139%20133%2C123%20125%2C145%22%20fill%3D%22%23ffffff%22%20stroke%3D%22%23e2e8f0%22%20stroke-width%3D%221%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Suit%20Lapels%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2072%20152%20L%2098%20139%20L%20109%20178%20L%2088%20185%20Z%22%20fill%3D%22%2325272c%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20168%20152%20L%20142%20139%20L%20131%20178%20L%20152%20185%20Z%22%20fill%3D%22%2325272c%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Left%20Ear%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2077%2084%20C%2069%2084%2C%2069%20105%2C%2077%20105%20Z%22%20fill%3D%22%23f5d0b5%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2076%2089%20C%2073%2089%2C%2073%2099%2C%2076%2099%22%20stroke%3D%22%23e5bfa4%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Right%20Ear%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20163%2084%20C%20171%2084%2C%20171%20105%2C%20163%20105%20Z%22%20fill%3D%22%23f5d0b5%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20164%2089%20C%20167%2089%2C%20167%2099%2C%20164%2099%22%20stroke%3D%22%23e5bfa4%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Faceless%20Head%20Contour%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2079%2082%20C%2079%2048%2C%20161%2048%2C%20161%2082%20C%20161%20114%2C%20143%20128%2C%20120%20128%20C%2097%20128%2C%2079%20114%2C%2079%2082%20Z%22%20fill%3D%22%23f5d0b5%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Styled%20Dark%20Hair%20with%20Side%20Parting%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2076%2084%20C%2076%2042%2C%20102%2030%2C%20128%2030%20C%20158%2030%2C%20166%2050%2C%20166%2084%20C%20166%2094%2C%20163%20104%2C%20160%20107%20C%20160%2082%2C%20155%2064%2C%20144%2054%20C%20130%2044%2C%20108%2050%2C%2090%2066%20C%2083%2073%2C%2080%2086%2C%2080%20107%20C%2077%20104%2C%2076%2094%2C%2076%2084%20Z%22%20fill%3D%22%23282a30%22%2F%3E%0A%20%20%20%20%3C!--%20Sweeping%20Front%20Bangs%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2086%2054%20C%20102%2044%2C%20128%2044%2C%20146%2058%20C%20156%2066%2C%20160%2078%2C%20160%2078%20C%20148%2066%2C%20130%2060%2C%20112%2064%20C%2098%2068%2C%2088%2080%2C%2088%2080%20C%2088%2080%2C%2082%2066%2C%2086%2054%20Z%22%20fill%3D%22%23282a30%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
-        "nationalId": "Pending",
-        "email": "laladada696@gmail.com",
-        "securityPin": "1234"
-      },
-      "clinicalRecords": []
-    },
-    "DNA-US-26-10026": {
-      "appointments": [],
-      "clinicalRecords": [],
-      "dnaId": "DNA-US-26-10026",
-      "fullName": "Dady",
-      "history": {
-        "allergies": [],
-        "chronicIllnesses": [],
-        "diseases": [],
-        "familyHistory": [],
-        "lifestyle": {
-          "alcoholConsumption": "None",
-          "dietType": "Balanced",
-          "physicalActivity": "Active (3-5 days/wk)",
-          "sleepAvgHours": 8,
-          "smokingStatus": "Non-smoker"
-        },
-        "medicines": [],
-        "surgeries": [],
-        "vaccinations": []
-      },
-      "labReports": [],
-      "patient": {
-        "address": "Not Specified",
-        "avatarUrl": "data:image/svg+xml;utf8,%0A%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20240%20240%22%20width%3D%22240%22%20height%3D%22240%22%3E%0A%20%20%3Cdefs%3E%0A%20%20%20%20%3Cstyle%3E%0A%20%20%20%20%20%20%40keyframes%20breathe%20%7B%0A%20%20%20%20%20%20%20%200%25%2C%20100%25%20%7B%20transform%3A%20translateY(0px)%3B%20%7D%0A%20%20%20%20%20%20%20%2050%25%20%7B%20transform%3A%20translateY(-2px)%3B%20%7D%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%40keyframes%20auraGlow%20%7B%0A%20%20%20%20%20%20%20%200%25%2C%20100%25%20%7B%20stroke-opacity%3A%200.3%3B%20%7D%0A%20%20%20%20%20%20%20%2050%25%20%7B%20stroke-opacity%3A%200.8%3B%20%7D%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20.character-group%20%7B%0A%20%20%20%20%20%20%20%20transform-origin%3A%20120px%20160px%3B%0A%20%20%20%20%20%20%20%20animation%3A%20breathe%203.6s%20ease-in-out%20infinite%3B%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20.ring-pulse%20%7B%0A%20%20%20%20%20%20%20%20animation%3A%20auraGlow%203s%20ease-in-out%20infinite%3B%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%3C%2Fstyle%3E%0A%20%20%20%20%3Cfilter%20id%3D%22avatarShadow%22%20x%3D%22-10%25%22%20y%3D%22-10%25%22%20width%3D%22120%25%22%20height%3D%22120%25%22%3E%0A%20%20%20%20%20%20%3CfeDropShadow%20dx%3D%220%22%20dy%3D%224%22%20stdDeviation%3D%226%22%20flood-color%3D%22%230f172a%22%20flood-opacity%3D%220.12%22%2F%3E%0A%20%20%20%20%3C%2Ffilter%3E%0A%20%20%3C%2Fdefs%3E%0A%0A%20%20%3C!--%20Circular%20Avatar%20Badge%20with%20Clean%20Medical%20Rim%20--%3E%0A%20%20%3Ccircle%20cx%3D%22120%22%20cy%3D%22120%22%20r%3D%22108%22%20fill%3D%22%23e2e8f0%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%224.5%22%20filter%3D%22url(%23avatarShadow)%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%22120%22%20cy%3D%22120%22%20r%3D%22102%22%20fill%3D%22%23edf2f7%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%22120%22%20cy%3D%22120%22%20r%3D%22102%22%20fill%3D%22none%22%20stroke%3D%22%23cbd5e1%22%20stroke-width%3D%221.5%22%20stroke-dasharray%3D%226%204%22%20className%3D%22ring-pulse%22%2F%3E%0A%0A%20%20%3C!--%20Man%20in%20Suit%20Character%20--%3E%0A%20%20%3Cg%20className%3D%22character-group%22%3E%0A%20%20%20%20%3C!--%20Black%20Suit%20Blazer%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2038%20224%20L%2038%20200%20C%2038%20162%2C%2068%20144%2C%2098%20139%20L%20108%20178%20L%20120%20188%20L%20132%20178%20L%20142%20139%20C%20172%20144%2C%20202%20162%2C%20202%20200%20L%20202%20224%20Z%22%20fill%3D%22%2318191c%22%2F%3E%0A%0A%20%20%20%20%3C!--%20White%20Collared%20Dress%20Shirt%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%2298%2C139%20120%2C195%20142%2C139%20135%2C124%20105%2C124%22%20fill%3D%22%23ffffff%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Neck%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22105%2C110%20105%2C134%20120%2C150%20135%2C134%20135%2C110%22%20fill%3D%22%23f5d0b5%22%2F%3E%0A%20%20%20%20%3C!--%20Subtle%20Chin%20Shadow%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20105%20112%20C%20112%20123%2C%20128%20123%2C%20135%20112%20L%20135%20120%20C%20128%20131%2C%20112%20131%2C%20105%20120%20Z%22%20fill%3D%22%23e5bfa4%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Red%20Tie%20Knot%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22113%2C141%20127%2C141%20125%2C154%20120%2C157%20115%2C154%22%20fill%3D%22%23dc2626%22%2F%3E%0A%20%20%20%20%3C!--%20Red%20Tie%20Blade%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22115%2C154%20125%2C154%20130%2C198%20120%2C214%20110%2C198%22%20fill%3D%22%23ef4444%22%2F%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22120%2C157%20125%2C154%20130%2C198%20120%2C214%22%20fill%3D%22%23dc2626%22%2F%3E%0A%0A%20%20%20%20%3C!--%20White%20Shirt%20Collars%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%2297%2C139%20107%2C123%20115%2C145%22%20fill%3D%22%23ffffff%22%20stroke%3D%22%23e2e8f0%22%20stroke-width%3D%221%22%2F%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22143%2C139%20133%2C123%20125%2C145%22%20fill%3D%22%23ffffff%22%20stroke%3D%22%23e2e8f0%22%20stroke-width%3D%221%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Suit%20Lapels%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2072%20152%20L%2098%20139%20L%20109%20178%20L%2088%20185%20Z%22%20fill%3D%22%2325272c%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20168%20152%20L%20142%20139%20L%20131%20178%20L%20152%20185%20Z%22%20fill%3D%22%2325272c%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Left%20Ear%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2077%2084%20C%2069%2084%2C%2069%20105%2C%2077%20105%20Z%22%20fill%3D%22%23f5d0b5%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2076%2089%20C%2073%2089%2C%2073%2099%2C%2076%2099%22%20stroke%3D%22%23e5bfa4%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Right%20Ear%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20163%2084%20C%20171%2084%2C%20171%20105%2C%20163%20105%20Z%22%20fill%3D%22%23f5d0b5%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20164%2089%20C%20167%2089%2C%20167%2099%2C%20164%2099%22%20stroke%3D%22%23e5bfa4%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Faceless%20Head%20Contour%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2079%2082%20C%2079%2048%2C%20161%2048%2C%20161%2082%20C%20161%20114%2C%20143%20128%2C%20120%20128%20C%2097%20128%2C%2079%20114%2C%2079%2082%20Z%22%20fill%3D%22%23f5d0b5%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Styled%20Dark%20Hair%20with%20Side%20Parting%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2076%2084%20C%2076%2042%2C%20102%2030%2C%20128%2030%20C%20158%2030%2C%20166%2050%2C%20166%2084%20C%20166%2094%2C%20163%20104%2C%20160%20107%20C%20160%2082%2C%20155%2064%2C%20144%2054%20C%20130%2044%2C%20108%2050%2C%2090%2066%20C%2083%2073%2C%2080%2086%2C%2080%20107%20C%2077%20104%2C%2076%2094%2C%2076%2084%20Z%22%20fill%3D%22%23282a30%22%2F%3E%0A%20%20%20%20%3C!--%20Sweeping%20Front%20Bangs%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2086%2054%20C%20102%2044%2C%20128%2044%2C%20146%2058%20C%20156%2066%2C%20160%2078%2C%20160%2078%20C%20148%2066%2C%20130%2060%2C%20112%2064%20C%2098%2068%2C%2088%2080%2C%2088%2080%20C%2088%2080%2C%2082%2066%2C%2086%2054%20Z%22%20fill%3D%22%23282a30%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
-        "biometricAuthEnabled": true,
-        "biometricStatus": "Verified",
-        "bloodGroup": "O Positive (O+)",
-        "dnaId": "DNA-US-26-10026",
-        "dob": "2026-09-28",
-        "email": "nomikaj@gmail.com",
-        "emergencyContacts": [],
-        "fullName": "Dady",
-        "gender": "Male",
-        "insurance": {
-          "coverageAmount": "N/A",
-          "groupNumber": "N/A",
-          "policyNumber": "N/A",
-          "provider": "None / Self-Pay",
-          "status": "Pending"
-        },
-        "nationalId": "Pending",
-        "organDonorStatus": false,
-        "password": "Dady123@",
-        "phone": "Not Provided",
-        "registeredHospital": "General Healthcare Registry",
-        "securityPin": "1234"
-      },
-      "prescriptions": [],
-      "updatedAt": "2026-09-28T16:06:10.756Z"
-    },
-    "DNA-US-26-10027": {
-      "patient": {
-        "dnaId": "DNA-US-26-10027",
-        "fullName": "Mhrn",
-        "dob": "2026-09-28",
-        "gender": "Male",
-        "bloodGroup": "O Positive (O+)",
-        "avatarUrl": "data:image/svg+xml;utf8,%0A%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20240%20240%22%20width%3D%22240%22%20height%3D%22240%22%3E%0A%20%20%3Cdefs%3E%0A%20%20%20%20%3Cstyle%3E%0A%20%20%20%20%20%20%40keyframes%20breathe%20%7B%0A%20%20%20%20%20%20%20%200%25%2C%20100%25%20%7B%20transform%3A%20translateY(0px)%3B%20%7D%0A%20%20%20%20%20%20%20%2050%25%20%7B%20transform%3A%20translateY(-2px)%3B%20%7D%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%40keyframes%20auraGlow%20%7B%0A%20%20%20%20%20%20%20%200%25%2C%20100%25%20%7B%20stroke-opacity%3A%200.3%3B%20%7D%0A%20%20%20%20%20%20%20%2050%25%20%7B%20stroke-opacity%3A%200.8%3B%20%7D%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20.character-group%20%7B%0A%20%20%20%20%20%20%20%20transform-origin%3A%20120px%20160px%3B%0A%20%20%20%20%20%20%20%20animation%3A%20breathe%203.6s%20ease-in-out%20infinite%3B%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20.ring-pulse%20%7B%0A%20%20%20%20%20%20%20%20animation%3A%20auraGlow%203s%20ease-in-out%20infinite%3B%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%3C%2Fstyle%3E%0A%20%20%20%20%3Cfilter%20id%3D%22avatarShadow%22%20x%3D%22-10%25%22%20y%3D%22-10%25%22%20width%3D%22120%25%22%20height%3D%22120%25%22%3E%0A%20%20%20%20%20%20%3CfeDropShadow%20dx%3D%220%22%20dy%3D%224%22%20stdDeviation%3D%226%22%20flood-color%3D%22%230f172a%22%20flood-opacity%3D%220.12%22%2F%3E%0A%20%20%20%20%3C%2Ffilter%3E%0A%20%20%3C%2Fdefs%3E%0A%0A%20%20%3C!--%20Circular%20Avatar%20Badge%20with%20Clean%20Medical%20Rim%20--%3E%0A%20%20%3Ccircle%20cx%3D%22120%22%20cy%3D%22120%22%20r%3D%22108%22%20fill%3D%22%23e2e8f0%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%224.5%22%20filter%3D%22url(%23avatarShadow)%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%22120%22%20cy%3D%22120%22%20r%3D%22102%22%20fill%3D%22%23edf2f7%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%22120%22%20cy%3D%22120%22%20r%3D%22102%22%20fill%3D%22none%22%20stroke%3D%22%23cbd5e1%22%20stroke-width%3D%221.5%22%20stroke-dasharray%3D%226%204%22%20className%3D%22ring-pulse%22%2F%3E%0A%0A%20%20%3C!--%20Man%20in%20Suit%20Character%20--%3E%0A%20%20%3Cg%20className%3D%22character-group%22%3E%0A%20%20%20%20%3C!--%20Black%20Suit%20Blazer%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2038%20224%20L%2038%20200%20C%2038%20162%2C%2068%20144%2C%2098%20139%20L%20108%20178%20L%20120%20188%20L%20132%20178%20L%20142%20139%20C%20172%20144%2C%20202%20162%2C%20202%20200%20L%20202%20224%20Z%22%20fill%3D%22%2318191c%22%2F%3E%0A%0A%20%20%20%20%3C!--%20White%20Collared%20Dress%20Shirt%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%2298%2C139%20120%2C195%20142%2C139%20135%2C124%20105%2C124%22%20fill%3D%22%23ffffff%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Neck%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22105%2C110%20105%2C134%20120%2C150%20135%2C134%20135%2C110%22%20fill%3D%22%23f5d0b5%22%2F%3E%0A%20%20%20%20%3C!--%20Subtle%20Chin%20Shadow%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20105%20112%20C%20112%20123%2C%20128%20123%2C%20135%20112%20L%20135%20120%20C%20128%20131%2C%20112%20131%2C%20105%20120%20Z%22%20fill%3D%22%23e5bfa4%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Red%20Tie%20Knot%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22113%2C141%20127%2C141%20125%2C154%20120%2C157%20115%2C154%22%20fill%3D%22%23dc2626%22%2F%3E%0A%20%20%20%20%3C!--%20Red%20Tie%20Blade%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22115%2C154%20125%2C154%20130%2C198%20120%2C214%20110%2C198%22%20fill%3D%22%23ef4444%22%2F%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22120%2C157%20125%2C154%20130%2C198%20120%2C214%22%20fill%3D%22%23dc2626%22%2F%3E%0A%0A%20%20%20%20%3C!--%20White%20Shirt%20Collars%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%2297%2C139%20107%2C123%20115%2C145%22%20fill%3D%22%23ffffff%22%20stroke%3D%22%23e2e8f0%22%20stroke-width%3D%221%22%2F%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22143%2C139%20133%2C123%20125%2C145%22%20fill%3D%22%23ffffff%22%20stroke%3D%22%23e2e8f0%22%20stroke-width%3D%221%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Suit%20Lapels%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2072%20152%20L%2098%20139%20L%20109%20178%20L%2088%20185%20Z%22%20fill%3D%22%2325272c%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20168%20152%20L%20142%20139%20L%20131%20178%20L%20152%20185%20Z%22%20fill%3D%22%2325272c%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Left%20Ear%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2077%2084%20C%2069%2084%2C%2069%20105%2C%2077%20105%20Z%22%20fill%3D%22%23f5d0b5%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2076%2089%20C%2073%2089%2C%2073%2099%2C%2076%2099%22%20stroke%3D%22%23e5bfa4%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Right%20Ear%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20163%2084%20C%20171%2084%2C%20171%20105%2C%20163%20105%20Z%22%20fill%3D%22%23f5d0b5%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20164%2089%20C%20167%2089%2C%20167%2099%2C%20164%2099%22%20stroke%3D%22%23e5bfa4%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Faceless%20Head%20Contour%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2079%2082%20C%2079%2048%2C%20161%2048%2C%20161%2082%20C%20161%20114%2C%20143%20128%2C%20120%20128%20C%2097%20128%2C%2079%20114%2C%2079%2082%20Z%22%20fill%3D%22%23f5d0b5%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Styled%20Dark%20Hair%20with%20Side%20Parting%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2076%2084%20C%2076%2042%2C%20102%2030%2C%20128%2030%20C%20158%2030%2C%20166%2050%2C%20166%2084%20C%20166%2094%2C%20163%20104%2C%20160%20107%20C%20160%2082%2C%20155%2064%2C%20144%2054%20C%20130%2044%2C%20108%2050%2C%2090%2066%20C%2083%2073%2C%2080%2086%2C%2080%20107%20C%2077%20104%2C%2076%2094%2C%2076%2084%20Z%22%20fill%3D%22%23282a30%22%2F%3E%0A%20%20%20%20%3C!--%20Sweeping%20Front%20Bangs%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2086%2054%20C%20102%2044%2C%20128%2044%2C%20146%2058%20C%20156%2066%2C%20160%2078%2C%20160%2078%20C%20148%2066%2C%20130%2060%2C%20112%2064%20C%2098%2068%2C%2088%2080%2C%2088%2080%20C%2088%2080%2C%2082%2066%2C%2086%2054%20Z%22%20fill%3D%22%23282a30%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
-        "phone": "Not Provided",
-        "email": "Not Specified",
-        "address": "Not Specified",
-        "nationalId": "Pending",
-        "biometricStatus": "Verified",
-        "organDonorStatus": false,
-        "registeredHospital": "General Healthcare Registry",
-        "securityPin": "1234",
         "password": "Nmr123@$",
-        "biometricAuthEnabled": true,
-        "insurance": {
-          "provider": "None / Self-Pay",
-          "policyNumber": "N/A",
-          "groupNumber": "N/A",
-          "status": "Pending",
-          "coverageAmount": "N/A"
-        },
-        "emergencyContacts": []
+        "nationalId": "Pending",
+        "bloodGroup": "O Positive (O+)",
+        "email": "Not Specified",
+        "organDonorStatus": false,
+        "dob": "2026-09-28",
+        "phone": "Not Provided",
+        "avatarUrl": "data:image/svg+xml;utf8,%0A%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20240%20240%22%20width%3D%22240%22%20height%3D%22240%22%3E%0A%20%20%3Cdefs%3E%0A%20%20%20%20%3Cstyle%3E%0A%20%20%20%20%20%20%40keyframes%20breathe%20%7B%0A%20%20%20%20%20%20%20%200%25%2C%20100%25%20%7B%20transform%3A%20translateY(0px)%3B%20%7D%0A%20%20%20%20%20%20%20%2050%25%20%7B%20transform%3A%20translateY(-2px)%3B%20%7D%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%40keyframes%20auraGlow%20%7B%0A%20%20%20%20%20%20%20%200%25%2C%20100%25%20%7B%20stroke-opacity%3A%200.3%3B%20%7D%0A%20%20%20%20%20%20%20%2050%25%20%7B%20stroke-opacity%3A%200.8%3B%20%7D%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20.character-group%20%7B%0A%20%20%20%20%20%20%20%20transform-origin%3A%20120px%20160px%3B%0A%20%20%20%20%20%20%20%20animation%3A%20breathe%203.6s%20ease-in-out%20infinite%3B%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20.ring-pulse%20%7B%0A%20%20%20%20%20%20%20%20animation%3A%20auraGlow%203s%20ease-in-out%20infinite%3B%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%3C%2Fstyle%3E%0A%20%20%20%20%3Cfilter%20id%3D%22avatarShadow%22%20x%3D%22-10%25%22%20y%3D%22-10%25%22%20width%3D%22120%25%22%20height%3D%22120%25%22%3E%0A%20%20%20%20%20%20%3CfeDropShadow%20dx%3D%220%22%20dy%3D%224%22%20stdDeviation%3D%226%22%20flood-color%3D%22%230f172a%22%20flood-opacity%3D%220.12%22%2F%3E%0A%20%20%20%20%3C%2Ffilter%3E%0A%20%20%3C%2Fdefs%3E%0A%0A%20%20%3C!--%20Circular%20Avatar%20Badge%20with%20Clean%20Medical%20Rim%20--%3E%0A%20%20%3Ccircle%20cx%3D%22120%22%20cy%3D%22120%22%20r%3D%22108%22%20fill%3D%22%23e2e8f0%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%224.5%22%20filter%3D%22url(%23avatarShadow)%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%22120%22%20cy%3D%22120%22%20r%3D%22102%22%20fill%3D%22%23edf2f7%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%22120%22%20cy%3D%22120%22%20r%3D%22102%22%20fill%3D%22none%22%20stroke%3D%22%23cbd5e1%22%20stroke-width%3D%221.5%22%20stroke-dasharray%3D%226%204%22%20className%3D%22ring-pulse%22%2F%3E%0A%0A%20%20%3C!--%20Man%20in%20Suit%20Character%20--%3E%0A%20%20%3Cg%20className%3D%22character-group%22%3E%0A%20%20%20%20%3C!--%20Black%20Suit%20Blazer%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2038%20224%20L%2038%20200%20C%2038%20162%2C%2068%20144%2C%2098%20139%20L%20108%20178%20L%20120%20188%20L%20132%20178%20L%20142%20139%20C%20172%20144%2C%20202%20162%2C%20202%20200%20L%20202%20224%20Z%22%20fill%3D%22%2318191c%22%2F%3E%0A%0A%20%20%20%20%3C!--%20White%20Collared%20Dress%20Shirt%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%2298%2C139%20120%2C195%20142%2C139%20135%2C124%20105%2C124%22%20fill%3D%22%23ffffff%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Neck%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22105%2C110%20105%2C134%20120%2C150%20135%2C134%20135%2C110%22%20fill%3D%22%23f5d0b5%22%2F%3E%0A%20%20%20%20%3C!--%20Subtle%20Chin%20Shadow%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20105%20112%20C%20112%20123%2C%20128%20123%2C%20135%20112%20L%20135%20120%20C%20128%20131%2C%20112%20131%2C%20105%20120%20Z%22%20fill%3D%22%23e5bfa4%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Red%20Tie%20Knot%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22113%2C141%20127%2C141%20125%2C154%20120%2C157%20115%2C154%22%20fill%3D%22%23dc2626%22%2F%3E%0A%20%20%20%20%3C!--%20Red%20Tie%20Blade%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22115%2C154%20125%2C154%20130%2C198%20120%2C214%20110%2C198%22%20fill%3D%22%23ef4444%22%2F%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22120%2C157%20125%2C154%20130%2C198%20120%2C214%22%20fill%3D%22%23dc2626%22%2F%3E%0A%0A%20%20%20%20%3C!--%20White%20Shirt%20Collars%20--%3E%0A%20%20%20%20%3Cpolygon%20points%3D%2297%2C139%20107%2C123%20115%2C145%22%20fill%3D%22%23ffffff%22%20stroke%3D%22%23e2e8f0%22%20stroke-width%3D%221%22%2F%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22143%2C139%20133%2C123%20125%2C145%22%20fill%3D%22%23ffffff%22%20stroke%3D%22%23e2e8f0%22%20stroke-width%3D%221%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Suit%20Lapels%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2072%20152%20L%2098%20139%20L%20109%20178%20L%2088%20185%20Z%22%20fill%3D%22%2325272c%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20168%20152%20L%20142%20139%20L%20131%20178%20L%20152%20185%20Z%22%20fill%3D%22%2325272c%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Left%20Ear%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2077%2084%20C%2069%2084%2C%2069%20105%2C%2077%20105%20Z%22%20fill%3D%22%23f5d0b5%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2076%2089%20C%2073%2089%2C%2073%2099%2C%2076%2099%22%20stroke%3D%22%23e5bfa4%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Right%20Ear%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20163%2084%20C%20171%2084%2C%20171%20105%2C%20163%20105%20Z%22%20fill%3D%22%23f5d0b5%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%20164%2089%20C%20167%2089%2C%20167%2099%2C%20164%2099%22%20stroke%3D%22%23e5bfa4%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Faceless%20Head%20Contour%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2079%2082%20C%2079%2048%2C%20161%2048%2C%20161%2082%20C%20161%20114%2C%20143%20128%2C%20120%20128%20C%2097%20128%2C%2079%20114%2C%2079%2082%20Z%22%20fill%3D%22%23f5d0b5%22%2F%3E%0A%0A%20%20%20%20%3C!--%20Styled%20Dark%20Hair%20with%20Side%20Parting%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2076%2084%20C%2076%2042%2C%20102%2030%2C%20128%2030%20C%20158%2030%2C%20166%2050%2C%20166%2084%20C%20166%2094%2C%20163%20104%2C%20160%20107%20C%20160%2082%2C%20155%2064%2C%20144%2054%20C%20130%2044%2C%20108%2050%2C%2090%2066%20C%2083%2073%2C%2080%2086%2C%2080%20107%20C%2077%20104%2C%2076%2094%2C%2076%2084%20Z%22%20fill%3D%22%23282a30%22%2F%3E%0A%20%20%20%20%3C!--%20Sweeping%20Front%20Bangs%20--%3E%0A%20%20%20%20%3Cpath%20d%3D%22M%2086%2054%20C%20102%2044%2C%20128%2044%2C%20146%2058%20C%20156%2066%2C%20160%2078%2C%20160%2078%20C%20148%2066%2C%20130%2060%2C%20112%2064%20C%2098%2068%2C%2088%2080%2C%2088%2080%20C%2088%2080%2C%2082%2066%2C%2086%2054%20Z%22%20fill%3D%22%23282a30%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
+        "biometricStatus": "Verified"
       },
-      "history": {
-        "diseases": [],
-        "surgeries": [],
-        "vaccinations": [],
-        "medicines": [],
-        "allergies": [],
-        "familyHistory": [],
-        "chronicIllnesses": [],
-        "lifestyle": {
-          "smokingStatus": "Non-smoker",
-          "alcoholConsumption": "None",
-          "physicalActivity": "Light (1-2 days/wk)",
-          "sleepAvgHours": 7.5,
-          "dietType": "Balanced"
-        }
-      },
-      "clinicalRecords": [],
       "labReports": [],
-      "prescriptions": [],
-      "appointments": []
+      "clinicalRecords": [],
+      "dnaId": "DNA-US-26-10030",
+      "prescriptions": []
     }
   },
-  "auditLogs": [
-    {
-      "id": "log-1790611648911-2615",
-      "timestamp": "2026-09-28 16:07:28",
-      "actor": "Patient Registration Service",
-      "role": "patient",
-      "action": "New Patient Registered to Universal Network",
-      "details": "Profile Mhrn (DNA-US-26-10027) registered into lifetime database.",
-      "ipAddress": "127.0.0.1",
-      "securityHash": "0xa09a280bfae334dca77ad502470f9a7b21334acc2e720e531d3b53467480ff05",
-      "tamperProofVerified": true
-    },
-    {
-      "id": "log-1790611576227-7269",
-      "timestamp": "2026-09-28 16:06:16",
-      "actor": "Patient Registration Service",
-      "role": "patient",
-      "action": "New Patient Registered to Universal Network",
-      "details": "Profile Dady (DNA-US-26-10026) registered into lifetime database.",
-      "ipAddress": "127.0.0.1",
-      "securityHash": "0x59567540c0923a3213ca069e7f5992c086a9ccd74ff1ecf6ef3f1c62fa96f2d0",
-      "tamperProofVerified": true
-    },
-    {
-      "id": "log-1790611471913-1274",
-      "timestamp": "2026-09-28 16:04:31",
-      "actor": "Patient Registration Service",
-      "role": "patient",
-      "action": "New Patient Registered to Universal Network",
-      "details": "Profile Dada (DNA-PK-26-10025) registered into lifetime database.",
-      "ipAddress": "127.0.0.1",
-      "securityHash": "0x5b91c2f263df1db2bf7929a0345d014bbefe811be70362e9dc74ced55a6dc9db",
-      "tamperProofVerified": true
-    }
-  ],
-  "updatedAt": "2026-09-28T16:07:28.911Z"
+  "updatedAt": "2026-09-29T17:26:07.374Z"
 }

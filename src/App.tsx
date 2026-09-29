@@ -63,6 +63,7 @@ import {
   getAndClearExpirationNotice,
   WARNING_DURATION_SECONDS,
 } from "./utils/sessionSecurity";
+import { generateNewDnaId } from "./utils/dnaIdGenerator";
 
 import {
   User,
@@ -93,7 +94,7 @@ import {
   LogOut,
 } from "lucide-react";
 
-const STORAGE_KEY = "health_dna_patients_database_v11";
+const STORAGE_KEY = "health_dna_patients_database_v12";
 
 export default function App() {
   const [currentRole, setRole] = useState<UserRole>("patient");
@@ -128,7 +129,7 @@ export default function App() {
     } catch (e) {
       console.warn("Could not read from localStorage:", e);
     }
-    return INITIAL_PATIENTS_DATABASE;
+    return {};
   });
 
   // Authentication State: Validated against session activity
@@ -154,15 +155,7 @@ export default function App() {
   const [geneticMarkers] = useState(INITIAL_GENETIC_MARKERS);
 
   // Doctor Authorized Sessions Map: { [dnaId]: DoctorAuthSession }
-  const [doctorAuthSessions, setDoctorAuthSessions] = useState<Record<string, DoctorAuthSession>>({
-    "DNA-PK-26-10025": {
-      patientDnaId: "DNA-PK-26-10025",
-      doctorName: "Dr. Marcus Vance, FACC",
-      authorizedAt: new Date().toISOString(),
-      expiresAt: new Date(Date.now() + 3600000).toISOString(),
-      token: "AUTH-SESSION-DEMO-ROOT",
-    },
-  });
+  const [doctorAuthSessions, setDoctorAuthSessions] = useState<Record<string, DoctorAuthSession>>({});
 
   // Modal States
   const [isEmergencyModalOpen, setIsEmergencyModalOpen] = useState(false);
@@ -193,32 +186,9 @@ export default function App() {
       const data = await res.json();
       const serverDb = data.patientsDatabase || data.database;
 
-      if (data.success && serverDb && typeof serverDb === "object" && Object.keys(serverDb).length > 0) {
-        setPatientsDatabase((prev) => {
-          // Check if server has new patients or changes
-          const prevKeys = Object.keys(prev);
-          const serverKeys = Object.keys(serverDb);
-          const hasNew = serverKeys.some((k) => !prev[k]);
-          const hasUpdates = serverKeys.length !== prevKeys.length;
-
-          if (!hasNew && !hasUpdates && !isInitial) {
-            return prev;
-          }
-
-          const merged = { ...prev, ...serverDb };
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
-          return merged;
-        });
-      } else if (isInitial) {
-        // If server had no file yet, push our initial seed database to the server store
-        setPatientsDatabase((current) => {
-          fetch("/api/database/save", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ database: current, patientsDatabase: current }),
-          }).catch(() => {});
-          return current;
-        });
+      if (data.success && serverDb && typeof serverDb === "object") {
+        setPatientsDatabase(serverDb);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(serverDb));
       }
     } catch (err) {
       console.warn("Live database sync notice:", err);
@@ -228,18 +198,15 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    // 1. Initial Firestore connection test & demo seeding if empty
+    // 1. Initial Firestore connection test & cleanup of legacy demo remnants
     testFirestoreConnection();
     seedInitialFirestorePatientsIfEmpty();
 
     // 2. Real-time Firestore Live Subscription across all devices worldwide
     const unsubscribeFirestore = subscribeToPatientsDirectory((firestoreDb) => {
-      if (firestoreDb && Object.keys(firestoreDb).length > 0) {
-        setPatientsDatabase((prev) => {
-          const merged = { ...prev, ...firestoreDb };
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
-          return merged;
-        });
+      if (firestoreDb && typeof firestoreDb === "object" && Object.keys(firestoreDb).length > 0) {
+        setPatientsDatabase(firestoreDb);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(firestoreDb));
       }
     });
 
@@ -382,10 +349,17 @@ export default function App() {
   const prescriptions = currentRecord ? currentRecord.prescriptions || [] : [];
   const appointments = currentRecord ? currentRecord.appointments || [] : [];
 
-  // All registered patients list (for directory & emergency triage)
-  const allPatientsList = (Object.values(patientsDatabase) as PatientFullRecord[]).map(
-    (r) => r.patient
-  );
+  // All registered patients list (for directory & emergency triage) - strictly ordered by increasing sequence
+  const allPatientsList = (Object.values(patientsDatabase) as PatientFullRecord[])
+    .map((r) => r.patient)
+    .sort((a, b) => {
+      const matchA = a.dnaId.match(/(?:-|_|^)(\d{5,})(?:-|_|$)/);
+      const seqA = matchA ? parseInt(matchA[1], 10) : 0;
+      const matchB = b.dnaId.match(/(?:-|_|^)(\d{5,})(?:-|_|$)/);
+      const seqB = matchB ? parseInt(matchB[1], 10) : 0;
+      if (seqA !== seqB) return seqA - seqB; // Strictly increasing order (10025 -> 10026 -> 10027 -> 10028...)
+      return a.dnaId.localeCompare(b.dnaId);
+    });
 
   // Authentication Login Handler
   const handleLoginSuccess = (dnaId: string, remember = true) => {
@@ -580,19 +554,34 @@ export default function App() {
   };
 
   const handleRegisterPatient = async (newRecord: PatientFullRecord) => {
-    const newDnaId = newRecord.patient.dnaId;
+    let finalRecord = { ...newRecord };
+    let finalDnaId = newRecord.patient.dnaId;
+
+    // Strict uniqueness check against both memory database and known IDs
+    const existingIds = Object.keys(patientsDatabase);
+    if (existingIds.includes(finalDnaId)) {
+      const countryCode = finalDnaId.split("-")[1] || "PK";
+      finalDnaId = generateNewDnaId(countryCode, existingIds);
+      finalRecord = {
+        ...newRecord,
+        patient: {
+          ...newRecord.patient,
+          dnaId: finalDnaId,
+        },
+      };
+    }
     
     // Instant local state update
     updatePatientsDatabaseState((prev) => ({
       ...prev,
-      [newDnaId]: newRecord,
+      [finalDnaId]: finalRecord,
     }));
-    handleLoginSuccess(newDnaId);
+    handleLoginSuccess(finalDnaId);
 
     // Save directly to Firestore for instantaneous multi-device cloud directory availability
     try {
-      await savePatientToFirestore(newRecord);
-      console.log("[Firestore] Registered patient pushed to live cloud:", newDnaId);
+      await savePatientToFirestore(finalRecord);
+      console.log("[Firestore] Registered patient pushed to live cloud:", finalDnaId);
     } catch (fsErr) {
       console.warn("[Firestore] Live push note:", fsErr);
     }
@@ -602,7 +591,7 @@ export default function App() {
       await fetch("/api/patients/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ newRecord }),
+        body: JSON.stringify({ newRecord: finalRecord }),
       });
       syncDatabaseFromServer(false);
     } catch (e) {
@@ -616,7 +605,7 @@ export default function App() {
       actor: "Patient Registration Portal",
       role: currentRole,
       action: "New Patient Identity Created",
-      details: `Registered profile for ${newRecord.patient.fullName} under ${newDnaId} with Lifetime Storage`,
+      details: `Registered profile for ${finalRecord.patient.fullName} under ${finalDnaId} with Lifetime Storage`,
       ipAddress: "127.0.0.1 (Authorized Auth Portal)",
       securityHash: `0x${Math.random().toString(16).substring(2, 10).toUpperCase()}...AES256`,
     };

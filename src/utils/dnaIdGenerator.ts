@@ -179,19 +179,56 @@ export function formatDnaId(
 
 /**
  * Generates and increments a new official DNA ID based on selected country code.
- * Guarantees sequence starts at 10025 and increments forward: 10026, 10027, etc.
+ * Strictly guarantees sequence starts at 10025 and increments forward: 10026, 10027, etc.
+ * Enforces that sequence is globally unique and ONE DNA ID is strictly assigned to ONE patient.
  */
 export function generateNewDnaId(countryCode: string, existingIds?: string[]): string {
-  const seq = getNextDnaSequence(existingIds);
-  return formatDnaId(countryCode, seq);
+  let seq = getNextDnaSequence(existingIds);
+  let candidate = formatDnaId(countryCode, seq);
+
+  if (existingIds && existingIds.length > 0) {
+    const existingSeqSet = new Set(
+      existingIds
+        .map((id) => {
+          const m = id.match(/(?:-|_|^)(\d{5,})(?:-|_|$)/);
+          return m ? parseInt(m[1], 10) : null;
+        })
+        .filter((n): n is number => n !== null)
+    );
+
+    // Keep advancing until sequence and candidate are 100% unique globally
+    while (existingIds.includes(candidate) || existingSeqSet.has(seq)) {
+      seq = getNextDnaSequence([...existingIds, candidate]);
+      candidate = formatDnaId(countryCode, seq);
+    }
+  }
+  return candidate;
 }
 
 /**
  * Returns a live preview string of the DNA ID for UI display before submission.
+ * Reflects the exact guaranteed unique sequence.
  */
 export function previewDnaId(countryCode: string, existingIds?: string[]): string {
-  const seq = peekNextDnaSequence(existingIds);
-  return formatDnaId(countryCode, seq);
+  let seq = peekNextDnaSequence(existingIds);
+  let candidate = formatDnaId(countryCode, seq);
+
+  if (existingIds && existingIds.length > 0) {
+    const existingSeqSet = new Set(
+      existingIds
+        .map((id) => {
+          const m = id.match(/(?:-|_|^)(\d{5,})(?:-|_|$)/);
+          return m ? parseInt(m[1], 10) : null;
+        })
+        .filter((n): n is number => n !== null)
+    );
+
+    while (existingIds.includes(candidate) || existingSeqSet.has(seq)) {
+      seq++;
+      candidate = formatDnaId(countryCode, seq);
+    }
+  }
+  return candidate;
 }
 
 /**

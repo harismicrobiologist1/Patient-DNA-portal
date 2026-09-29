@@ -218,19 +218,24 @@ app.post("/api/database/save", (req, res) => {
       return res.status(400).json({ success: false, error: "Database payload missing or invalid" });
     }
 
-    // Merge with any existing database to ensure no patient accounts are lost
-    const { database: currentDb, auditLogs: currentLogs } = readDatabaseFromDisk();
-    const mergedDb = { ...currentDb, ...incomingDb };
+    // Store current state directly so deleted accounts or re-indexed IDs are never resurrected
+    const { auditLogs: currentLogs } = readDatabaseFromDisk();
+    const cleanDb: Record<string, any> = {};
+    for (const [k, v] of Object.entries(incomingDb)) {
+      if (k && v && typeof v === "object") {
+        cleanDb[k] = v;
+      }
+    }
     const mergedLogs = [...(incomingLogs.length > 0 ? incomingLogs : currentLogs)];
 
-    writeDatabaseToDisk(mergedDb, mergedLogs);
-    console.log(`[PATIENTS DATABASE STORE] Saved ${Object.keys(mergedDb).length} patients to disk.`);
+    writeDatabaseToDisk(cleanDb, mergedLogs);
+    console.log(`[PATIENTS DATABASE STORE] Saved ${Object.keys(cleanDb).length} patients to disk.`);
 
     return res.json({
       success: true,
-      database: mergedDb,
-      patientsDatabase: mergedDb,
-      count: Object.keys(mergedDb).length,
+      database: cleanDb,
+      patientsDatabase: cleanDb,
+      count: Object.keys(cleanDb).length,
       message: "Database permanently saved to lifetime disk storage",
     });
   } catch (err: any) {

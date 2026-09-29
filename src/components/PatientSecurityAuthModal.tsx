@@ -247,23 +247,6 @@ export const PatientSecurityAuthModal: React.FC<PatientSecurityAuthModalProps> =
               )}
             </div>
 
-            {/* Demo Helper for Official Demo Account Only */}
-            {targetPatient.dnaId === "DNA-1629-3931" && (
-              <div className="p-3 rounded-2xl bg-blue-50/70 border border-blue-200/70 text-[11px] text-blue-900 flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <Info className="w-4 h-4 text-blue-600 shrink-0" />
-                  <span className="font-semibold text-blue-950">Official Demo Profile: Haris Amin</span>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setEnteredPassword(targetPatient.password || "Haris456?!*")}
-                  className="px-2.5 py-1 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-[10px] transition-colors cursor-pointer"
-                >
-                  Autofill Demo Password
-                </button>
-              </div>
-            )}
-
             {/* Password Action Button */}
             <div className="flex items-center justify-end gap-3 pt-2">
               <button

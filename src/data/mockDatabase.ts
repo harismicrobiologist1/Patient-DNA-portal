@@ -667,13 +667,4 @@ export interface PatientFullRecord {
   appointments: Appointment[];
 }
 
-export const INITIAL_PATIENTS_DATABASE: Record<string, PatientFullRecord> = {
-  "DNA-PK-26-10025": {
-    patient: INITIAL_PATIENT,
-    history: INITIAL_MEDICAL_HISTORY,
-    clinicalRecords: INITIAL_CLINICAL_RECORDS,
-    labReports: INITIAL_LAB_REPORTS,
-    prescriptions: INITIAL_PRESCRIPTIONS,
-    appointments: INITIAL_APPOINTMENTS,
-  },
-};
+export const INITIAL_PATIENTS_DATABASE: Record<string, PatientFullRecord> = {};

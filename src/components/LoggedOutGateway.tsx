@@ -91,7 +91,7 @@ export const LoggedOutGateway: React.FC<LoggedOutGatewayProps> = ({
     }
   };
 
-  const handleSelectDemoPatient = (p: PatientProfile) => {
+  const handleSelectPatient = (p: PatientProfile) => {
     setSelectedQuickPatient(p);
     setIdentifier(p.dnaId);
     setPassword("");
@@ -168,7 +168,7 @@ export const LoggedOutGateway: React.FC<LoggedOutGatewayProps> = ({
                   <button
                     key={p.dnaId}
                     type="button"
-                    onClick={() => handleSelectDemoPatient(p)}
+                    onClick={() => handleSelectPatient(p)}
                     className={`flex items-center space-x-2.5 p-2.5 rounded-2xl border text-left transition-all ${
                       isSelected
                         ? "bg-blue-50/80 border-blue-500 ring-2 ring-blue-500/20"

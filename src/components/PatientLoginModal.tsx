@@ -124,12 +124,6 @@ export const PatientLoginModal: React.FC<PatientLoginModalProps> = ({
     }
   };
 
-  const handleQuickDemo = (demoPatient: PatientProfile) => {
-    setIdentifier(demoPatient.dnaId);
-    setPassword(demoPatient.password || "Haris456?!*");
-    setErrorMsg(null);
-  };
-
   return (
     <div className="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
       <div className="relative max-w-lg w-full bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden my-8 animate-fadeIn">
@@ -278,53 +272,6 @@ export const PatientLoginModal: React.FC<PatientLoginModalProps> = ({
               <span>Log In to Patient Account</span>
             </button>
           </form>
-
-          {/* Fast Demo Switcher */}
-          {(() => {
-            const harisDemo = patients.find(
-              (p) => p.dnaId === "DNA-PK-26-10025" || p.fullName.toLowerCase().includes("haris amin")
-            );
-            if (!harisDemo) return null;
-            return (
-              <div className="space-y-2 pt-2 border-t border-slate-100">
-                <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">
-                  Quick Test Demo Account:
-                </span>
-                <button
-                  type="button"
-                  onClick={() => handleQuickDemo(harisDemo)}
-                  className="w-full p-3 rounded-2xl bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-blue-300 text-left transition-all flex items-center justify-between group cursor-pointer"
-                >
-                  <div className="flex items-center space-x-3 min-w-0">
-                    <img
-                      src={harisDemo.avatarUrl}
-                      alt={harisDemo.fullName}
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src = getDefaultAvatar(harisDemo.gender);
-                      }}
-                      className="w-8 h-8 rounded-xl object-cover ring-1 ring-slate-200 shrink-0"
-                    />
-                    <div className="min-w-0">
-                      <div className="flex items-center space-x-1.5">
-                        <p className="text-xs font-bold text-slate-900 group-hover:text-blue-700 truncate">
-                          {harisDemo.fullName}
-                        </p>
-                        <span className="px-1.5 py-0.2 rounded-md bg-blue-100 text-blue-800 font-mono text-[9px] font-bold">
-                          DEMO
-                        </span>
-                      </div>
-                      <p className="text-[10px] font-mono text-slate-500 truncate mt-0.5">
-                        {harisDemo.dnaId} • One-Click Autofill
-                      </p>
-                    </div>
-                  </div>
-                  <span className="text-[10px] font-bold text-blue-600 bg-blue-50 px-2.5 py-1 rounded-xl group-hover:bg-blue-600 group-hover:text-white transition-colors shrink-0">
-                    Autofill
-                  </span>
-                </button>
-              </div>
-            );
-          })()}
 
           {/* New Patient Registration Prompt */}
           <div className="p-3.5 rounded-2xl bg-cyan-50/70 border border-cyan-200 flex items-center justify-between text-xs text-cyan-950">

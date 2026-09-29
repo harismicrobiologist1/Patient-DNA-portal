@@ -282,10 +282,12 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
     }
   };
 
-  // Quick Demo Account Selector (populates form for quick review without bypassing security)
-  const handleSelectDemoAccount = (demoPatient: PatientProfile) => {
-    setIdentifier(demoPatient.dnaId);
-    setPassword(demoPatient.password || "Haris456?!*");
+  // Quick Account Selector (populates form for quick review without bypassing security)
+  const handleSelectQuickAccount = (patient: PatientProfile) => {
+    setIdentifier(patient.dnaId);
+    if (patient.password) {
+      setPassword(patient.password);
+    }
     setLoginError(null);
   };
 
@@ -709,7 +711,7 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
                 </form>
               </div>
 
-              {/* Demo Account & Worldwide Architecture Guidance (5 cols) */}
+              {/* Registered Patient Accounts & Worldwide Architecture Guidance (5 cols) */}
               <div className="lg:col-span-5 bg-slate-50 rounded-3xl p-6 border border-slate-200 space-y-4">
                 <div className="flex items-center space-x-2">
                   <div className="p-2 bg-blue-100 text-blue-700 rounded-xl">
@@ -717,53 +719,48 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
                   </div>
                   <div>
                     <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
-                      Demo Account & Credentials
+                      Registered Accounts
                     </h3>
                     <p className="text-[11px] text-slate-500">
-                      Click the test profile to autofill credentials:
+                      Select an account or enter your credentials:
                     </p>
                   </div>
                 </div>
 
-                {(() => {
-                  const demoP = patientList.find(
-                    (p) => p.dnaId === "DNA-PK-26-10025" || p.fullName.toLowerCase().includes("haris amin")
-                  );
-                  if (!demoP) return null;
-                  return (
-                    <div className="space-y-2.5">
+                {patientList && patientList.length > 0 && (
+                  <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
+                    {patientList.slice(0, 4).map((p) => (
                       <button
+                        key={p.dnaId}
                         type="button"
-                        onClick={() => handleSelectDemoAccount(demoP)}
-                        className="w-full flex items-center justify-between p-3.5 rounded-2xl bg-white hover:bg-blue-50/70 border border-slate-200 hover:border-blue-300 transition-all text-left group cursor-pointer shadow-sm"
+                        onClick={() => handleSelectQuickAccount(p)}
+                        className="w-full flex items-center justify-between p-3 rounded-2xl bg-white hover:bg-blue-50/70 border border-slate-200 hover:border-blue-300 transition-all text-left group cursor-pointer shadow-sm"
                       >
                         <div className="flex items-center space-x-3 min-w-0">
                           <img
-                            src={demoP.avatarUrl}
-                            alt={demoP.fullName}
-                            className="w-10 h-10 rounded-xl object-cover ring-1 ring-slate-200 shrink-0"
+                            src={p.avatarUrl}
+                            alt={p.fullName}
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).src = getDefaultAvatar(p.gender);
+                            }}
+                            className="w-9 h-9 rounded-xl object-cover ring-1 ring-slate-200 shrink-0"
                           />
                           <div className="min-w-0">
-                            <div className="flex items-center space-x-1.5">
-                              <p className="text-xs font-bold text-slate-900 truncate group-hover:text-blue-700">
-                                {demoP.fullName}
-                              </p>
-                              <span className="px-1.5 py-0.2 rounded-md bg-blue-100 text-blue-800 font-mono text-[9px] font-bold">
-                                DEMO
-                              </span>
-                            </div>
+                            <p className="text-xs font-bold text-slate-900 truncate group-hover:text-blue-700">
+                              {p.fullName}
+                            </p>
                             <p className="text-[10px] font-mono text-slate-500 truncate mt-0.5">
-                              {demoP.dnaId} • One-Click Autofill
+                              {p.dnaId}
                             </p>
                           </div>
                         </div>
-                        <span className="text-[10px] font-bold text-blue-600 bg-blue-50 px-2.5 py-1.5 rounded-xl group-hover:bg-blue-600 group-hover:text-white transition-colors shrink-0">
-                          Autofill Demo
+                        <span className="text-[10px] font-bold text-blue-600 bg-blue-50 px-2.5 py-1 rounded-xl group-hover:bg-blue-600 group-hover:text-white transition-colors shrink-0">
+                          Select
                         </span>
                       </button>
-                    </div>
-                  );
-                })()}
+                    ))}
+                  </div>
+                )}
 
                 <div className="p-4 rounded-2xl bg-blue-50/80 border border-blue-100 text-xs text-blue-900 space-y-2 leading-relaxed">
                   <div className="flex items-center space-x-2 text-blue-800 font-bold">

@@ -52,6 +52,7 @@ import {
   downloadFHIRBundleJson,
 } from "../utils/fhirEngine";
 import { FHIRBundle } from "../types/fhir";
+import { deletePatientFromFirestore } from "../firebase";
 
 interface FhirCryptoVaultModalProps {
   isOpen: boolean;
@@ -188,6 +189,9 @@ export const FhirCryptoVaultModal: React.FC<FhirCryptoVaultModalProps> = ({
       const data = await res.json();
       if (data.success) {
         setGdprMessage(`GDPR Erasure completed: ${data.message} (Audit Hash: ${data.auditTrailHash?.slice(0, 16)}...)`);
+        deletePatientFromFirestore(patient.dnaId).catch((err) =>
+          console.warn("[Firebase] Cleanup error on GDPR delete:", err)
+        );
         fetchLiveSecurityAudit();
       } else {
         setGdprMessage(`Erasure failed: ${data.error}`);

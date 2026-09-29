@@ -59,11 +59,19 @@ export const PatientSwitcherModal: React.FC<PatientSwitcherModalProps> = ({
     }
   };
 
+  const extractDnaSeq = (dnaId: string): number => {
+    if (!dnaId) return 0;
+    const match = dnaId.match(/(?:-|_|^)(\d{5,})(?:-|_|$)/);
+    if (match) return parseInt(match[1], 10);
+    const anyNum = dnaId.match(/(\d+)/);
+    return anyNum ? parseInt(anyNum[1], 10) : 0;
+  };
+
   const sortedPatients = [...patients].sort((a, b) => {
-    if (a.dnaId === activePatientId) return -1;
-    if (b.dnaId === activePatientId) return 1;
-    // Newest DNA IDs tend to be sorted first
-    return b.dnaId.localeCompare(a.dnaId);
+    const seqA = extractDnaSeq(a.dnaId);
+    const seqB = extractDnaSeq(b.dnaId);
+    if (seqA !== seqB) return seqA - seqB; // Strictly increasing numerical sequence order (10025 -> 10026 -> 10027...)
+    return a.dnaId.localeCompare(b.dnaId);
   });
 
   const filteredPatients = sortedPatients.filter(

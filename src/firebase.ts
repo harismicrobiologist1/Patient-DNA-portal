@@ -6,13 +6,13 @@ import {
   setDoc,
   getDoc,
   getDocs,
+  deleteDoc,
   onSnapshot,
   getDocFromServer,
   Firestore,
 } from "firebase/firestore";
 import firebaseConfig from "../firebase-applet-config.json";
 import { PatientFullRecord } from "./types";
-import { INITIAL_PATIENTS_DATABASE } from "./data/mockDatabase";
 
 // Initialize Firebase App
 const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
@@ -51,7 +51,21 @@ export async function savePatientToFirestore(record: PatientFullRecord): Promise
 }
 
 /**
- * Fetch a single patient by DNA ID directly from Firestore (supports millions of records globally)
+ * Permanently delete a patient record from Firestore
+ */
+export async function deletePatientFromFirestore(dnaId: string): Promise<void> {
+  try {
+    const cleanId = (dnaId || "").trim();
+    if (!cleanId) return;
+    await deleteDoc(doc(db, PATIENTS_COLLECTION, cleanId));
+    console.log(`[Firebase] Permanently removed patient document ${cleanId} from Firestore.`);
+  } catch (err) {
+    console.warn(`[Firebase] Error removing patient ${dnaId} from Firestore:`, err);
+  }
+}
+
+/**
+ * Fetch a single patient by DNA ID directly from Firestore
  */
 export async function getPatientFromFirestore(dnaId: string): Promise<PatientFullRecord | null> {
   try {
@@ -112,21 +126,19 @@ export function subscribeToPatientsDirectory(
 }
 
 /**
- * Seed initial baseline demo account into Firestore if empty
+ * Clean up any legacy demo account remnants if present
  */
 export async function seedInitialFirestorePatientsIfEmpty() {
   try {
-    // Check if primary account exists
-    const harisSnap = await getDoc(doc(db, PATIENTS_COLLECTION, "DNA-PK-26-10025"));
-    if (!harisSnap.exists()) {
-      const harisRecord = INITIAL_PATIENTS_DATABASE["DNA-PK-26-10025"];
-      if (harisRecord) {
-        console.log("[Firebase] Seeding baseline profile to Firestore...");
-        await savePatientToFirestore(harisRecord);
-      }
+    // Permanently remove any legacy demo account from Firestore if found
+    const demoOld = await getDoc(doc(db, PATIENTS_COLLECTION, "DNA-1629-3931"));
+    if (demoOld.exists()) {
+      await deleteDoc(doc(db, PATIENTS_COLLECTION, "DNA-1629-3931"));
+      console.log("[Firebase] Removed legacy demo account DNA-1629-3931 from Firestore.");
     }
   } catch (err) {
-    console.warn("[Firebase] Seed check note:", err);
+    console.warn("[Firebase] Cleanup check note:", err);
   }
 }
+
 
