@@ -711,64 +711,51 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
                 </form>
               </div>
 
-              {/* Registered Patient Accounts & Worldwide Architecture Guidance (5 cols) */}
+              {/* Worldwide Security & Directory Guidance (5 cols) */}
               <div className="lg:col-span-5 bg-slate-50 rounded-3xl p-6 border border-slate-200 space-y-4">
                 <div className="flex items-center space-x-2">
                   <div className="p-2 bg-blue-100 text-blue-700 rounded-xl">
-                    <Dna className="w-4 h-4" />
+                    <ShieldCheck className="w-4 h-4 text-blue-700" />
                   </div>
                   <div>
                     <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
-                      Registered Accounts
+                      Vault Security & Architecture
                     </h3>
                     <p className="text-[11px] text-slate-500">
-                      Select an account or enter your credentials:
+                      Decentralized cryptographic health identity
                     </p>
                   </div>
                 </div>
 
-                {patientList && patientList.length > 0 && (
-                  <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
-                    {patientList.slice(0, 4).map((p) => (
-                      <button
-                        key={p.dnaId}
-                        type="button"
-                        onClick={() => handleSelectQuickAccount(p)}
-                        className="w-full flex items-center justify-between p-3 rounded-2xl bg-white hover:bg-blue-50/70 border border-slate-200 hover:border-blue-300 transition-all text-left group cursor-pointer shadow-sm"
-                      >
-                        <div className="flex items-center space-x-3 min-w-0">
-                          <img
-                            src={p.avatarUrl}
-                            alt={p.fullName}
-                            onError={(e) => {
-                              (e.target as HTMLImageElement).src = getDefaultAvatar(p.gender);
-                            }}
-                            className="w-9 h-9 rounded-xl object-cover ring-1 ring-slate-200 shrink-0"
-                          />
-                          <div className="min-w-0">
-                            <p className="text-xs font-bold text-slate-900 truncate group-hover:text-blue-700">
-                              {p.fullName}
-                            </p>
-                            <p className="text-[10px] font-mono text-slate-500 truncate mt-0.5">
-                              {p.dnaId}
-                            </p>
-                          </div>
-                        </div>
-                        <span className="text-[10px] font-bold text-blue-600 bg-blue-50 px-2.5 py-1 rounded-xl group-hover:bg-blue-600 group-hover:text-white transition-colors shrink-0">
-                          Select
-                        </span>
-                      </button>
-                    ))}
+                <div className="space-y-3 text-xs text-slate-600">
+                  <div className="p-3.5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-1.5">
+                    <div className="flex items-center space-x-2 text-slate-900 font-bold">
+                      <Lock className="w-3.5 h-3.5 text-blue-600" />
+                      <span>Zero-Knowledge AES-256</span>
+                    </div>
+                    <p className="text-[11px] text-slate-500 leading-relaxed">
+                      Personal clinical records and genomic markers are encrypted with tamper-evident cryptographic security.
+                    </p>
                   </div>
-                )}
 
-                <div className="p-4 rounded-2xl bg-blue-50/80 border border-blue-100 text-xs text-blue-900 space-y-2 leading-relaxed">
+                  <div className="p-3.5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-1.5">
+                    <div className="flex items-center space-x-2 text-slate-900 font-bold">
+                      <Users className="w-3.5 h-3.5 text-indigo-600" />
+                      <span>Official Patient Directory</span>
+                    </div>
+                    <p className="text-[11px] text-slate-500 leading-relaxed">
+                      All registered patient accounts and verified identities can be browsed in the <strong>Patient Directory</strong> tab above.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="p-4 rounded-2xl bg-blue-50/80 border border-blue-100 text-xs text-blue-900 space-y-1.5 leading-relaxed">
                   <div className="flex items-center space-x-2 text-blue-800 font-bold">
-                    <ShieldCheck className="w-4 h-4 text-blue-600" />
-                    <span>Independent Worldwide Accounts</span>
+                    <Dna className="w-4 h-4 text-blue-600" />
+                    <span>Independent Worldwide Vaults</span>
                   </div>
                   <p className="text-[11px] text-blue-800">
-                    Each patient has a completely separate, encrypted health record vault. Anyone can create an account, log out, and create or access other accounts on any device worldwide.
+                    Each patient has a dedicated, encrypted personal health record vault. Authenticate with your DNA ID, registered email, or phone.
                   </p>
                 </div>
               </div>

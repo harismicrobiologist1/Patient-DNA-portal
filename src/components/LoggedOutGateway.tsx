@@ -156,40 +156,6 @@ export const LoggedOutGateway: React.FC<LoggedOutGatewayProps> = ({
             </p>
           </div>
 
-          {/* Patient Quick Selector / Account Finder */}
-          <div className="space-y-2">
-            <label className="block text-xs font-bold text-slate-700">
-              Select Patient Account:
-            </label>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-48 overflow-y-auto pr-1">
-              {patients.map((p) => {
-                const isSelected = identifier.toLowerCase() === p.dnaId.toLowerCase();
-                return (
-                  <button
-                    key={p.dnaId}
-                    type="button"
-                    onClick={() => handleSelectPatient(p)}
-                    className={`flex items-center space-x-2.5 p-2.5 rounded-2xl border text-left transition-all ${
-                      isSelected
-                        ? "bg-blue-50/80 border-blue-500 ring-2 ring-blue-500/20"
-                        : "bg-slate-50/60 hover:bg-slate-100/80 border-slate-200"
-                    }`}
-                  >
-                    <img
-                      src={p.avatarUrl}
-                      alt={p.fullName}
-                      className="w-9 h-9 rounded-xl object-cover ring-1 ring-slate-300 shrink-0"
-                    />
-                    <div className="min-w-0 flex-1">
-                      <p className="text-xs font-bold text-slate-800 truncate">{p.fullName}</p>
-                      <p className="text-[10px] font-mono text-slate-500 truncate">{p.dnaId}</p>
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
           {/* Form */}
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
