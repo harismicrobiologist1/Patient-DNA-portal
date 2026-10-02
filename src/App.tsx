@@ -63,7 +63,7 @@ import {
   getAndClearExpirationNotice,
   WARNING_DURATION_SECONDS,
 } from "./utils/sessionSecurity";
-import { generateNewDnaId } from "./utils/dnaIdGenerator";
+import { generateNewDnaId, syncSequenceWithExisting } from "./utils/dnaIdGenerator";
 
 import {
   User,
@@ -187,8 +187,30 @@ export default function App() {
       const serverDb = data.patientsDatabase || data.database;
 
       if (data.success && serverDb && typeof serverDb === "object") {
-        setPatientsDatabase(serverDb);
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(serverDb));
+        setPatientsDatabase((prev) => {
+          const merged: Record<string, PatientFullRecord> = { ...prev };
+          let hasChange = false;
+          for (const [id, record] of Object.entries(serverDb as Record<string, PatientFullRecord>)) {
+            if (record && record.patient && record.patient.dnaId) {
+              if (!merged[id]) {
+                merged[id] = record;
+                hasChange = true;
+              } else {
+                const prevTime = new Date(merged[id].updatedAt || 0).getTime();
+                const srvTime = new Date(record.updatedAt || 0).getTime();
+                if (srvTime > prevTime) {
+                  merged[id] = record;
+                  hasChange = true;
+                }
+              }
+            }
+          }
+          if (hasChange || isInitial) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
+            return merged;
+          }
+          return prev;
+        });
       }
     } catch (err) {
       console.warn("Live database sync notice:", err);
@@ -205,8 +227,30 @@ export default function App() {
     // 2. Real-time Firestore Live Subscription across all devices worldwide
     const unsubscribeFirestore = subscribeToPatientsDirectory((firestoreDb) => {
       if (firestoreDb && typeof firestoreDb === "object" && Object.keys(firestoreDb).length > 0) {
-        setPatientsDatabase(firestoreDb);
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(firestoreDb));
+        setPatientsDatabase((prev) => {
+          const merged: Record<string, PatientFullRecord> = { ...prev };
+          let hasChange = false;
+          for (const [id, record] of Object.entries(firestoreDb)) {
+            if (record && record.patient && record.patient.dnaId) {
+              if (!merged[id]) {
+                merged[id] = record;
+                hasChange = true;
+              } else {
+                const prevTime = new Date(merged[id].updatedAt || 0).getTime();
+                const fsTime = new Date(record.updatedAt || 0).getTime();
+                if (fsTime >= prevTime) {
+                  merged[id] = record;
+                  hasChange = true;
+                }
+              }
+            }
+          }
+          if (hasChange) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
+            return merged;
+          }
+          return prev;
+        });
       }
     });
 
@@ -556,6 +600,11 @@ export default function App() {
   const handleRegisterPatient = async (newRecord: PatientFullRecord) => {
     let finalRecord = { ...newRecord };
     let finalDnaId = newRecord.patient.dnaId;
+    const nowIso = new Date().toISOString();
+    finalRecord.updatedAt = nowIso;
+    if (finalRecord.patient) {
+      (finalRecord.patient as any).updatedAt = nowIso;
+    }
 
     // Strict uniqueness check against both memory database and known IDs
     const existingIds = Object.keys(patientsDatabase);
@@ -564,39 +613,51 @@ export default function App() {
       finalDnaId = generateNewDnaId(countryCode, existingIds);
       finalRecord = {
         ...newRecord,
+        updatedAt: nowIso,
         patient: {
           ...newRecord.patient,
           dnaId: finalDnaId,
+          updatedAt: nowIso,
         },
       };
     }
     
-    // Instant local state update
-    updatePatientsDatabaseState((prev) => ({
-      ...prev,
-      [finalDnaId]: finalRecord,
-    }));
+    // 1. Instant local state update and immediate localStorage synchronous write
+    setPatientsDatabase((prev) => {
+      const updated = {
+        ...prev,
+        [finalDnaId]: finalRecord,
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+      return updated;
+    });
+
     handleLoginSuccess(finalDnaId);
 
-    // Save directly to Firestore for instantaneous multi-device cloud directory availability
+    // 2. Direct Cloud Firestore save for instantaneous multi-device cloud directory availability
     try {
       await savePatientToFirestore(finalRecord);
-      console.log("[Firestore] Registered patient pushed to live cloud:", finalDnaId);
+      console.log("[Firestore] Registered patient permanently saved to cloud:", finalDnaId);
     } catch (fsErr) {
       console.warn("[Firestore] Live push note:", fsErr);
     }
 
-    // Broadcast to server registration endpoint for secondary backup
+    // 3. Broadcast to server registration endpoint for persistent backend disk storage
     try {
-      await fetch("/api/patients/register", {
+      const res = await fetch("/api/patients/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ newRecord: finalRecord }),
       });
-      syncDatabaseFromServer(false);
+      if (res.ok) {
+        console.log("[Server] Registered patient pushed to server store:", finalDnaId);
+      }
     } catch (e) {
       console.warn("Server registration push note:", e);
     }
+
+    // 4. Update sequence counter
+    syncSequenceWithExisting([...existingIds, finalDnaId]);
 
     // Audit log
     const newLog: AuditLog = {

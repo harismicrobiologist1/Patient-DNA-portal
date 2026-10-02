@@ -665,6 +665,10 @@ export interface PatientFullRecord {
   labReports: LabReport[];
   prescriptions: Prescription[];
   appointments: Appointment[];
+  updatedAt?: string;
+  createdAt?: string;
+  dnaId?: string;
+  fullName?: string;
 }
 
 export const INITIAL_PATIENTS_DATABASE: Record<string, PatientFullRecord> = {};

@@ -313,6 +313,48 @@
       "clinicalRecords": [],
       "dnaId": "DNA-US-26-10030",
       "prescriptions": []
+    },
+    "DNA-PK-26-10031": {
+      "patient": {
+        "dnaId": "DNA-PK-26-10031",
+        "fullName": "Zubair Khan",
+        "dob": "1994-08-15",
+        "gender": "Male",
+        "bloodGroup": "B Positive (B+)",
+        "avatarUrl": "data:image/svg+xml;utf8,<svg></svg>",
+        "phone": "+92 300 1234567",
+        "email": "zubair@example.com",
+        "address": "Islamabad, Pakistan",
+        "nationalId": "37405-1234567-1",
+        "biometricStatus": "Verified",
+        "organDonorStatus": true,
+        "registeredHospital": "National Medical Center",
+        "securityPin": "1234",
+        "password": "Password123!*",
+        "insurance": {
+          "provider": "State Life",
+          "policyNumber": "SL-123",
+          "groupNumber": "GRP-1",
+          "status": "Active",
+          "coverageAmount": "$100,000"
+        },
+        "emergencyContacts": []
+      },
+      "history": {
+        "diseases": [],
+        "surgeries": [],
+        "vaccinations": [],
+        "medicines": [],
+        "allergies": [],
+        "familyHistory": [],
+        "chronicIllnesses": [],
+        "lifestyle": {}
+      },
+      "clinicalRecords": [],
+      "labReports": [],
+      "prescriptions": [],
+      "appointments": [],
+      "updatedAt": "2026-10-02T19:01:40.135Z"
     }
   },
   "patientsDatabase": {
@@ -629,7 +671,73 @@
       "clinicalRecords": [],
       "dnaId": "DNA-US-26-10030",
       "prescriptions": []
+    },
+    "DNA-PK-26-10031": {
+      "patient": {
+        "dnaId": "DNA-PK-26-10031",
+        "fullName": "Zubair Khan",
+        "dob": "1994-08-15",
+        "gender": "Male",
+        "bloodGroup": "B Positive (B+)",
+        "avatarUrl": "data:image/svg+xml;utf8,<svg></svg>",
+        "phone": "+92 300 1234567",
+        "email": "zubair@example.com",
+        "address": "Islamabad, Pakistan",
+        "nationalId": "37405-1234567-1",
+        "biometricStatus": "Verified",
+        "organDonorStatus": true,
+        "registeredHospital": "National Medical Center",
+        "securityPin": "1234",
+        "password": "Password123!*",
+        "insurance": {
+          "provider": "State Life",
+          "policyNumber": "SL-123",
+          "groupNumber": "GRP-1",
+          "status": "Active",
+          "coverageAmount": "$100,000"
+        },
+        "emergencyContacts": []
+      },
+      "history": {
+        "diseases": [],
+        "surgeries": [],
+        "vaccinations": [],
+        "medicines": [],
+        "allergies": [],
+        "familyHistory": [],
+        "chronicIllnesses": [],
+        "lifestyle": {}
+      },
+      "clinicalRecords": [],
+      "labReports": [],
+      "prescriptions": [],
+      "appointments": [],
+      "updatedAt": "2026-10-02T19:01:40.135Z"
     }
   },
-  "updatedAt": "2026-09-29T17:26:07.374Z"
+  "auditLogs": [
+    {
+      "id": "log-1790967700277-8872",
+      "timestamp": "2026-10-02 19:01:40",
+      "actor": "Patient Registration Service",
+      "role": "patient",
+      "action": "New Patient Registered to Universal Network",
+      "details": "Profile Zubair Khan (DNA-PK-26-10031) registered into lifetime database.",
+      "ipAddress": "127.0.0.1",
+      "securityHash": "0x8ed403090f484641d96f7002309d768ef57f18d5e799563459f0a3d9d4bcc5cc",
+      "tamperProofVerified": true
+    },
+    {
+      "id": "log-1790967431471-3360",
+      "timestamp": "2026-10-02 18:57:11",
+      "actor": "Patient Registration Service",
+      "role": "patient",
+      "action": "New Patient Registered to Universal Network",
+      "details": "Profile Test User (DNA-PK-26-99999) registered into lifetime database.",
+      "ipAddress": "127.0.0.1",
+      "securityHash": "0x7cae8992e2b92ad7ad68705f20a26f5f063689f9533bcd19ace5eea8a0fb9e36",
+      "tamperProofVerified": true
+    }
+  ],
+  "updatedAt": "2026-10-02T19:01:40.277Z"
 }

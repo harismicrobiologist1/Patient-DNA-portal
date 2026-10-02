@@ -7,6 +7,8 @@ import { createServer as createViteServer } from "vite";
 import { GoogleGenAI } from "@google/genai";
 import { Resend } from "resend";
 import dotenv from "dotenv";
+import { initializeApp, getApps, getApp } from "firebase/app";
+import { getFirestore, doc, setDoc, getDocs, deleteDoc, collection, Firestore } from "firebase/firestore";
 
 dotenv.config();
 
@@ -96,6 +98,20 @@ function getResendClient(): Resend | null {
 
 // In-memory / File-backed Database Store (use process.cwd() so production and dev reference same path)
 const DATA_FILE_PATH = path.join(process.cwd(), "patients_database_store.json");
+
+// Cloud Firestore Server Instance for Persistent Multi-Container Worldwide Data
+let serverFirestoreDb: Firestore | null = null;
+try {
+  const cfgPath = path.join(process.cwd(), "firebase-applet-config.json");
+  if (fs.existsSync(cfgPath)) {
+    const cfg = JSON.parse(fs.readFileSync(cfgPath, "utf-8"));
+    const fbApp = getApps().length === 0 ? initializeApp(cfg) : getApp();
+    serverFirestoreDb = cfg.firestoreDatabaseId ? getFirestore(fbApp, cfg.firestoreDatabaseId) : getFirestore(fbApp);
+    console.log("[Server Firestore] Connected to Cloud Firestore database:", cfg.firestoreDatabaseId || "(default)");
+  }
+} catch (e: any) {
+  console.warn("[Server Firestore] Setup notice:", e?.message);
+}
 
 // In-memory active OTP codes store: key = `${doctorName}-${patientDnaId}`
 interface OtpEntry {
@@ -194,9 +210,31 @@ function writeDatabaseToDisk(db: Record<string, any>, logs: any[] = []) {
   }
 }
 
-app.get("/api/database/load", (req, res) => {
+app.get("/api/database/load", async (req, res) => {
   try {
     const { database, auditLogs } = readDatabaseFromDisk();
+
+    // Sync with Firestore if available to guarantee zero data loss across restarts or instances
+    if (serverFirestoreDb) {
+      try {
+        const snap = await getDocs(collection(serverFirestoreDb, "patients"));
+        let updatedFromCloud = false;
+        snap.forEach((d) => {
+          const data = d.data();
+          const key = data.patient?.dnaId || d.id;
+          if (key && !database[key]) {
+            database[key] = data;
+            updatedFromCloud = true;
+          }
+        });
+        if (updatedFromCloud) {
+          writeDatabaseToDisk(database, auditLogs);
+        }
+      } catch (fsErr: any) {
+        // Fall back to disk seamlessly
+      }
+    }
+
     const hasData = database && Object.keys(database).length > 0;
     return res.json({
       success: true,
@@ -407,6 +445,11 @@ app.delete("/api/patient/:dnaId/erase-data", (req, res) => {
     );
 
     writeDatabaseToDisk(database, [eraseLog, ...auditLogs]);
+    if (serverFirestoreDb) {
+      deleteDoc(doc(serverFirestoreDb, "patients", dnaId)).catch((err: any) =>
+        console.warn("[Server Firestore] Erasure delete note:", err?.message)
+      );
+    }
     console.log(`[GDPR ERASURE] Permanently wiped record for ${dnaId}`);
 
     return res.json({
@@ -677,6 +720,20 @@ app.post("/api/patients/register", rateLimiter(60000, 120, "Patient Registration
 
     const updatedLogs = [newAuditLog, ...currentLogs];
     writeDatabaseToDisk(updatedDb, updatedLogs);
+
+    // Save directly to Cloud Firestore as authoritative persistence
+    if (serverFirestoreDb) {
+      setDoc(
+        doc(serverFirestoreDb, "patients", dnaId),
+        {
+          ...patientRecord,
+          dnaId,
+          fullName: patientRecord.patient.fullName,
+          updatedAt: new Date().toISOString(),
+        },
+        { merge: true }
+      ).catch((err: any) => console.warn("[Server Firestore] Registration save note:", err?.message));
+    }
 
     console.log(`[PATIENT REGISTERED TO LIFETIME DIRECTORY] ${patientRecord.patient.fullName} (${dnaId})`);
 
