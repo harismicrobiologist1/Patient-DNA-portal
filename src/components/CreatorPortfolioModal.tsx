@@ -25,7 +25,7 @@ const PORTFOLIO_STORAGE_KEY = "patient_dna_creator_portfolio_url";
 
 export function CreatorPortfolioModal({ isOpen, onClose }: CreatorPortfolioModalProps) {
   const [portfolioUrl, setPortfolioUrl] = useState<string>(() => {
-    return localStorage.getItem(PORTFOLIO_STORAGE_KEY) || "https://patient-dna-por.vercel.app";
+    return localStorage.getItem(PORTFOLIO_STORAGE_KEY) || "https://www.patientdnapro.com";
   });
   const [isEditingUrl, setIsEditingUrl] = useState(false);
   const [tempUrl, setTempUrl] = useState(portfolioUrl);

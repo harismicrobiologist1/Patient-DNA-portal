@@ -3,4 +3,4 @@ User-agent: *
 Allow: /
 
 # Sitemap location for Google Search Console & Web Crawlers
-Sitemap: https://patient-dna-por.vercel.app/sitemap.xml
+Sitemap: https://www.patientdnapro.com/sitemap.xml
