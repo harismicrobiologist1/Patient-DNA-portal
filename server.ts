@@ -96,6 +96,14 @@ function getResendClient(): Resend | null {
   return resendClient;
 }
 
+function getFromEmail(): string {
+  const envFrom = (process.env.RESEND_FROM_EMAIL || "").trim();
+  if (envFrom && envFrom.includes("@") && !envFrom.startsWith("re_")) {
+    return envFrom;
+  }
+  return "Patient DNA <security@patientdnapro.com>";
+}
+
 // In-memory / File-backed Database Store (use process.cwd() so production and dev reference same path)
 const DATA_FILE_PATH = path.join(process.cwd(), "patients_database_store.json");
 
@@ -973,7 +981,7 @@ app.post("/api/auth/send-registration-otp", async (req, res) => {
     const resend = getResendClient();
     if (resend) {
       try {
-        const fromEmail = process.env.RESEND_FROM_EMAIL || "Health DNA <onboarding@resend.dev>";
+        const fromEmail = getFromEmail();
         const emailResponse = await resend.emails.send({
           from: fromEmail,
           to: [cleanEmail],
@@ -1112,6 +1120,243 @@ app.post("/api/auth/verify-registration-otp", (req, res) => {
     });
   } catch (err: any) {
     console.error("Error verifying registration OTP:", err);
+    return res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// ----------------------------------------------------
+// Patient Login 2FA OTP Email Verification Endpoints
+// ----------------------------------------------------
+interface LoginOtpEntry {
+  code: string;
+  dnaId: string;
+  email: string;
+  fullName: string;
+  expiresAt: number;
+}
+const loginOtps = new Map<string, LoginOtpEntry>();
+
+app.post("/api/auth/send-login-otp", rateLimiter(60000, 15, "Login OTP"), async (req, res) => {
+  try {
+    const { identifier, password } = req.body;
+    if (!identifier || !password) {
+      return res.status(400).json({ success: false, error: "Identifier and password are required." });
+    }
+
+    const query = String(identifier).trim().toLowerCase();
+    const cleanPwd = String(password).trim();
+
+    const { database } = readDatabaseFromDisk();
+    let targetRecord = Object.values(database).find((rec: any) => {
+      const p = rec?.patient;
+      if (!p) return false;
+      return (
+        p.dnaId?.toLowerCase() === query ||
+        p.email?.toLowerCase() === query ||
+        p.phone?.replace(/[^0-9]/g, "") === query.replace(/[^0-9]/g, "")
+      );
+    });
+
+    // If not found on disk, try Firestore if available
+    if (!targetRecord && serverFirestoreDb) {
+      try {
+        const snap = await getDocs(collection(serverFirestoreDb, "patients"));
+        snap.forEach((d) => {
+          const rec: any = d.data();
+          const p = rec?.patient;
+          if (p) {
+            if (
+              p.dnaId?.toLowerCase() === query ||
+              p.email?.toLowerCase() === query ||
+              p.phone?.replace(/[^0-9]/g, "") === query.replace(/[^0-9]/g, "")
+            ) {
+              targetRecord = rec;
+            }
+          }
+        });
+      } catch (e) {
+        // Continue
+      }
+    }
+
+    if (!targetRecord || !targetRecord.patient) {
+      return res.status(404).json({ success: false, error: "No patient record found matching that DNA ID, Email, or Phone." });
+    }
+
+    const patient = targetRecord.patient;
+    const expectedPassword = (patient.password || "Haris456?!*").trim();
+
+    if (cleanPwd !== expectedPassword) {
+      return res.status(401).json({ success: false, error: "Access Denied: Incorrect password." });
+    }
+
+    const patientEmail = (patient.email || "").trim().toLowerCase();
+    if (!patientEmail || !patientEmail.includes("@")) {
+      return res.status(400).json({
+        success: false,
+        error: "Patient does not have a registered email address for 2FA verification. Please contact support or update profile.",
+      });
+    }
+
+    // Generate secure 6-digit numeric OTP code
+    const generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
+    const expiresAt = Date.now() + 10 * 60 * 1000; // 10 minutes
+
+    loginOtps.set(patient.dnaId, {
+      code: generatedOtp,
+      dnaId: patient.dnaId,
+      email: patientEmail,
+      fullName: patient.fullName || "Patient",
+      expiresAt,
+    });
+
+    console.log(`[PATIENT LOGIN 2FA OTP] Generated code ${generatedOtp} for ${patient.fullName} (${patient.dnaId}) at ${patientEmail}`);
+
+    const parts = patientEmail.split("@");
+    const namePart = parts[0] || "";
+    const maskedEmail = `${namePart.substring(0, Math.min(2, namePart.length))}***${namePart.length > 2 ? namePart.substring(namePart.length - 1) : ""}@${parts[1]}`;
+
+    let emailDeliveryStatus: "sent" | "simulated" | "failed" = "simulated";
+    let emailDeliveryError: string | null = null;
+
+    const resend = getResendClient();
+    if (resend) {
+      try {
+        const fromEmail = getFromEmail();
+        const emailResponse = await resend.emails.send({
+          from: fromEmail,
+          to: [patientEmail],
+          subject: `🛡️ ${generatedOtp} is your Patient DNA Login Security Code`,
+          html: `
+            <!DOCTYPE html>
+            <html>
+            <head>
+              <meta charset="utf-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>Patient DNA Login Authorization</title>
+            </head>
+            <body style="margin: 0; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f8fafc; color: #1e293b;">
+              <div style="max-width: 560px; margin: 0 auto; background-color: #ffffff; border-radius: 20px; border: 1px solid #e2e8f0; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+                
+                <!-- Brand Header -->
+                <div style="background: linear-gradient(135deg, #1e1b4b 0%, #2563eb 50%, #0284c7 100%); padding: 32px 24px; text-align: center;">
+                  <div style="display: inline-block; background-color: rgba(255, 255, 255, 0.2); backdrop-filter: blur(8px); padding: 6px 16px; border-radius: 9999px; color: #ffffff; font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px;">
+                    Two-Factor Vault Security
+                  </div>
+                  <h1 style="margin: 0; color: #ffffff; font-size: 24px; font-weight: 800; letter-spacing: -0.5px;">
+                    Login Authorization Code
+                  </h1>
+                </div>
+
+                <!-- Body Content -->
+                <div style="padding: 32px 28px;">
+                  <p style="font-size: 16px; color: #334155; margin-top: 0; margin-bottom: 12px; font-weight: 600;">
+                    Hello ${patient.fullName},
+                  </p>
+                  <p style="font-size: 14px; color: #475569; line-height: 1.6; margin-bottom: 24px;">
+                    A login attempt was initiated for your <strong>Patient DNA Vault (${patient.dnaId})</strong>. Enter the following 6-digit verification code to complete your login:
+                  </p>
+
+                  <!-- OTP Display Box -->
+                  <div style="text-align: center; margin: 28px 0; background-color: #f0fdf4; border: 2px dashed #16a34a; border-radius: 16px; padding: 24px 16px;">
+                    <div style="font-size: 11px; font-weight: 700; color: #16a34a; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px;">
+                      Your Login Verification Code
+                    </div>
+                    <div style="font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace; font-size: 38px; font-weight: 900; letter-spacing: 10px; color: #14532d; padding-left: 10px;">
+                      ${generatedOtp}
+                    </div>
+                    <div style="font-size: 12px; color: #64748b; margin-top: 10px;">
+                      ⏱ This code expires in <strong>10 minutes</strong>.
+                    </div>
+                  </div>
+
+                  <div style="background-color: #fef2f2; border: 1px solid #fee2e2; border-radius: 12px; padding: 14px 16px; margin-top: 24px;">
+                    <p style="margin: 0; font-size: 12px; color: #991b1b; line-height: 1.5;">
+                      <strong>⚠️ Security Notice:</strong> If you did not attempt to sign in to Patient DNA, please secure your account credentials immediately.
+                    </p>
+                  </div>
+                </div>
+
+                <!-- Footer -->
+                <div style="background-color: #f8fafc; border-top: 1px solid #e2e8f0; padding: 20px 24px; text-align: center; font-size: 12px; color: #64748b;">
+                  Patient DNA Universal Health System • www.patientdnapro.com
+                </div>
+              </div>
+            </body>
+            </html>
+          `,
+        });
+
+        if (emailResponse.error) {
+          console.error("Resend login delivery failed:", emailResponse.error);
+          emailDeliveryStatus = "failed";
+          emailDeliveryError = emailResponse.error.message;
+        } else {
+          emailDeliveryStatus = "sent";
+          console.log(`[RESEND SUCCESS] Login OTP sent to ${patientEmail}. Resend ID: ${emailResponse.data?.id}`);
+        }
+      } catch (sendErr: any) {
+        console.error("Resend API exception:", sendErr);
+        emailDeliveryStatus = "failed";
+        emailDeliveryError = sendErr.message;
+      }
+    }
+
+    return res.json({
+      success: true,
+      message: `A 6-digit security code was delivered to ${maskedEmail}`,
+      emailDeliveryStatus,
+      emailDeliveryError,
+      resendConfigured: !!resend,
+      otpCode: emailDeliveryStatus === "sent" ? undefined : generatedOtp,
+      maskedEmail,
+      dnaId: patient.dnaId,
+      expiresAt,
+    });
+  } catch (err: any) {
+    console.error("Error in /api/auth/send-login-otp:", err);
+    return res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.post("/api/auth/verify-login-otp", (req, res) => {
+  try {
+    const { dnaId, otpCode } = req.body;
+    if (!dnaId || !otpCode) {
+      return res.status(400).json({ success: false, error: "dnaId and otpCode are required." });
+    }
+
+    const cleanDnaId = String(dnaId).trim();
+    const entry = loginOtps.get(cleanDnaId);
+
+    if (!entry) {
+      return res.status(400).json({ success: false, error: "No pending login authorization found. Please sign in again." });
+    }
+
+    if (Date.now() > entry.expiresAt) {
+      loginOtps.delete(cleanDnaId);
+      return res.status(400).json({ success: false, error: "Security code expired. Please sign in again to request a new code." });
+    }
+
+    if (entry.code !== String(otpCode).trim()) {
+      return res.status(400).json({ success: false, error: "Incorrect 6-digit security code. Please check your email." });
+    }
+
+    // Success!
+    loginOtps.delete(cleanDnaId);
+
+    const { database } = readDatabaseFromDisk();
+    const patientRecord = database[cleanDnaId];
+
+    return res.json({
+      success: true,
+      verified: true,
+      dnaId: cleanDnaId,
+      patient: patientRecord?.patient || null,
+      message: "2FA login verification successful.",
+    });
+  } catch (err: any) {
+    console.error("Error verifying login OTP:", err);
     return res.status(500).json({ success: false, error: err.message });
   }
 });

@@ -59,6 +59,8 @@ import {
   Users,
   Upload,
   Camera,
+  AlertCircle,
+  X,
 } from "lucide-react";
 
 interface AuthWelcomeScreenProps {
@@ -144,6 +146,46 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
   const [regError, setRegError] = useState<string | null>(null);
   const [isRegistering, setIsRegistering] = useState(false);
   const [registrationSuccess, setRegistrationSuccess] = useState(false);
+
+  // Registration Email OTP State
+  const [isRegOtpModalOpen, setIsRegOtpModalOpen] = useState(false);
+  const [regOtpCode, setRegOtpCode] = useState("");
+  const [regOtpError, setRegOtpError] = useState<string | null>(null);
+  const [isRegOtpVerifying, setIsRegOtpVerifying] = useState(false);
+  const [isRegOtpSending, setIsRegOtpSending] = useState(false);
+  const [regOtpMaskedEmail, setRegOtpMaskedEmail] = useState("");
+  const [regOtpCountdown, setRegOtpCountdown] = useState(600); // 10 minutes
+  const [pendingRegistrationRecord, setPendingRegistrationRecord] = useState<PatientFullRecord | null>(null);
+  const [regSimulatedOtp, setRegSimulatedOtp] = useState<string | null>(null);
+
+  // Login 2FA Email OTP State
+  const [isLoginOtpModalOpen, setIsLoginOtpModalOpen] = useState(false);
+  const [loginOtpCode, setLoginOtpCode] = useState("");
+  const [loginOtpError, setLoginOtpError] = useState<string | null>(null);
+  const [isLoginOtpVerifying, setIsLoginOtpVerifying] = useState(false);
+  const [isLoginOtpSending, setIsLoginOtpSending] = useState(false);
+  const [loginOtpMaskedEmail, setLoginOtpMaskedEmail] = useState("");
+  const [loginOtpCountdown, setLoginOtpCountdown] = useState(600); // 10 minutes
+  const [loginOtpTargetDnaId, setLoginOtpTargetDnaId] = useState<string | null>(null);
+  const [loginSimulatedOtp, setLoginSimulatedOtp] = useState<string | null>(null);
+
+  // Registration OTP Countdown
+  useEffect(() => {
+    if (!isRegOtpModalOpen || regOtpCountdown <= 0) return;
+    const timer = setInterval(() => {
+      setRegOtpCountdown((prev) => Math.max(0, prev - 1));
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [isRegOtpModalOpen, regOtpCountdown]);
+
+  // Login OTP Countdown
+  useEffect(() => {
+    if (!isLoginOtpModalOpen || loginOtpCountdown <= 0) return;
+    const timer = setInterval(() => {
+      setLoginOtpCountdown((prev) => Math.max(0, prev - 1));
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [isLoginOtpModalOpen, loginOtpCountdown]);
 
   // Countdown timer for lockout
   useEffect(() => {
@@ -260,6 +302,39 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
 
     if (isMatch) {
       resetFailedAttempts(matched.dnaId);
+
+      // Enforce 2FA Email OTP Verification if patient has a registered email address
+      const patientEmail = (matched.email || "").trim();
+      if (patientEmail && patientEmail.includes("@") && !patientEmail.toLowerCase().includes("not specified")) {
+        setIsAuthenticating(true);
+        try {
+          const res = await fetch("/api/auth/send-login-otp", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ identifier: cleanId, password: cleanPwd }),
+          });
+          const data = await res.json();
+          if (data.success) {
+            setLoginOtpTargetDnaId(matched.dnaId);
+            setLoginOtpMaskedEmail(data.maskedEmail);
+            setLoginOtpCountdown(600);
+            setLoginOtpCode("");
+            setLoginOtpError(null);
+            setLoginSimulatedOtp(data.otpCode || null);
+            setIsLoginOtpModalOpen(true);
+            return;
+          } else {
+            setLoginError(data.error || "Failed to dispatch login authorization code.");
+            return;
+          }
+        } catch (otpErr) {
+          console.warn("Could not dispatch login OTP:", otpErr);
+        } finally {
+          setIsAuthenticating(false);
+        }
+      }
+
+      // Fallback for accounts without registered email
       setIsAuthenticating(true);
       setTimeout(() => {
         setIsAuthenticating(false);
@@ -282,6 +357,65 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
     }
   };
 
+  const handleVerifyLoginOtp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoginOtpError(null);
+
+    if (!loginOtpCode.trim() || loginOtpCode.trim().length < 6) {
+      setLoginOtpError("Please enter the complete 6-digit verification code.");
+      return;
+    }
+    if (!loginOtpTargetDnaId) return;
+
+    setIsLoginOtpVerifying(true);
+    try {
+      const res = await fetch("/api/auth/verify-login-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ dnaId: loginOtpTargetDnaId, otpCode: loginOtpCode.trim() }),
+      });
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        setLoginOtpError(data.error || "Incorrect verification code. Please check your email.");
+        return;
+      }
+
+      // 2FA Verified! Complete login
+      setIsLoginOtpModalOpen(false);
+      onLoginSuccess(loginOtpTargetDnaId, rememberMe);
+    } catch (err: any) {
+      console.error("Login OTP verify error:", err);
+      setLoginOtpError("Verification error. Please try again.");
+    } finally {
+      setIsLoginOtpVerifying(false);
+    }
+  };
+
+  const handleResendLoginOtp = async () => {
+    if (!identifier || !password) return;
+    setIsLoginOtpSending(true);
+    setLoginOtpError(null);
+    try {
+      const res = await fetch("/api/auth/send-login-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ identifier: identifier.trim(), password: password.trim() }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setLoginOtpCountdown(600);
+        setLoginSimulatedOtp(data.otpCode || null);
+      } else {
+        setLoginOtpError(data.error || "Failed to resend code.");
+      }
+    } catch (e) {
+      setLoginOtpError("Failed to resend code. Please check connection.");
+    } finally {
+      setIsLoginOtpSending(false);
+    }
+  };
+
   // Quick Account Selector (populates form for quick review without bypassing security)
   const handleSelectQuickAccount = (patient: PatientProfile) => {
     setIdentifier(patient.dnaId);
@@ -291,8 +425,8 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
     setLoginError(null);
   };
 
-  // Single-Step Direct Patient Registration
-  const handleDirectRegistration = (e: React.FormEvent) => {
+  // Patient Registration with Live Email OTP Verification
+  const handleDirectRegistration = async (e: React.FormEvent) => {
     e.preventDefault();
     setRegError(null);
 
@@ -320,12 +454,8 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
       return;
     }
 
-    setIsRegistering(true);
-    setRegistrationSuccess(true);
-
     // Generate unique sequential DNA ID starting at 10025 based on selected country
     const newDnaId = generateNewDnaId(regForm.country || "PK", allExistingIds);
-    const regCountry = getCountryByCode(regForm.country || "PK");
 
     const newPatientProfile: PatientProfile = {
       dnaId: newDnaId,
@@ -335,7 +465,7 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
       bloodGroup: regForm.bloodGroup,
       avatarUrl: regForm.customAvatar || getDefaultAvatar(regForm.gender),
       phone: regForm.phone.trim() || "Not Provided",
-      email: regForm.email.trim(),
+      email: cleanEmail,
       address: regForm.address.trim() || "Not Specified",
       nationalId: regForm.nationalId.trim() || "Pending",
       biometricStatus: "Verified",
@@ -386,14 +516,101 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
       labReports: [],
       prescriptions: [],
       appointments: [],
+      updatedAt: new Date().toISOString(),
     };
 
-    setTimeout(() => {
-      setIsRegistering(false);
-      if (handleRegisterCallback) {
-        handleRegisterCallback(newRecord);
+    setIsRegistering(true);
+    try {
+      const res = await fetch("/api/auth/send-registration-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: cleanEmail, fullName: regForm.fullName.trim() }),
+      });
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        setRegError(data.error || "Failed to dispatch verification code to email.");
+        return;
       }
-    }, 400);
+
+      setPendingRegistrationRecord(newRecord);
+      setRegOtpMaskedEmail(data.maskedEmail);
+      setRegOtpCountdown(600);
+      setRegOtpCode("");
+      setRegOtpError(null);
+      setRegSimulatedOtp(data.otpCode || null);
+      setIsRegOtpModalOpen(true);
+    } catch (sendErr: any) {
+      console.error("Registration OTP error:", sendErr);
+      setRegError("Network error sending verification code. Please try again.");
+    } finally {
+      setIsRegistering(false);
+    }
+  };
+
+  const handleVerifyRegistrationOtp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setRegOtpError(null);
+
+    if (!regOtpCode.trim() || regOtpCode.trim().length < 6) {
+      setRegOtpError("Please enter the complete 6-digit verification code.");
+      return;
+    }
+    if (!pendingRegistrationRecord) return;
+
+    setIsRegOtpVerifying(true);
+    try {
+      const res = await fetch("/api/auth/verify-registration-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: pendingRegistrationRecord.patient.email, otpCode: regOtpCode.trim() }),
+      });
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        setRegOtpError(data.error || "Incorrect verification code. Please check your email.");
+        return;
+      }
+
+      // Verified! Register the patient into Firestore & database
+      setIsRegOtpModalOpen(false);
+      setRegistrationSuccess(true);
+      if (handleRegisterCallback) {
+        handleRegisterCallback(pendingRegistrationRecord);
+      }
+    } catch (err: any) {
+      console.error("Register OTP verify error:", err);
+      setRegOtpError("Verification error. Please try again.");
+    } finally {
+      setIsRegOtpVerifying(false);
+    }
+  };
+
+  const handleResendRegistrationOtp = async () => {
+    if (!pendingRegistrationRecord) return;
+    setIsRegOtpSending(true);
+    setRegOtpError(null);
+    try {
+      const res = await fetch("/api/auth/send-registration-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: pendingRegistrationRecord.patient.email,
+          fullName: pendingRegistrationRecord.patient.fullName,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setRegOtpCountdown(600);
+        setRegSimulatedOtp(data.otpCode || null);
+      } else {
+        setRegOtpError(data.error || "Failed to resend code.");
+      }
+    } catch (e) {
+      setRegOtpError("Failed to resend code. Please check connection.");
+    } finally {
+      setIsRegOtpSending(false);
+    }
   };
 
   // Handle Emergency Lookup
@@ -1443,6 +1660,224 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
         isOpen={isPortfolioModalOpen}
         onClose={() => setIsPortfolioModalOpen(false)}
       />
+
+      {/* Registration Email OTP Verification Modal */}
+      {isRegOtpModalOpen && pendingRegistrationRecord && (
+        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto animate-fadeIn">
+          <div className="relative max-w-md w-full bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden">
+            {/* Header */}
+            <div className="bg-gradient-to-r from-blue-700 via-indigo-700 to-cyan-600 p-6 text-white text-center relative">
+              <button
+                type="button"
+                onClick={() => setIsRegOtpModalOpen(false)}
+                className="absolute top-4 right-4 p-2 rounded-2xl bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+              <div className="w-14 h-14 mx-auto rounded-2xl bg-white/15 border border-white/20 flex items-center justify-center mb-3 shadow-inner">
+                <MailCheck className="w-7 h-7 text-cyan-200" />
+              </div>
+              <h3 className="text-xl font-black tracking-tight">Verify Your Email</h3>
+              <p className="text-xs text-blue-100 mt-1">
+                A verification code was dispatched to activate your vault
+              </p>
+            </div>
+
+            {/* Content */}
+            <div className="p-6 space-y-5">
+              <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs text-slate-600 space-y-1 text-center">
+                <p className="font-medium text-slate-700">
+                  Enter the 6-digit verification code delivered to:
+                </p>
+                <p className="font-bold text-slate-900 font-mono text-sm">
+                  {regOtpMaskedEmail || pendingRegistrationRecord.patient.email}
+                </p>
+                <p className="text-[11px] text-slate-400">
+                  Sender: <span className="font-medium text-blue-600">Patient DNA (security@patientdnapro.com)</span>
+                </p>
+              </div>
+
+              {regSimulatedOtp && (
+                <div className="p-3 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 text-xs flex items-center space-x-2">
+                  <Sparkles className="w-4 h-4 text-amber-600 shrink-0" />
+                  <div>
+                    <span className="font-bold">Sandbox Testing Code:</span>{" "}
+                    <span className="font-mono font-bold tracking-widest text-sm bg-amber-200/60 px-2 py-0.5 rounded-lg">
+                      {regSimulatedOtp}
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              {regOtpError && (
+                <div className="p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center space-x-2 animate-shake">
+                  <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+                  <span>{regOtpError}</span>
+                </div>
+              )}
+
+              <form onSubmit={handleVerifyRegistrationOtp} className="space-y-5">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2 text-center">
+                    6-Digit Verification Code
+                  </label>
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    autoFocus
+                    maxLength={6}
+                    value={regOtpCode}
+                    onChange={(e) => setRegOtpCode(e.target.value.replace(/[^0-9]/g, ""))}
+                    placeholder="••••••"
+                    className="w-full text-center text-3xl font-mono font-black tracking-[12px] py-3.5 px-4 rounded-2xl bg-slate-50 border-2 border-slate-200 focus:border-blue-600 focus:bg-white focus:outline-none transition-all text-slate-900"
+                  />
+                </div>
+
+                <div className="flex items-center justify-between text-xs text-slate-500">
+                  <span className="flex items-center space-x-1 font-mono">
+                    <Clock className="w-3.5 h-3.5 text-slate-400" />
+                    <span>
+                      {Math.floor(regOtpCountdown / 60)}:{(regOtpCountdown % 60).toString().padStart(2, "0")}
+                    </span>
+                  </span>
+
+                  <button
+                    type="button"
+                    disabled={isRegOtpSending || regOtpCountdown > 540}
+                    onClick={handleResendRegistrationOtp}
+                    className="font-bold text-blue-600 hover:text-blue-700 disabled:opacity-40 disabled:hover:text-blue-600 flex items-center space-x-1 cursor-pointer"
+                  >
+                    <RefreshCw className={`w-3.5 h-3.5 ${isRegOtpSending ? "animate-spin" : ""}`} />
+                    <span>{isRegOtpSending ? "Resending..." : "Resend Code"}</span>
+                  </button>
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={isRegOtpVerifying || regOtpCode.trim().length < 6}
+                  className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-sm shadow-lg shadow-blue-500/25 transition-all flex items-center justify-center space-x-2 disabled:opacity-50 cursor-pointer"
+                >
+                  {isRegOtpVerifying ? (
+                    <RefreshCw className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <CheckCircle2 className="w-4 h-4" />
+                  )}
+                  <span>{isRegOtpVerifying ? "Verifying Email..." : "Verify & Activate Account"}</span>
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Login 2FA Email OTP Verification Modal */}
+      {isLoginOtpModalOpen && (
+        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto animate-fadeIn">
+          <div className="relative max-w-md w-full bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden">
+            {/* Header */}
+            <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-blue-900 p-6 text-white text-center relative">
+              <button
+                type="button"
+                onClick={() => setIsLoginOtpModalOpen(false)}
+                className="absolute top-4 right-4 p-2 rounded-2xl bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+              <div className="w-14 h-14 mx-auto rounded-2xl bg-white/10 border border-white/20 flex items-center justify-center mb-3 shadow-inner">
+                <ShieldCheck className="w-7 h-7 text-cyan-300" />
+              </div>
+              <h3 className="text-xl font-black tracking-tight">Two-Factor Authentication</h3>
+              <p className="text-xs text-blue-200 mt-1">
+                Authorize login to access your encrypted health records
+              </p>
+            </div>
+
+            {/* Content */}
+            <div className="p-6 space-y-5">
+              <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs text-slate-600 space-y-1 text-center">
+                <p className="font-medium text-slate-700">
+                  A 6-digit security authorization code was sent to:
+                </p>
+                <p className="font-bold text-slate-900 font-mono text-sm">
+                  {loginOtpMaskedEmail}
+                </p>
+                <p className="text-[11px] text-slate-400">
+                  Verified Sender: <span className="font-medium text-blue-600">Patient DNA (security@patientdnapro.com)</span>
+                </p>
+              </div>
+
+              {loginSimulatedOtp && (
+                <div className="p-3 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 text-xs flex items-center space-x-2">
+                  <Sparkles className="w-4 h-4 text-amber-600 shrink-0" />
+                  <div>
+                    <span className="font-bold">Sandbox Testing Code:</span>{" "}
+                    <span className="font-mono font-bold tracking-widest text-sm bg-amber-200/60 px-2 py-0.5 rounded-lg">
+                      {loginSimulatedOtp}
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              {loginOtpError && (
+                <div className="p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center space-x-2 animate-shake">
+                  <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+                  <span>{loginOtpError}</span>
+                </div>
+              )}
+
+              <form onSubmit={handleVerifyLoginOtp} className="space-y-5">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2 text-center">
+                    6-Digit Security Code
+                  </label>
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    autoFocus
+                    maxLength={6}
+                    value={loginOtpCode}
+                    onChange={(e) => setLoginOtpCode(e.target.value.replace(/[^0-9]/g, ""))}
+                    placeholder="••••••"
+                    className="w-full text-center text-3xl font-mono font-black tracking-[12px] py-3.5 px-4 rounded-2xl bg-slate-50 border-2 border-slate-200 focus:border-blue-600 focus:bg-white focus:outline-none transition-all text-slate-900"
+                  />
+                </div>
+
+                <div className="flex items-center justify-between text-xs text-slate-500">
+                  <span className="flex items-center space-x-1 font-mono">
+                    <Clock className="w-3.5 h-3.5 text-slate-400" />
+                    <span>
+                      {Math.floor(loginOtpCountdown / 60)}:{(loginOtpCountdown % 60).toString().padStart(2, "0")}
+                    </span>
+                  </span>
+
+                  <button
+                    type="button"
+                    disabled={isLoginOtpSending || loginOtpCountdown > 540}
+                    onClick={handleResendLoginOtp}
+                    className="font-bold text-blue-600 hover:text-blue-700 disabled:opacity-40 disabled:hover:text-blue-600 flex items-center space-x-1 cursor-pointer"
+                  >
+                    <RefreshCw className={`w-3.5 h-3.5 ${isLoginOtpSending ? "animate-spin" : ""}`} />
+                    <span>{isLoginOtpSending ? "Resending..." : "Resend Code"}</span>
+                  </button>
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={isLoginOtpVerifying || loginOtpCode.trim().length < 6}
+                  className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-blue-700 to-indigo-700 hover:from-blue-600 hover:to-indigo-600 text-white font-bold text-sm shadow-lg shadow-blue-600/25 transition-all flex items-center justify-center space-x-2 disabled:opacity-50 cursor-pointer"
+                >
+                  {isLoginOtpVerifying ? (
+                    <RefreshCw className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <Lock className="w-4 h-4" />
+                  )}
+                  <span>{isLoginOtpVerifying ? "Verifying Authorization..." : "Authorize & Unlock Vault"}</span>
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
