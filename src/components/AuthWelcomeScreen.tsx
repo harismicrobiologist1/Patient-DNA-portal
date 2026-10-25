@@ -123,9 +123,12 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
     }
   }, [lastActivePatientId, identifier]);
 
-  // Registration states
+  // Registration 3-Step Wizard states
+  const [regStep, setRegStep] = useState<1 | 2 | 3>(1);
   const [regForm, setRegForm] = useState({
     country: "PK",
+    firstName: "",
+    surname: "",
     fullName: "",
     dob: "",
     gender: "Male",
@@ -147,7 +150,27 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
   const [isRegistering, setIsRegistering] = useState(false);
   const [registrationSuccess, setRegistrationSuccess] = useState(false);
 
-  // Registration Email OTP State
+  // Step 2 Inline Email OTP States
+  const [isEmailVerified, setIsEmailVerified] = useState(false);
+  const [step2OtpCode, setStep2OtpCode] = useState("");
+  const [step2OtpSent, setStep2OtpSent] = useState(false);
+  const [step2OtpSending, setStep2OtpSending] = useState(false);
+  const [step2OtpVerifying, setStep2OtpVerifying] = useState(false);
+  const [step2OtpError, setStep2OtpError] = useState<string | null>(null);
+  const [step2OtpSuccess, setStep2OtpSuccess] = useState<string | null>(null);
+  const [step2OtpCountdown, setStep2OtpCountdown] = useState(600); // 10 minutes
+  const [step2SimulatedOtp, setStep2SimulatedOtp] = useState<string | null>(null);
+
+  // Step 2 OTP Countdown
+  useEffect(() => {
+    if (!step2OtpSent || step2OtpCountdown <= 0) return;
+    const timer = setInterval(() => {
+      setStep2OtpCountdown((prev) => Math.max(0, prev - 1));
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [step2OtpSent, step2OtpCountdown]);
+
+  // Modal OTP States (for backward compatibility)
   const [isRegOtpModalOpen, setIsRegOtpModalOpen] = useState(false);
   const [regOtpCode, setRegOtpCode] = useState("");
   const [regOtpError, setRegOtpError] = useState<string | null>(null);
@@ -613,6 +636,223 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
     }
   };
 
+  // ==========================================
+  // 3-STEP WIZARD ACTION HANDLERS
+  // ==========================================
+
+  // Step 1: Validate Personal Profile & Save/Advance to Step 2
+  const handleStep1Next = (e: React.FormEvent) => {
+    e.preventDefault();
+    setRegError(null);
+
+    if (!regForm.firstName.trim()) {
+      setRegError("Please enter the patient's first name.");
+      return;
+    }
+    if (!regForm.surname.trim()) {
+      setRegError("Please enter the patient's surname.");
+      return;
+    }
+    if (!regForm.dob) {
+      setRegError("Please specify the date of birth.");
+      return;
+    }
+
+    setRegForm((prev) => ({
+      ...prev,
+      fullName: `${prev.firstName.trim()} ${prev.surname.trim()}`,
+    }));
+
+    setRegStep(2);
+  };
+
+  // Step 2: Dispatch Email Verification Code (OTP)
+  const handleSendStep2Otp = async () => {
+    const cleanEmail = regForm.email.trim().toLowerCase();
+    if (!cleanEmail || !cleanEmail.includes("@") || !cleanEmail.includes(".")) {
+      setStep2OtpError("Please enter a valid email address first.");
+      return;
+    }
+
+    setStep2OtpSending(true);
+    setStep2OtpError(null);
+    setStep2OtpSuccess(null);
+
+    const displayName = `${regForm.firstName.trim()} ${regForm.surname.trim()}`.trim() || "Valued Patient";
+
+    try {
+      const res = await fetch("/api/auth/send-registration-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: cleanEmail, fullName: displayName }),
+      });
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        setStep2OtpSent(true);
+        setStep2OtpCountdown(600);
+        setStep2SimulatedOtp(data.otpCode || null);
+        setStep2OtpSuccess(`Verification code dispatched to ${data.maskedEmail || cleanEmail}`);
+      } else {
+        setStep2OtpError(data.error || "Failed to dispatch verification code. Please check email.");
+      }
+    } catch (err) {
+      setStep2OtpError("Network connection error. Could not dispatch verification code.");
+    } finally {
+      setStep2OtpSending(false);
+    }
+  };
+
+  // Step 2: Verify Entered 6-Digit Email Code
+  const handleVerifyStep2Otp = async () => {
+    const cleanCode = step2OtpCode.trim();
+    if (!cleanCode || cleanCode.length < 6) {
+      setStep2OtpError("Please enter the complete 6-digit verification code.");
+      return;
+    }
+
+    setStep2OtpVerifying(true);
+    setStep2OtpError(null);
+
+    try {
+      const res = await fetch("/api/auth/verify-registration-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: regForm.email.trim().toLowerCase(), otpCode: cleanCode }),
+      });
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        setIsEmailVerified(true);
+        setStep2OtpSuccess("✓ Email verified successfully! You may now proceed to Step 3.");
+      } else {
+        setStep2OtpError(data.error || "Incorrect code. Please check your email inbox.");
+      }
+    } catch (err) {
+      setStep2OtpError("Verification error. Please try again.");
+    } finally {
+      setStep2OtpVerifying(false);
+    }
+  };
+
+  // Step 2: Validate Email Verification & Advance to Step 3
+  const handleStep2Next = (e: React.FormEvent) => {
+    e.preventDefault();
+    setRegError(null);
+
+    if (!regForm.email.trim()) {
+      setRegError("Email address is required.");
+      return;
+    }
+
+    if (!isEmailVerified) {
+      setRegError("Please verify your email address using the 6-digit verification code before proceeding.");
+      return;
+    }
+
+    setRegStep(3);
+  };
+
+  // Step 3: Complete Account Registration, Save to Cloud Firestore & Dispatch Welcome Email
+  const handleStep3Submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setRegError(null);
+
+    if (!regForm.password.trim()) {
+      setRegError("Please set an account password.");
+      return;
+    }
+    if (!regPasswordStrength.isValidStrong) {
+      setRegError(
+        "Strong Password Required: Must have at least 8 characters, uppercase, lowercase, numbers, and a special character (!@#$)."
+      );
+      return;
+    }
+    if (regForm.password !== regForm.confirmPassword) {
+      setRegError("Passwords do not match. Please verify.");
+      return;
+    }
+
+    setIsRegistering(true);
+
+    try {
+      const combinedName = `${regForm.firstName.trim()} ${regForm.surname.trim()}`.trim();
+      const newDnaId = generateNewDnaId(regForm.country || "PK", allExistingIds);
+
+      const newPatientProfile: PatientProfile = {
+        dnaId: newDnaId,
+        fullName: combinedName,
+        dob: regForm.dob || "Not Specified",
+        gender: regForm.gender,
+        bloodGroup: regForm.bloodGroup,
+        avatarUrl: regForm.customAvatar || getDefaultAvatar(regForm.gender),
+        phone: regForm.phone.trim() || "Not Provided",
+        email: regForm.email.trim(),
+        address: regForm.address.trim() || "Not Specified",
+        nationalId: regForm.nationalId.trim() || "Pending",
+        biometricStatus: "Verified",
+        organDonorStatus: regForm.organDonor,
+        registeredHospital: regForm.hospital.trim() || "General Healthcare Registry",
+        securityPin: "1234",
+        password: regForm.password.trim(),
+        biometricAuthEnabled: true,
+        insurance: {
+          provider: "None / Self-Pay",
+          policyNumber: "N/A",
+          groupNumber: "N/A",
+          status: "Pending",
+          coverageAmount: "N/A",
+        },
+        emergencyContacts: regForm.emergencyContactName.trim()
+          ? [
+              {
+                id: `ec-${Date.now()}`,
+                name: regForm.emergencyContactName.trim(),
+                relationship: "Emergency Contact",
+                phone: regForm.emergencyContactPhone.trim() || regForm.phone.trim() || "N/A",
+                isPrimary: true,
+              },
+            ]
+          : [],
+      };
+
+      const newRecord: PatientFullRecord = {
+        patient: newPatientProfile,
+        history: {
+          diseases: [],
+          surgeries: [],
+          vaccinations: [],
+          medicines: [],
+          allergies: [],
+          familyHistory: [],
+          chronicIllnesses: [],
+          lifestyle: {
+            smokingStatus: "Non-smoker",
+            alcoholConsumption: "None",
+            physicalActivity: "Active (3-5 days/wk)",
+            sleepAvgHours: 8,
+            dietType: "Balanced",
+          },
+        },
+        clinicalRecords: [],
+        labReports: [],
+        prescriptions: [],
+        appointments: [],
+        updatedAt: new Date().toISOString(),
+      };
+
+      setRegistrationSuccess(true);
+      if (handleRegisterCallback) {
+        await handleRegisterCallback(newRecord);
+      }
+    } catch (err: any) {
+      console.error("Final registration error:", err);
+      setRegError(err?.message || "Failed to create account. Please try again.");
+    } finally {
+      setIsRegistering(false);
+    }
+  };
+
   // Handle Emergency Lookup
   const handleEmergencySearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -998,7 +1238,116 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
               </p>
             </div>
 
-            <form onSubmit={handleDirectRegistration} className="space-y-6">
+            {/* 3-Step Wizard Navigation Stepper */}
+            <div className="flex items-center justify-between max-w-2xl mx-auto py-2 px-1">
+              {/* Step 1 Indicator */}
+              <button
+                type="button"
+                onClick={() => setRegStep(1)}
+                className={`flex items-center space-x-2.5 px-4 py-2.5 rounded-2xl text-xs font-bold transition-all cursor-pointer ${
+                  regStep === 1
+                    ? "bg-blue-600 text-white shadow-md shadow-blue-500/25 ring-2 ring-blue-400/40"
+                    : regStep > 1
+                    ? "bg-emerald-50 text-emerald-800 border border-emerald-300 hover:bg-emerald-100"
+                    : "bg-slate-100 text-slate-500"
+                }`}
+              >
+                <div
+                  className={`w-6 h-6 rounded-xl flex items-center justify-center text-xs font-black ${
+                    regStep === 1
+                      ? "bg-white text-blue-700"
+                      : regStep > 1
+                      ? "bg-emerald-600 text-white"
+                      : "bg-slate-300 text-slate-700"
+                  }`}
+                >
+                  {regStep > 1 ? "✓" : "1"}
+                </div>
+                <span className="hidden sm:inline">1. Profile & Bio</span>
+              </button>
+
+              <div
+                className={`h-0.5 flex-1 mx-2 transition-colors ${
+                  regStep >= 2 ? "bg-blue-500" : "bg-slate-200"
+                }`}
+              />
+
+              {/* Step 2 Indicator */}
+              <button
+                type="button"
+                onClick={() => {
+                  if (regForm.firstName.trim() && regForm.surname.trim() && regForm.dob) {
+                    setRegStep(2);
+                  }
+                }}
+                className={`flex items-center space-x-2.5 px-4 py-2.5 rounded-2xl text-xs font-bold transition-all cursor-pointer ${
+                  regStep === 2
+                    ? "bg-blue-600 text-white shadow-md shadow-blue-500/25 ring-2 ring-blue-400/40"
+                    : regStep > 2
+                    ? "bg-emerald-50 text-emerald-800 border border-emerald-300 hover:bg-emerald-100"
+                    : "bg-slate-100 text-slate-500"
+                }`}
+              >
+                <div
+                  className={`w-6 h-6 rounded-xl flex items-center justify-center text-xs font-black ${
+                    regStep === 2
+                      ? "bg-white text-blue-700"
+                      : regStep > 2
+                      ? "bg-emerald-600 text-white"
+                      : "bg-slate-300 text-slate-700"
+                  }`}
+                >
+                  {regStep > 2 ? "✓" : "2"}
+                </div>
+                <span className="hidden sm:inline">2. Email & OTP</span>
+              </button>
+
+              <div
+                className={`h-0.5 flex-1 mx-2 transition-colors ${
+                  regStep === 3 ? "bg-blue-500" : "bg-slate-200"
+                }`}
+              />
+
+              {/* Step 3 Indicator */}
+              <button
+                type="button"
+                onClick={() => {
+                  if (regForm.firstName.trim() && regForm.surname.trim() && isEmailVerified) {
+                    setRegStep(3);
+                  }
+                }}
+                className={`flex items-center space-x-2.5 px-4 py-2.5 rounded-2xl text-xs font-bold transition-all cursor-pointer ${
+                  regStep === 3
+                    ? "bg-blue-600 text-white shadow-md shadow-blue-500/25 ring-2 ring-blue-400/40"
+                    : "bg-slate-100 text-slate-500"
+                }`}
+              >
+                <div
+                  className={`w-6 h-6 rounded-xl flex items-center justify-center text-xs font-black ${
+                    regStep === 3
+                      ? "bg-white text-blue-700"
+                      : "bg-slate-300 text-slate-700"
+                  }`}
+                >
+                  3
+                </div>
+                <span className="hidden sm:inline">3. Password & Vault</span>
+              </button>
+            </div>
+
+            {/* Error Display Banner */}
+            {regError && (
+              <div className="p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold flex items-center space-x-2 animate-shake">
+                <ShieldAlert className="w-4 h-4 text-rose-600 shrink-0" />
+                <span>{regError}</span>
+              </div>
+            )}
+
+            {/* ======================================================== */}
+            {/* PAGE 1: Personal & Biometric Profile */}
+            {/* ======================================================== */}
+            {regStep === 1 && (
+              <form onSubmit={handleStep1Next} className="space-y-6 animate-fadeIn">
                 {/* Automated Health DNA ID Issuance & Country Selection Banner */}
                 <div className="p-4 sm:p-5 rounded-3xl bg-gradient-to-br from-slate-900 via-indigo-950 to-blue-950 text-white shadow-xl border border-indigo-500/30 space-y-4">
                   <div className="flex items-center justify-between">
@@ -1008,7 +1357,7 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
                     </div>
                     <span className="px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-200 text-[10px] font-bold border border-cyan-400/30 flex items-center space-x-1">
                       <Sparkles className="w-3 h-3 text-cyan-300" />
-                      <span>Format: DNA-[COUNTRY]-[YEAR]-[SEQ] (Starts from #10025)</span>
+                      <span>Starts from #10025</span>
                     </span>
                   </div>
 
@@ -1020,7 +1369,7 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
                         <span>Country / Region Jurisdiction <span className="text-rose-400">*</span></span>
                       </label>
                       <select
-                        value={regForm.country || "US"}
+                        value={regForm.country || "PK"}
                         onChange={(e) => handleRegCountryChange(e.target.value)}
                         className="w-full pl-3.5 pr-8 py-2.5 rounded-xl bg-white text-slate-900 border border-indigo-300/40 font-bold text-xs focus:ring-2 focus:ring-cyan-400 outline-none transition-all cursor-pointer shadow-inner"
                       >
@@ -1032,7 +1381,7 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
                       </select>
                       <p className="text-[11px] text-blue-200/80 mt-1.5 flex items-center space-x-1">
                         <span>Selected:</span>
-                        <span className="font-bold text-cyan-300">{regCountryObj.flag} {regCountryObj.name} ({regForm.country || "US"})</span>
+                        <span className="font-bold text-cyan-300">{regCountryObj.flag} {regCountryObj.name} ({regForm.country || "PK"})</span>
                       </p>
                     </div>
 
@@ -1061,7 +1410,7 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
                         </div>
                         <div className="bg-cyan-500/30 text-cyan-200 px-1 py-0.5 rounded border border-cyan-400/40">
                           <span className="text-cyan-300 block text-[8px]">COUNTRY</span>
-                          <span className="font-black">{regForm.country || "US"}</span>
+                          <span className="font-black">{regForm.country || "PK"}</span>
                         </div>
                         <div className="bg-white/10 px-1 py-0.5 rounded border border-white/10">
                           <span className="text-slate-400 block text-[8px]">YEAR</span>
@@ -1076,42 +1425,62 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
                   </div>
                 </div>
 
-                {/* Personal Details */}
-                <div>
-                  <h3 className="text-xs font-bold uppercase text-slate-500 tracking-wider mb-3">
-                    1. Personal Identity & Demographics
+                {/* Personal Identity Fields */}
+                <div className="p-6 bg-slate-50/80 rounded-3xl border border-slate-200/80 space-y-4">
+                  <h3 className="text-xs font-black uppercase text-slate-600 tracking-wider flex items-center space-x-2">
+                    <User className="w-4 h-4 text-blue-600" />
+                    <span>Page 1: Personal Demographic Details</span>
                   </h3>
+
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                    {/* First Name */}
                     <div className="sm:col-span-2">
                       <label className="block text-xs font-bold text-slate-700 mb-1">
-                        Full Legal Name <span className="text-red-500">*</span>
+                        First Name <span className="text-rose-500">*</span>
                       </label>
                       <input
                         type="text"
-                        placeholder="e.g. Eleanor Vance"
-                        value={regForm.fullName}
-                        onChange={(e) => setRegForm({ ...regForm, fullName: e.target.value })}
-                        className="w-full px-3.5 py-2 rounded-2xl border border-slate-300 text-xs font-bold text-slate-900 focus:ring-2 focus:ring-indigo-500 outline-none"
+                        placeholder="e.g. Haris"
+                        value={regForm.firstName}
+                        onChange={(e) => setRegForm({ ...regForm, firstName: e.target.value })}
+                        className="w-full px-3.5 py-2.5 rounded-2xl border border-slate-300 text-xs font-bold text-slate-900 focus:ring-2 focus:ring-blue-500 outline-none bg-white transition-all"
                         required
                       />
                     </div>
 
+                    {/* Surname */}
+                    <div className="sm:col-span-2">
+                      <label className="block text-xs font-bold text-slate-700 mb-1">
+                        Surname <span className="text-rose-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="e.g. Amin"
+                        value={regForm.surname}
+                        onChange={(e) => setRegForm({ ...regForm, surname: e.target.value })}
+                        className="w-full px-3.5 py-2.5 rounded-2xl border border-slate-300 text-xs font-bold text-slate-900 focus:ring-2 focus:ring-blue-500 outline-none bg-white transition-all"
+                        required
+                      />
+                    </div>
+
+                    {/* Date of Birth */}
                     <div>
                       <label className="block text-xs font-bold text-slate-700 mb-1">
-                        Date of Birth <span className="text-red-500">*</span>
+                        Date of Birth (DOB) <span className="text-rose-500">*</span>
                       </label>
                       <input
                         type="date"
                         value={regForm.dob}
                         onChange={(e) => setRegForm({ ...regForm, dob: e.target.value })}
-                        className="w-full px-3.5 py-2 rounded-2xl border border-slate-300 text-xs font-bold text-slate-900 focus:ring-2 focus:ring-indigo-500 outline-none"
+                        className="w-full px-3.5 py-2.5 rounded-2xl border border-slate-300 text-xs font-bold text-slate-900 focus:ring-2 focus:ring-blue-500 outline-none bg-white transition-all"
                         required
                       />
                     </div>
 
+                    {/* Gender */}
                     <div>
                       <label className="block text-xs font-bold text-slate-700 mb-1">
-                        Gender <span className="text-red-500">*</span>
+                        Gender <span className="text-rose-500">*</span>
                       </label>
                       <select
                         value={regForm.gender}
@@ -1125,7 +1494,7 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
                               : prev.customAvatar,
                           }));
                         }}
-                        className="w-full px-3.5 py-2 rounded-2xl border border-slate-300 text-xs font-bold text-slate-900 focus:ring-2 focus:ring-indigo-500 outline-none bg-white"
+                        className="w-full px-3.5 py-2.5 rounded-2xl border border-slate-300 text-xs font-bold text-slate-900 focus:ring-2 focus:ring-blue-500 outline-none bg-white transition-all cursor-pointer"
                       >
                         <option value="Male">Male</option>
                         <option value="Female">Female</option>
@@ -1134,14 +1503,15 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
                       </select>
                     </div>
 
-                    <div>
+                    {/* Blood Group */}
+                    <div className="sm:col-span-2">
                       <label className="block text-xs font-bold text-slate-700 mb-1">
-                        Blood Group <span className="text-red-500">*</span>
+                        Blood Group <span className="text-rose-500">*</span>
                       </label>
                       <select
                         value={regForm.bloodGroup}
                         onChange={(e) => setRegForm({ ...regForm, bloodGroup: e.target.value })}
-                        className="w-full px-3.5 py-2 rounded-2xl border border-slate-300 text-xs font-bold text-slate-900 focus:ring-2 focus:ring-indigo-500 outline-none bg-white"
+                        className="w-full px-3.5 py-2.5 rounded-2xl border border-slate-300 text-xs font-bold text-slate-900 focus:ring-2 focus:ring-blue-500 outline-none bg-white transition-all cursor-pointer"
                       >
                         <option value="O Positive (O+)">O Positive (O+)</option>
                         <option value="O Negative (O-)">O Negative (O-)</option>
@@ -1154,20 +1524,20 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
                       </select>
                     </div>
 
-                    {/* Photo / Symbol Avatar Area */}
-                    <div className="sm:col-span-2 md:col-span-4 p-4 bg-slate-50/90 rounded-2xl border border-slate-200">
+                    {/* Photo / Symbol Avatar Selector */}
+                    <div className="sm:col-span-2 md:col-span-4 p-4 bg-white rounded-2xl border border-slate-200">
                       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-3">
                         <div>
                           <label className="block text-xs font-bold text-slate-900">
                             Patient ID Photo / Symbol Avatar
                           </label>
                           <p className="text-[11px] text-slate-500">
-                            Choose between the standard Male or Female symbol avatar, or upload your personal photo
+                            Choose between standard Male/Female symbol avatar or upload your personal photo
                           </p>
                         </div>
-                        <label className="px-3.5 py-1.5 rounded-xl bg-white border border-slate-300 hover:border-indigo-400 hover:bg-indigo-50/40 text-slate-800 text-xs font-bold cursor-pointer transition-all shadow-sm shrink-0 flex items-center space-x-1.5">
-                          <Upload className="w-3.5 h-3.5 text-indigo-600" />
-                          <span>Upload Real Photo</span>
+                        <label className="px-3.5 py-1.5 rounded-xl bg-slate-50 border border-slate-300 hover:border-blue-400 hover:bg-blue-50 text-slate-800 text-xs font-bold cursor-pointer transition-all shadow-sm shrink-0 flex items-center space-x-1.5">
+                          <Upload className="w-3.5 h-3.5 text-blue-600" />
+                          <span>Upload Photo</span>
                           <input
                             type="file"
                             accept="image/*"
@@ -1205,8 +1575,8 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
                               }}
                               className={`p-3 rounded-2xl border-2 flex items-center space-x-3.5 transition-all text-left cursor-pointer ${
                                 isSelected
-                                  ? "bg-white border-indigo-600 shadow-md ring-2 ring-indigo-500/20"
-                                  : "bg-white/70 border-slate-200 hover:border-slate-300 hover:bg-white"
+                                  ? "bg-blue-50/50 border-blue-600 shadow-md ring-2 ring-blue-500/20"
+                                  : "bg-slate-50 border-slate-200 hover:border-slate-300 hover:bg-white"
                               }`}
                             >
                               <img
@@ -1221,7 +1591,7 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
                                     {sym.label}
                                   </p>
                                   {isSelected && (
-                                    <CheckCircle2 className="w-4 h-4 text-indigo-600 shrink-0" />
+                                    <CheckCircle2 className="w-4 h-4 text-blue-600 shrink-0" />
                                   )}
                                 </div>
                                 <span className="text-[10px] text-slate-500 block truncate mt-0.5">
@@ -1234,12 +1604,12 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
                       </div>
 
                       {regForm.customAvatar && !regForm.customAvatar.startsWith("data:image/svg+xml") && (
-                        <div className="mt-3 p-2.5 rounded-xl bg-indigo-50/80 border border-indigo-200 flex items-center justify-between text-xs text-indigo-900">
+                        <div className="mt-3 p-2.5 rounded-xl bg-blue-50 border border-blue-200 flex items-center justify-between text-xs text-blue-900">
                           <div className="flex items-center space-x-2 truncate">
                             <img
                               src={regForm.customAvatar}
                               alt="Uploaded"
-                              className="w-8 h-8 rounded-lg object-cover ring-1 ring-indigo-300"
+                              className="w-8 h-8 rounded-lg object-cover ring-1 ring-blue-300"
                             />
                             <span className="font-semibold truncate">Custom Photo Uploaded</span>
                           </div>
@@ -1251,141 +1621,282 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
                                 customAvatar: getDefaultAvatar(prev.gender),
                               }))
                             }
-                            className="text-[11px] font-bold text-indigo-700 hover:underline shrink-0 ml-2"
+                            className="text-[11px] font-bold text-blue-700 hover:underline shrink-0 ml-2 cursor-pointer"
                           >
-                            Reset to Symbol Avatar
+                            Reset to Default
                           </button>
                         </div>
                       )}
                     </div>
-
-                    <div>
-                      <label className="block text-xs font-bold text-slate-700 mb-1">
-                        Phone Number
-                      </label>
-                      <input
-                        type="tel"
-                        placeholder="+1 (555) 000-0000"
-                        value={regForm.phone}
-                        onChange={(e) => setRegForm({ ...regForm, phone: e.target.value })}
-                        className="w-full px-3.5 py-2 rounded-2xl border border-slate-300 text-xs font-bold text-slate-900 focus:ring-2 focus:ring-indigo-500 outline-none"
-                      />
-                    </div>
-
-                    <div className="sm:col-span-2">
-                      <label className="block text-xs font-bold text-slate-700 mb-1">
-                        Email Address <span className="text-red-500">*</span>
-                      </label>
-                      <div className="relative">
-                        <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
-                        <input
-                          type="email"
-                          placeholder="your.email@example.com"
-                          value={regForm.email}
-                          onChange={(e) => setRegForm({ ...regForm, email: e.target.value })}
-                          className="w-full pl-9 pr-3.5 py-2 rounded-2xl border border-slate-300 text-xs font-bold text-slate-900 focus:ring-2 focus:ring-indigo-500 outline-none"
-                          required
-                        />
-                      </div>
-                    </div>
-
-                    <div className="sm:col-span-2">
-                      <label className="block text-xs font-bold text-slate-700 mb-1">
-                        National ID / CNIC / SSN (Optional)
-                      </label>
-                      <input
-                        type="text"
-                        placeholder="e.g. 16301-6122822-5 or National ID"
-                        value={regForm.nationalId}
-                        onChange={(e) => setRegForm({ ...regForm, nationalId: e.target.value })}
-                        className="w-full px-3.5 py-2 rounded-2xl border border-slate-300 text-xs font-mono font-bold text-slate-900 focus:ring-2 focus:ring-indigo-500 outline-none"
-                      />
-                    </div>
-
-                    <div className="sm:col-span-2">
-                      <label className="block text-xs font-bold text-slate-700 mb-1">
-                        Registered Base Hospital (Optional)
-                      </label>
-                      <input
-                        type="text"
-                        placeholder="e.g. BKMC, Mayo Hospital, City Clinic"
-                        value={regForm.hospital}
-                        onChange={(e) => setRegForm({ ...regForm, hospital: e.target.value })}
-                        className="w-full px-3.5 py-2 rounded-2xl border border-slate-300 text-xs font-bold text-slate-900 focus:ring-2 focus:ring-indigo-500 outline-none"
-                      />
-                    </div>
-
-                    <div className="sm:col-span-2 md:col-span-4">
-                      <label className="block text-xs font-bold text-slate-700 mb-1">
-                        Residential Address (Optional)
-                      </label>
-                      <input
-                        type="text"
-                        placeholder="City, Province / State, Country"
-                        value={regForm.address}
-                        onChange={(e) => setRegForm({ ...regForm, address: e.target.value })}
-                        className="w-full px-3.5 py-2 rounded-2xl border border-slate-300 text-xs font-bold text-slate-900 focus:ring-2 focus:ring-indigo-500 outline-none"
-                      />
-                    </div>
-
-                    <div className="sm:col-span-2">
-                      <label className="block text-xs font-bold text-slate-700 mb-1">
-                        Emergency Contact Name (Optional)
-                      </label>
-                      <input
-                        type="text"
-                        placeholder="Contact person's full name"
-                        value={regForm.emergencyContactName}
-                        onChange={(e) => setRegForm({ ...regForm, emergencyContactName: e.target.value })}
-                        className="w-full px-3.5 py-2 rounded-2xl border border-slate-300 text-xs font-bold text-slate-900 focus:ring-2 focus:ring-indigo-500 outline-none"
-                      />
-                    </div>
-
-                    <div className="sm:col-span-2">
-                      <label className="block text-xs font-bold text-slate-700 mb-1">
-                        Emergency Contact Phone (Optional)
-                      </label>
-                      <input
-                        type="tel"
-                        placeholder="Contact phone number"
-                        value={regForm.emergencyContactPhone}
-                        onChange={(e) => setRegForm({ ...regForm, emergencyContactPhone: e.target.value })}
-                        className="w-full px-3.5 py-2 rounded-2xl border border-slate-300 text-xs font-bold text-slate-900 focus:ring-2 focus:ring-indigo-500 outline-none"
-                      />
-                    </div>
                   </div>
                 </div>
 
-                {/* Password & Security */}
-                <div>
-                  <h3 className="text-xs font-bold uppercase text-slate-500 tracking-wider mb-3">
-                    2. Account Password & Vault Security
+                {/* Page 1 Bottom Actions */}
+                <div className="pt-2 flex justify-end">
+                  <button
+                    type="submit"
+                    className="px-8 py-3.5 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-black text-sm shadow-xl shadow-blue-500/25 transition-all flex items-center space-x-2 cursor-pointer"
+                  >
+                    <span>Save & Next Step</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                </div>
+              </form>
+            )}
+
+            {/* ======================================================== */}
+            {/* PAGE 2: Contact & Live Email Verification */}
+            {/* ======================================================== */}
+            {regStep === 2 && (
+              <form onSubmit={handleStep2Next} className="space-y-6 animate-fadeIn">
+                <div className="p-6 bg-slate-50/80 rounded-3xl border border-slate-200/80 space-y-5">
+                  <div className="flex items-center justify-between border-b border-slate-200 pb-3">
+                    <h3 className="text-xs font-black uppercase text-slate-600 tracking-wider flex items-center space-x-2">
+                      <Mail className="w-4 h-4 text-blue-600" />
+                      <span>Page 2: Contact Info & Email Verification</span>
+                    </h3>
+                    <span className="text-[11px] text-slate-500 font-medium">
+                      Patient: <strong className="text-slate-800">{regForm.firstName} {regForm.surname}</strong>
+                    </span>
+                  </div>
+
+                  {/* Email & Send Code Section */}
+                  <div className="space-y-3">
+                    <label className="block text-xs font-bold text-slate-700">
+                      Email Address <span className="text-rose-500">*</span>
+                    </label>
+                    <div className="flex flex-col sm:flex-row gap-2.5">
+                      <div className="relative flex-1">
+                        <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+                        <input
+                          type="email"
+                          disabled={isEmailVerified}
+                          placeholder="e.g. harismicrobiologist1@gmail.com"
+                          value={regForm.email}
+                          onChange={(e) => {
+                            setRegForm({ ...regForm, email: e.target.value });
+                            setIsEmailVerified(false);
+                            setStep2OtpSent(false);
+                            setStep2OtpSuccess(null);
+                          }}
+                          className={`w-full pl-10 pr-4 py-2.5 rounded-2xl border text-xs sm:text-sm font-bold text-slate-900 outline-none transition-all ${
+                            isEmailVerified
+                              ? "bg-emerald-50/50 border-emerald-400 text-emerald-950 font-mono"
+                              : "bg-white border-slate-300 focus:ring-2 focus:ring-blue-500"
+                          }`}
+                          required
+                        />
+                        {isEmailVerified && (
+                          <CheckCircle2 className="w-4 h-4 text-emerald-600 absolute right-3.5 top-3" />
+                        )}
+                      </div>
+
+                      <button
+                        type="button"
+                        disabled={step2OtpSending || isEmailVerified}
+                        onClick={handleSendStep2Otp}
+                        className={`px-5 py-2.5 rounded-2xl text-xs font-bold transition-all flex items-center justify-center space-x-1.5 shrink-0 cursor-pointer ${
+                          isEmailVerified
+                            ? "bg-emerald-600 text-white cursor-default"
+                            : "bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white shadow-md shadow-blue-500/20 disabled:opacity-50"
+                        }`}
+                      >
+                        {step2OtpSending ? (
+                          <>
+                            <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                            <span>Sending...</span>
+                          </>
+                        ) : isEmailVerified ? (
+                          <>
+                            <CheckCircle2 className="w-3.5 h-3.5" />
+                            <span>Verified ✓</span>
+                          </>
+                        ) : step2OtpSent ? (
+                          <>
+                            <RefreshCw className="w-3.5 h-3.5" />
+                            <span>Resend Code</span>
+                          </>
+                        ) : (
+                          <>
+                            <Send className="w-3.5 h-3.5" />
+                            <span>Send Verification Code</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
+
+                    <p className="text-[11px] text-slate-500">
+                      Dispatched from: <span className="font-medium text-blue-600">Patient DNA (security@patientdnapro.com)</span>
+                    </p>
+                  </div>
+
+                  {/* Inline OTP Verification Box */}
+                  {step2OtpSent && !isEmailVerified && (
+                    <div className="p-4 rounded-2xl bg-white border-2 border-blue-200 shadow-sm space-y-3.5 animate-fadeIn">
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="font-bold text-slate-800 flex items-center space-x-1.5">
+                          <KeyRound className="w-3.5 h-3.5 text-blue-600" />
+                          <span>Enter 6-Digit Code Sent to Email:</span>
+                        </span>
+                        <span className="font-mono text-slate-500 flex items-center space-x-1">
+                          <Clock className="w-3.5 h-3.5 text-slate-400" />
+                          <span>
+                            {Math.floor(step2OtpCountdown / 60)}:{(step2OtpCountdown % 60).toString().padStart(2, "0")}
+                          </span>
+                        </span>
+                      </div>
+
+                      {step2SimulatedOtp && (
+                        <div className="p-2.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-xs flex items-center space-x-2">
+                          <Sparkles className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                          <span>Sandbox Preview Code: </span>
+                          <span className="font-mono font-black text-sm bg-amber-200/60 px-2 py-0.5 rounded">
+                            {step2SimulatedOtp}
+                          </span>
+                        </div>
+                      )}
+
+                      {step2OtpError && (
+                        <div className="p-2.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold flex items-center space-x-1.5">
+                          <AlertCircle className="w-3.5 h-3.5 text-rose-600 shrink-0" />
+                          <span>{step2OtpError}</span>
+                        </div>
+                      )}
+
+                      <div className="flex flex-col sm:flex-row gap-2.5">
+                        <input
+                          type="text"
+                          inputMode="numeric"
+                          maxLength={6}
+                          autoFocus
+                          placeholder="••••••"
+                          value={step2OtpCode}
+                          onChange={(e) => setStep2OtpCode(e.target.value.replace(/[^0-9]/g, ""))}
+                          className="flex-1 text-center py-2.5 px-4 rounded-2xl border-2 border-slate-300 font-mono text-xl font-black tracking-[8px] focus:border-blue-600 outline-none bg-slate-50 focus:bg-white transition-all text-slate-900"
+                        />
+                        <button
+                          type="button"
+                          disabled={step2OtpVerifying || step2OtpCode.trim().length < 6}
+                          onClick={handleVerifyStep2Otp}
+                          className="px-6 py-2.5 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-md shadow-emerald-600/20 transition-all flex items-center justify-center space-x-1.5 disabled:opacity-50 cursor-pointer"
+                        >
+                          {step2OtpVerifying ? (
+                            <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                          ) : (
+                            <CheckCircle2 className="w-3.5 h-3.5" />
+                          )}
+                          <span>{step2OtpVerifying ? "Verifying..." : "Verify Code"}</span>
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Verification Status Banner */}
+                  {step2OtpSuccess && (
+                    <div className="p-3 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold flex items-center space-x-2">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                      <span>{step2OtpSuccess}</span>
+                    </div>
+                  )}
+
+                  {/* Phone Number Field (Optional as requested) */}
+                  <div className="pt-2">
+                    <label className="block text-xs font-bold text-slate-700 mb-1 flex items-center space-x-1">
+                      <Phone className="w-3.5 h-3.5 text-slate-400" />
+                      <span>Phone Number <span className="text-slate-400 font-normal">(Optional)</span></span>
+                    </label>
+                    <input
+                      type="tel"
+                      placeholder={`${regCountryObj.dialCode} 300 1234567`}
+                      value={regForm.phone}
+                      onChange={(e) => setRegForm({ ...regForm, phone: e.target.value })}
+                      className="w-full px-3.5 py-2.5 rounded-2xl border border-slate-300 text-xs font-bold text-slate-900 focus:ring-2 focus:ring-blue-500 outline-none bg-white transition-all"
+                    />
+                    <p className="text-[11px] text-slate-400 mt-1">
+                      Used for secondary SMS alerts and emergency contact triage.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Page 2 Bottom Actions */}
+                <div className="pt-2 flex items-center justify-between">
+                  <button
+                    type="button"
+                    onClick={() => setRegStep(1)}
+                    className="px-5 py-2.5 rounded-2xl border border-slate-300 hover:bg-slate-100 text-slate-700 font-bold text-xs transition-all flex items-center space-x-1.5 cursor-pointer"
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                    <span>Back to Profile</span>
+                  </button>
+
+                  <button
+                    type="submit"
+                    disabled={!isEmailVerified}
+                    className="px-8 py-3.5 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-black text-sm shadow-xl shadow-blue-500/25 transition-all flex items-center space-x-2 disabled:opacity-40 cursor-pointer"
+                  >
+                    <span>Save & Next Step</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                </div>
+              </form>
+            )}
+
+            {/* ======================================================== */}
+            {/* PAGE 3: Password, Security & Account Activation */}
+            {/* ======================================================== */}
+            {regStep === 3 && (
+              <form onSubmit={handleStep3Submit} className="space-y-6 animate-fadeIn">
+                {/* Account Summary Card */}
+                <div className="p-4 rounded-2xl bg-gradient-to-r from-blue-50 via-indigo-50 to-cyan-50 border border-blue-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
+                  <div>
+                    <span className="text-[10px] font-black uppercase text-blue-600 tracking-wider">
+                      Identity Ready for Provisioning
+                    </span>
+                    <p className="text-sm font-extrabold text-slate-900 mt-0.5">
+                      {regForm.firstName} {regForm.surname}
+                    </p>
+                    <p className="text-[11px] text-slate-500 font-mono">
+                      Verified Email: {regForm.email}
+                    </p>
+                  </div>
+                  <div className="px-3.5 py-1.5 rounded-xl bg-white border border-blue-200 font-mono font-bold text-xs text-blue-700 shadow-sm shrink-0">
+                    {regPreviewDnaId} {regCountryObj.flag}
+                  </div>
+                </div>
+
+                <div className="p-6 bg-slate-50/80 rounded-3xl border border-slate-200/80 space-y-5">
+                  <h3 className="text-xs font-black uppercase text-slate-600 tracking-wider flex items-center space-x-2 border-b border-slate-200 pb-3">
+                    <Lock className="w-4 h-4 text-blue-600" />
+                    <span>Page 3: Account Password & Vault Security</span>
                   </h3>
+
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {/* Password */}
                     <div>
                       <label className="block text-xs font-bold text-slate-700 mb-1">
-                        Account Password <span className="text-red-500">*</span>
+                        Create Account Password <span className="text-rose-500">*</span>
                       </label>
                       <input
                         type="password"
                         placeholder="e.g. Vault@2026Secure!"
                         value={regForm.password}
                         onChange={(e) => setRegForm({ ...regForm, password: e.target.value })}
-                        className="w-full px-3.5 py-2 rounded-2xl border border-slate-300 text-xs font-mono font-bold text-slate-900 focus:ring-2 focus:ring-indigo-500 outline-none"
+                        className="w-full px-3.5 py-2.5 rounded-2xl border border-slate-300 text-xs font-mono font-bold text-slate-900 focus:ring-2 focus:ring-blue-500 outline-none bg-white transition-all"
                         required
                       />
                     </div>
 
+                    {/* Confirm Password */}
                     <div>
                       <label className="block text-xs font-bold text-slate-700 mb-1">
-                        Confirm Password <span className="text-red-500">*</span>
+                        Confirm Password <span className="text-rose-500">*</span>
                       </label>
                       <input
                         type="password"
-                        placeholder="Re-enter password"
+                        placeholder="Re-enter account password"
                         value={regForm.confirmPassword}
                         onChange={(e) => setRegForm({ ...regForm, confirmPassword: e.target.value })}
-                        className="w-full px-3.5 py-2 rounded-2xl border border-slate-300 text-xs font-mono font-bold text-slate-900 focus:ring-2 focus:ring-indigo-500 outline-none"
+                        className="w-full px-3.5 py-2.5 rounded-2xl border border-slate-300 text-xs font-mono font-bold text-slate-900 focus:ring-2 focus:ring-blue-500 outline-none bg-white transition-all"
                         required
                       />
                     </div>
@@ -1393,7 +1904,7 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
 
                   {/* Password Strength Checklist */}
                   {regForm.password.length > 0 && (
-                    <div className="mt-3 p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs space-y-2">
+                    <div className="p-3.5 rounded-2xl bg-white border border-slate-200 text-xs space-y-2">
                       <div className="flex items-center justify-between text-xs font-bold">
                         <span className="text-slate-600">Password Strength:</span>
                         <span className={regPasswordStrength.color}>
@@ -1430,16 +1941,40 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
                       </div>
                     </div>
                   )}
+
+                  {/* Organ Donor & Optional Fields */}
+                  <div className="p-3.5 rounded-2xl bg-white border border-slate-200 flex items-center justify-between">
+                    <div>
+                      <span className="text-xs font-bold text-slate-800 block">
+                        Organ Donor Registry
+                      </span>
+                      <span className="text-[11px] text-slate-500">
+                        Include organ donor authorization on your emergency digital passport
+                      </span>
+                    </div>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={regForm.organDonor}
+                        onChange={(e) => setRegForm({ ...regForm, organDonor: e.target.checked })}
+                        className="sr-only peer"
+                      />
+                      <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                    </label>
+                  </div>
                 </div>
 
-                {regError && (
-                  <div className="p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold flex items-center space-x-2">
-                    <ShieldAlert className="w-4 h-4 text-rose-600 shrink-0" />
-                    <span>{regError}</span>
-                  </div>
-                )}
+                {/* Page 3 Bottom Actions */}
+                <div className="pt-2 flex items-center justify-between">
+                  <button
+                    type="button"
+                    onClick={() => setRegStep(2)}
+                    className="px-5 py-2.5 rounded-2xl border border-slate-300 hover:bg-slate-100 text-slate-700 font-bold text-xs transition-all flex items-center space-x-1.5 cursor-pointer"
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                    <span>Back to Email</span>
+                  </button>
 
-                <div className="pt-2 flex justify-end">
                   <button
                     type="submit"
                     disabled={isRegistering}
@@ -1448,23 +1983,24 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
                     {isRegistering ? (
                       <>
                         <Sparkles className="w-4 h-4 animate-spin text-white" />
-                        <span>Creating Health DNA Vault...</span>
+                        <span>Activating Vault & Sending Welcome Email...</span>
                       </>
                     ) : registrationSuccess ? (
                       <>
                         <CheckCircle2 className="w-4 h-4 text-emerald-300" />
-                        <span>Vault Created! Opening...</span>
+                        <span>Vault Activated! Welcome Email Dispatched...</span>
                       </>
                     ) : (
                       <>
                         <UserPlus className="w-4 h-4" />
-                        <span>Create Patient Account & Launch Vault</span>
+                        <span>Complete Registration & Open Health Vault 🎉</span>
                         <ArrowRight className="w-4 h-4" />
                       </>
                     )}
                   </button>
                 </div>
               </form>
+            )}
           </div>
         )}
 

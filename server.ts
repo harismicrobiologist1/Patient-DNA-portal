@@ -86,7 +86,19 @@ if (!fs.existsSync(BACKUPS_DIR)) {
 // Lazy init Resend client
 let resendClient: Resend | null = null;
 function getResendClient(): Resend | null {
-  const apiKey = process.env.RESEND_API_KEY;
+  let apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey || apiKey.trim() === "" || apiKey === "MY_RESEND_API_KEY") {
+    try {
+      const envPath = path.join(process.cwd(), ".env");
+      if (fs.existsSync(envPath)) {
+        const content = fs.readFileSync(envPath, "utf-8");
+        const match = content.match(/RESEND_API_KEY=["']?([^"'\r\n]+)["']?/);
+        if (match && match[1]) {
+          apiKey = match[1].trim();
+        }
+      }
+    } catch {}
+  }
   if (!apiKey || apiKey.trim() === "" || apiKey === "MY_RESEND_API_KEY") {
     return null;
   }
@@ -744,6 +756,101 @@ app.post("/api/patients/register", rateLimiter(60000, 120, "Patient Registration
     }
 
     console.log(`[PATIENT REGISTERED TO LIFETIME DIRECTORY] ${patientRecord.patient.fullName} (${dnaId})`);
+
+    // Dispatch Official Welcome Email via Resend if email is registered
+    const patientEmail = (patientRecord.patient.email || "").trim().toLowerCase();
+    if (patientEmail && patientEmail.includes("@")) {
+      const resend = getResendClient();
+      if (resend) {
+        const fromEmail = getFromEmail();
+        resend.emails.send({
+          from: fromEmail,
+          to: [patientEmail],
+          subject: `🎉 Welcome to Patient DNA - Your Universal Health Vault is Active (${dnaId})`,
+          html: `
+            <!DOCTYPE html>
+            <html>
+            <head>
+              <meta charset="utf-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>Welcome to Patient DNA</title>
+            </head>
+            <body style="margin: 0; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f8fafc; color: #1e293b;">
+              <div style="max-width: 580px; margin: 0 auto; background-color: #ffffff; border-radius: 20px; border: 1px solid #e2e8f0; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+                
+                <!-- Brand Header -->
+                <div style="background: linear-gradient(135deg, #1e1b4b 0%, #2563eb 50%, #06b6d4 100%); padding: 36px 28px; text-align: center;">
+                  <div style="display: inline-block; background-color: rgba(255, 255, 255, 0.2); backdrop-filter: blur(8px); padding: 6px 16px; border-radius: 9999px; color: #ffffff; font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px;">
+                    Universal Healthcare Identity
+                  </div>
+                  <h1 style="margin: 0; color: #ffffff; font-size: 26px; font-weight: 800; letter-spacing: -0.5px;">
+                    Welcome to Patient DNA
+                  </h1>
+                  <p style="margin: 8px 0 0 0; color: #cffafe; font-size: 14px;">
+                    Your lifetime biometric health vault is now officially active
+                  </p>
+                </div>
+
+                <!-- Body Content -->
+                <div style="padding: 32px 28px;">
+                  <p style="font-size: 16px; color: #334155; margin-top: 0; margin-bottom: 12px; font-weight: 600;">
+                    Hello ${patientRecord.patient.fullName},
+                  </p>
+                  <p style="font-size: 14px; color: #475569; line-height: 1.6; margin-bottom: 24px;">
+                    Congratulations! Your universal health passport and electronic medical record have been permanently secured with cryptographic tamper protection.
+                  </p>
+
+                  <!-- DNA ID Highlight Card -->
+                  <div style="background-color: #f0fdf4; border: 2px solid #bbf7d0; border-radius: 16px; padding: 20px; text-align: center; margin-bottom: 24px;">
+                    <div style="font-size: 11px; font-weight: 800; color: #16a34a; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 6px;">
+                      Your Universal Patient DNA ID
+                    </div>
+                    <div style="font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace; font-size: 26px; font-weight: 900; letter-spacing: 2px; color: #14532d;">
+                      ${dnaId}
+                    </div>
+                    <div style="font-size: 12px; color: #15803d; margin-top: 6px;">
+                      Blood Group: <strong>${patientRecord.patient.bloodGroup || "Not Specified"}</strong> • Gender: <strong>${patientRecord.patient.gender || "Not Specified"}</strong>
+                    </div>
+                  </div>
+
+                  <!-- Quick Action Button -->
+                  <div style="text-align: center; margin: 28px 0;">
+                    <a href="https://www.patientdnapro.com" style="display: inline-block; background: linear-gradient(135deg, #2563eb, #4f46e5); color: #ffffff; text-decoration: none; font-size: 14px; font-weight: 700; padding: 14px 28px; border-radius: 12px; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);">
+                      Open Your Health DNA Vault →
+                    </a>
+                  </div>
+
+                  <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; margin-top: 24px;">
+                    <h4 style="margin: 0 0 8px 0; font-size: 13px; font-weight: 700; color: #0f172a;">
+                      Medical Identity Tips:
+                    </h4>
+                    <ul style="margin: 0; padding-left: 20px; font-size: 12px; color: #475569; line-height: 1.6;">
+                      <li>Keep your DNA ID handy during hospital admissions or doctor visits.</li>
+                      <li>In an emergency, medical responders can scan your digital QR code for instant blood type & allergy triage.</li>
+                      <li>Your records are encrypted and protected with Two-Factor Authentication.</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <!-- Footer -->
+                <div style="background-color: #f8fafc; border-top: 1px solid #e2e8f0; padding: 20px 24px; text-align: center; font-size: 12px; color: #64748b;">
+                  Patient DNA Universal Health System • <a href="https://www.patientdnapro.com" style="color: #2563eb; text-decoration: none;">www.patientdnapro.com</a>
+                </div>
+              </div>
+            </body>
+            </html>
+          `,
+        }).then((emailRes: any) => {
+          if (emailRes.error) {
+            console.warn("[WELCOME EMAIL FAILED]:", emailRes.error);
+          } else {
+            console.log(`[WELCOME EMAIL SENT] Dispatched to ${patientEmail} for ${dnaId}`);
+          }
+        }).catch((err: any) => {
+          console.warn("[WELCOME EMAIL EXCEPTION]:", err?.message);
+        });
+      }
+    }
 
     return res.json({
       success: true,
