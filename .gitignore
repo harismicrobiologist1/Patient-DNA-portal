@@ -1,8 +1,24 @@
+# Dependencies
 node_modules/
-build/
+.pnp
+.pnp.js
+
+# Production build outputs
 dist/
+build/
 coverage/
-.DS_Store
-*.log
-.env*
+
+# Environment and secrets
+.env
+.env.local
+.env.*.local
 !.env.example
+
+# Runtime databases & local data caches
+system_backups/
+patients_database_store.json
+*.log
+
+# System files
+.DS_Store
+Thumbs.db

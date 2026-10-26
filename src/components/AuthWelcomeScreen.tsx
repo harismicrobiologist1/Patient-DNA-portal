@@ -692,7 +692,13 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
         setStep2OtpSent(true);
         setStep2OtpCountdown(600);
         setStep2SimulatedOtp(data.otpCode || null);
-        setStep2OtpSuccess(`Verification code dispatched to ${data.maskedEmail || cleanEmail}`);
+        if (data.emailDeliveryStatus === "sent") {
+          setStep2OtpSuccess(`Verification code dispatched to ${data.maskedEmail || cleanEmail}`);
+        } else if (data.emailDeliveryStatus === "failed") {
+          setStep2OtpError(`Email dispatch note: ${data.emailDeliveryError || "Mail server deferred"}. You may use the instant verification code below.`);
+        } else {
+          setStep2OtpSuccess(`Verification code generated for ${data.maskedEmail || cleanEmail}`);
+        }
       } else {
         setStep2OtpError(data.error || "Failed to dispatch verification code. Please check email.");
       }
@@ -1728,6 +1734,29 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
                     <p className="text-[11px] text-slate-500">
                       Dispatched from: <span className="font-medium text-blue-600">Patient DNA (security@patientdnapro.com)</span>
                     </p>
+
+                    {/* Step 2 Error Notice (Always visible if error occurs) */}
+                    {step2OtpError && (
+                      <div className="p-3 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs font-semibold flex items-center space-x-2 animate-fadeIn">
+                        <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+                        <span>{step2OtpError}</span>
+                      </div>
+                    )}
+
+                    {/* Verification Status Banner with Spam Warning */}
+                    {step2OtpSuccess && (
+                      <div className="p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs font-medium space-y-1 animate-fadeIn">
+                        <div className="flex items-center space-x-2 font-bold text-emerald-800">
+                          <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                          <span>{step2OtpSuccess}</span>
+                        </div>
+                        {!isEmailVerified && (
+                          <p className="text-[11px] text-emerald-700/90 pl-6">
+                            📧 <strong>Important:</strong> First-time security emails may arrive in your <strong>Spam / Junk folder</strong> or <strong>Updates tab</strong>. Please check there if not in your Primary Inbox.
+                          </p>
+                        )}
+                      </div>
+                    )}
                   </div>
 
                   {/* Inline OTP Verification Box */}
@@ -1747,19 +1776,21 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
                       </div>
 
                       {step2SimulatedOtp && (
-                        <div className="p-2.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-xs flex items-center space-x-2">
-                          <Sparkles className="w-3.5 h-3.5 text-amber-600 shrink-0" />
-                          <span>Sandbox Preview Code: </span>
-                          <span className="font-mono font-black text-sm bg-amber-200/60 px-2 py-0.5 rounded">
-                            {step2SimulatedOtp}
-                          </span>
-                        </div>
-                      )}
-
-                      {step2OtpError && (
-                        <div className="p-2.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold flex items-center space-x-1.5">
-                          <AlertCircle className="w-3.5 h-3.5 text-rose-600 shrink-0" />
-                          <span>{step2OtpError}</span>
+                        <div className="p-2.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-xs flex items-center justify-between">
+                          <div className="flex items-center space-x-2">
+                            <Sparkles className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                            <span>Instant Testing Code: </span>
+                            <span className="font-mono font-black text-sm bg-amber-200/60 px-2 py-0.5 rounded">
+                              {step2SimulatedOtp}
+                            </span>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => setStep2OtpCode(step2SimulatedOtp)}
+                            className="text-[11px] font-bold text-amber-800 hover:text-amber-950 underline cursor-pointer"
+                          >
+                            Auto-Fill Code
+                          </button>
                         </div>
                       )}
 
@@ -1788,14 +1819,6 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
                           <span>{step2OtpVerifying ? "Verifying..." : "Verify Code"}</span>
                         </button>
                       </div>
-                    </div>
-                  )}
-
-                  {/* Verification Status Banner */}
-                  {step2OtpSuccess && (
-                    <div className="p-3 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold flex items-center space-x-2">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                      <span>{step2OtpSuccess}</span>
                     </div>
                   )}
 
