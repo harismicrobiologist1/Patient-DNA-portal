@@ -1176,21 +1176,19 @@ app.post("/api/auth/send-registration-otp", async (req, res) => {
         emailDeliveryStatus = "failed";
         emailDeliveryError = sendErr.message;
       }
-    } else {
-      console.log("[INFO] RESEND_API_KEY is not configured in environment. Using fallback simulation for preview testing.");
+    }
+
+    if (emailDeliveryStatus !== "sent") {
+      return res.status(500).json({
+        success: false,
+        error: `Could not deliver verification email to ${cleanEmail}. ${emailDeliveryError || "Please check your email address and try again."}`,
+      });
     }
 
     return res.json({
       success: true,
-      message: emailDeliveryStatus === "sent"
-        ? `A 6-digit verification code was delivered to ${cleanEmail}`
-        : `A 6-digit verification code was generated for ${cleanEmail}`,
-      emailDeliveryStatus,
-      emailDeliveryError,
-      resendConfigured: !!resend,
-      // If Resend is active and successfully delivered, do not expose OTP code in response payload.
-      // If Resend is not configured yet, include OTP for sandbox preview testing so user isn't locked out.
-      otpCode: emailDeliveryStatus === "sent" ? undefined : generatedOtp,
+      message: `A 6-digit verification code was delivered to ${cleanEmail}`,
+      emailDeliveryStatus: "sent",
       maskedEmail,
       expiresAt,
     });
@@ -1415,13 +1413,17 @@ app.post("/api/auth/send-login-otp", rateLimiter(60000, 15, "Login OTP"), async 
       }
     }
 
+    if (emailDeliveryStatus !== "sent") {
+      return res.status(500).json({
+        success: false,
+        error: `Could not deliver security authorization email. ${emailDeliveryError || "Please check connection and try again."}`,
+      });
+    }
+
     return res.json({
       success: true,
       message: `A 6-digit security code was delivered to ${maskedEmail}`,
-      emailDeliveryStatus,
-      emailDeliveryError,
-      resendConfigured: !!resend,
-      otpCode: emailDeliveryStatus === "sent" ? undefined : generatedOtp,
+      emailDeliveryStatus: "sent",
       maskedEmail,
       dnaId: patient.dnaId,
       expiresAt,

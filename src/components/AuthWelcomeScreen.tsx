@@ -159,8 +159,6 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
   const [step2OtpError, setStep2OtpError] = useState<string | null>(null);
   const [step2OtpSuccess, setStep2OtpSuccess] = useState<string | null>(null);
   const [step2OtpCountdown, setStep2OtpCountdown] = useState(600); // 10 minutes
-  const [step2SimulatedOtp, setStep2SimulatedOtp] = useState<string | null>(null);
-  const [step2FallbackOtp, setStep2FallbackOtp] = useState<string | null>(null);
 
   // Step 2 OTP Countdown
   useEffect(() => {
@@ -180,7 +178,6 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
   const [regOtpMaskedEmail, setRegOtpMaskedEmail] = useState("");
   const [regOtpCountdown, setRegOtpCountdown] = useState(600); // 10 minutes
   const [pendingRegistrationRecord, setPendingRegistrationRecord] = useState<PatientFullRecord | null>(null);
-  const [regSimulatedOtp, setRegSimulatedOtp] = useState<string | null>(null);
 
   // Login 2FA Email OTP State
   const [isLoginOtpModalOpen, setIsLoginOtpModalOpen] = useState(false);
@@ -191,7 +188,6 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
   const [loginOtpMaskedEmail, setLoginOtpMaskedEmail] = useState("");
   const [loginOtpCountdown, setLoginOtpCountdown] = useState(600); // 10 minutes
   const [loginOtpTargetDnaId, setLoginOtpTargetDnaId] = useState<string | null>(null);
-  const [loginSimulatedOtp, setLoginSimulatedOtp] = useState<string | null>(null);
 
   // Registration OTP Countdown
   useEffect(() => {
@@ -344,7 +340,6 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
             setLoginOtpCountdown(600);
             setLoginOtpCode("");
             setLoginOtpError(null);
-            setLoginSimulatedOtp(data.otpCode || null);
             setIsLoginOtpModalOpen(true);
             return;
           } else {
@@ -429,7 +424,6 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
       const data = await res.json();
       if (data.success) {
         setLoginOtpCountdown(600);
-        setLoginSimulatedOtp(data.otpCode || null);
       } else {
         setLoginOtpError(data.error || "Failed to resend code.");
       }
@@ -562,7 +556,6 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
       setRegOtpCountdown(600);
       setRegOtpCode("");
       setRegOtpError(null);
-      setRegSimulatedOtp(data.otpCode || null);
       setIsRegOtpModalOpen(true);
     } catch (sendErr: any) {
       console.error("Registration OTP error:", sendErr);
@@ -626,7 +619,6 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
       const data = await res.json();
       if (data.success) {
         setRegOtpCountdown(600);
-        setRegSimulatedOtp(data.otpCode || null);
       } else {
         setRegOtpError(data.error || "Failed to resend code.");
       }
@@ -688,45 +680,21 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
         body: JSON.stringify({ email: cleanEmail, fullName: displayName }),
       });
       
-      let data: any = null;
-      try {
-        data = await res.json();
-      } catch {
-        // Non-JSON response (e.g. 405 HTML from static Vercel)
-      }
+      const data = await res.json().catch(() => null);
 
       if (res.ok && data && data.success) {
         setStep2OtpSent(true);
         setStep2OtpCountdown(600);
-        setStep2SimulatedOtp(data.otpCode || null);
-        if (data.emailDeliveryStatus === "sent") {
-          setStep2OtpSuccess(`Verification code dispatched to ${data.maskedEmail || cleanEmail}`);
-        } else if (data.emailDeliveryStatus === "failed") {
-          setStep2OtpError(`Email dispatch note: ${data.emailDeliveryError || "Mail server deferred"}. You may use the instant verification code below.`);
-        } else {
-          setStep2OtpSuccess(`Verification code generated for ${data.maskedEmail || cleanEmail}`);
-        }
-      } else if (data && data.error) {
-        setStep2OtpError(data.error);
+        setStep2OtpSuccess(`A real 6-digit verification code was dispatched to ${data.maskedEmail || cleanEmail}. Please check your inbox or Spam/Junk folder.`);
+        setStep2OtpError(null);
       } else {
-        // Fallback for static hosts (e.g. Vercel before serverless deployment propagates)
-        const generatedFallback = Math.floor(100000 + Math.random() * 900000).toString();
-        setStep2FallbackOtp(generatedFallback);
-        setStep2SimulatedOtp(generatedFallback);
-        setStep2OtpSent(true);
-        setStep2OtpCountdown(600);
-        setStep2OtpSuccess(`Verification code generated for ${cleanEmail}`);
-        setStep2OtpError("Host notice: Using instant verification code below to activate your account.");
+        setStep2OtpError(
+          (data && data.error) ||
+          "Failed to dispatch verification email. Please check your email address and retry."
+        );
       }
-    } catch {
-      // Network failure fallback
-      const generatedFallback = Math.floor(100000 + Math.random() * 900000).toString();
-      setStep2FallbackOtp(generatedFallback);
-      setStep2SimulatedOtp(generatedFallback);
-      setStep2OtpSent(true);
-      setStep2OtpCountdown(600);
-      setStep2OtpSuccess(`Verification code generated for ${cleanEmail}`);
-      setStep2OtpError("Host notice: Using instant verification code below to activate your account.");
+    } catch (err: any) {
+      setStep2OtpError("Connection error while requesting verification code. Please check your network and retry.");
     } finally {
       setStep2OtpSending(false);
     }
@@ -736,7 +704,7 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
   const handleVerifyStep2Otp = async () => {
     const cleanCode = step2OtpCode.trim();
     if (!cleanCode || cleanCode.length < 6) {
-      setStep2OtpError("Please enter the complete 6-digit verification code.");
+      setStep2OtpError("Please enter the complete 6-digit code received in your email.");
       return;
     }
 
@@ -744,44 +712,25 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
     setStep2OtpError(null);
 
     try {
-      if (step2FallbackOtp && cleanCode === step2FallbackOtp) {
-        setIsEmailVerified(true);
-        setStep2OtpSuccess("✓ Email verified successfully! You may now proceed to Step 3.");
-        setStep2OtpError(null);
-        return;
-      }
-
       const res = await fetch("/api/auth/verify-registration-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: regForm.email.trim().toLowerCase(), otpCode: cleanCode }),
       });
-      let data: any = null;
-      try {
-        data = await res.json();
-      } catch {}
+      const data = await res.json().catch(() => null);
 
       if (res.ok && data && data.success) {
         setIsEmailVerified(true);
         setStep2OtpSuccess("✓ Email verified successfully! You may now proceed to Step 3.");
         setStep2OtpError(null);
-      } else if (data && data.error) {
-        setStep2OtpError(data.error || "Incorrect code. Please check your email inbox.");
-      } else if (step2SimulatedOtp && cleanCode === step2SimulatedOtp) {
-        setIsEmailVerified(true);
-        setStep2OtpSuccess("✓ Email verified successfully! You may now proceed to Step 3.");
-        setStep2OtpError(null);
       } else {
-        setStep2OtpError("Incorrect verification code. Please check your email inbox.");
+        setStep2OtpError(
+          (data && data.error) ||
+          "Incorrect verification code. Please check the code in your email and enter all 6 digits."
+        );
       }
-    } catch {
-      if (step2SimulatedOtp && cleanCode === step2SimulatedOtp) {
-        setIsEmailVerified(true);
-        setStep2OtpSuccess("✓ Email verified successfully! You may now proceed to Step 3.");
-        setStep2OtpError(null);
-      } else {
-        setStep2OtpError("Verification error. Please enter the 6-digit code shown.");
-      }
+    } catch (err: any) {
+      setStep2OtpError("Verification request error. Please verify your connection and retry.");
     } finally {
       setStep2OtpVerifying(false);
     }
@@ -1821,25 +1770,6 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
                         </span>
                       </div>
 
-                      {step2SimulatedOtp && (
-                        <div className="p-2.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-xs flex items-center justify-between">
-                          <div className="flex items-center space-x-2">
-                            <Sparkles className="w-3.5 h-3.5 text-amber-600 shrink-0" />
-                            <span>Instant Testing Code: </span>
-                            <span className="font-mono font-black text-sm bg-amber-200/60 px-2 py-0.5 rounded">
-                              {step2SimulatedOtp}
-                            </span>
-                          </div>
-                          <button
-                            type="button"
-                            onClick={() => setStep2OtpCode(step2SimulatedOtp)}
-                            className="text-[11px] font-bold text-amber-800 hover:text-amber-950 underline cursor-pointer"
-                          >
-                            Auto-Fill Code
-                          </button>
-                        </div>
-                      )}
-
                       <div className="flex flex-col sm:flex-row gap-2.5">
                         <input
                           type="text"
@@ -2302,18 +2232,6 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
                 </p>
               </div>
 
-              {regSimulatedOtp && (
-                <div className="p-3 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 text-xs flex items-center space-x-2">
-                  <Sparkles className="w-4 h-4 text-amber-600 shrink-0" />
-                  <div>
-                    <span className="font-bold">Sandbox Testing Code:</span>{" "}
-                    <span className="font-mono font-bold tracking-widest text-sm bg-amber-200/60 px-2 py-0.5 rounded-lg">
-                      {regSimulatedOtp}
-                    </span>
-                  </div>
-                </div>
-              )}
-
               {regOtpError && (
                 <div className="p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center space-x-2 animate-shake">
                   <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
@@ -2410,18 +2328,6 @@ export const AuthWelcomeScreen: React.FC<AuthWelcomeScreenProps> = ({
                   Verified Sender: <span className="font-medium text-blue-600">Patient DNA (security@patientdnapro.com)</span>
                 </p>
               </div>
-
-              {loginSimulatedOtp && (
-                <div className="p-3 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 text-xs flex items-center space-x-2">
-                  <Sparkles className="w-4 h-4 text-amber-600 shrink-0" />
-                  <div>
-                    <span className="font-bold">Sandbox Testing Code:</span>{" "}
-                    <span className="font-mono font-bold tracking-widest text-sm bg-amber-200/60 px-2 py-0.5 rounded-lg">
-                      {loginSimulatedOtp}
-                    </span>
-                  </div>
-                </div>
-              )}
 
               {loginOtpError && (
                 <div className="p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center space-x-2 animate-shake">
