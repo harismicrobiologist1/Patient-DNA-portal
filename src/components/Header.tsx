@@ -12,7 +12,6 @@ import {
   QrCode,
   Users,
   ChevronDown,
-  UserPlus,
   LogOut,
   KeyRound,
   Clock,
@@ -281,15 +280,6 @@ export const Header: React.FC<HeaderProps> = ({
                 >
                   <KeyRound className="w-3.5 h-3.5 text-cyan-300 group-hover:scale-110 transition-transform" />
                   <span>Sign In</span>
-                </button>
-
-                <button
-                  onClick={onOpenAddPatient}
-                  className="hidden md:flex items-center space-x-1.5 px-3 py-2 rounded-xl bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-200 border border-indigo-500/40 text-xs font-bold transition-all cursor-pointer"
-                  title="Register a new patient account"
-                >
-                  <UserPlus className="w-3.5 h-3.5 text-cyan-300" />
-                  <span>+ Register</span>
                 </button>
               </>
             )}
