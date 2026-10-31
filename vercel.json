@@ -1,5 +1,40 @@
 {
   "version": 2,
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "patient-dna-por.vercel.app"
+        }
+      ],
+      "destination": "https://www.patientdnapro.com/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "patient-dna-portal.vercel.app"
+        }
+      ],
+      "destination": "https://www.patientdnapro.com/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "patientdnapro.com"
+        }
+      ],
+      "destination": "https://www.patientdnapro.com/:path*",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     { "source": "/sitemap.xml", "destination": "/sitemap.xml" },
     { "source": "/robots.txt", "destination": "/robots.txt" },
